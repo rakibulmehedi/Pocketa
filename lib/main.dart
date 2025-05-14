@@ -1,66 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pocketa/core/constants/strings.dart';
+import 'package:pocketa/core/themes/app_theme.dart';
+import 'package:pocketa/features/onboarding/income_source_selection_screen.dart';
+import 'package:pocketa/features/onboarding/splash_screen.dart';
+import 'package:pocketa/features/onboarding/welcome_screen.dart';
+import 'package:device_preview/device_preview.dart';
+
+import 'core/provider/theme_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ProviderScope(child: DevicePreview(enabled: true, builder: (context) => const PocketaApp())));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class PocketaApp extends ConsumerWidget {
+  const PocketaApp({super.key});
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = ref.watch(isDarkModeProvider);
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
+      title: AppString.appName,
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const SplashScreen(),
+        '/welcome': (context) => const WelcomeScreen(),
+        '/onboarding/income-source':
+            (context) => const IncomeSourceSelectionScreen(),
+        'onboarding/income-range':
+            (context) => const IncomeSourceSelectionScreen(),
+      },
     );
   }
 }
