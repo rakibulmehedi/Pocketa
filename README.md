@@ -81,8 +81,8 @@ lib/
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/MehedisGIts/expense-management-system.git
-cd expense-management-system
+git clone https://github.com/MehedisGits/Pocketa
+cd Pocketa
 ````
 
 ### 2. Install dependencies
