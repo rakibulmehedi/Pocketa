@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pocketa/core/themes/app_colors.dart';
 import 'package:pocketa/core/utils/responsive_utils.dart';
 
 class OnboardingChip extends StatelessWidget {
@@ -59,7 +60,7 @@ class OnboardingChip extends StatelessWidget {
             Icon(
               icon,
               size: iconSize,
-              color: isSelected ? theme.primaryColor : Colors.black87,
+              color: isSelected ? AppColors.primary : Colors.grey,
             ),
             const SizedBox(height: 8),
             FittedBox(

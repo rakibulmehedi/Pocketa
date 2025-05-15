@@ -13,6 +13,8 @@ import 'package:pocketa/features/onboarding/data/income_options_data.dart';
 import '../../l10n/app_localization.dart';
 import 'package:pocketa/features/onboarding/model/income_options.dart';
 
+import 'controller/onboarding_controller.dart';
+
 final selectedIncomeSourceProvider = StateProvider<String?>((ref) => null);
 
 class IncomeSourceSelectionScreen extends ConsumerWidget {
@@ -20,10 +22,13 @@ class IncomeSourceSelectionScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
+    final currentStep = ref.watch(onboardingControllerProvider);
     final incomeSource = getIncomeOptions(context);
     int crossAxisCount() {
-      final width = MediaQuery.of(context).size.width;
+      final width = MediaQuery
+          .of(context)
+          .size
+          .width;
       if (width < 320) {
         return 1;
       } else if (width < 512) {
@@ -42,56 +47,57 @@ class IncomeSourceSelectionScreen extends ConsumerWidget {
         child: Padding(
           padding: ResponsiveUtils.horizontalPadding(context),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              AppHeader(
-                title: L.of(context).onboardingStep1,
-                subtitle: L.of(context).whatIsYourMainIncomeSource,
-              ),
-              ResponsiveUtils.spacing(context),
-
-              // Income Source Grid
-              buildGridView(
-                incomeSource,
-                crossAxisCount,
-                selectedIncomeSource,
-                ref,
-              ),
-              const Spacer(),
-              AppButton(
-                label: L.of(context).next,
-                onPressed: () {
-                  selectedIncomeSource != null
-                      ? () => Navigator.pushNamed(
-                        context,
-                        '/onboarding/income-range',
-                      )
-                      : null;
-                },
-              ),
-              const SizedBox(height: 16),
-              SkipButton(
-                onPressed:
-                    () => {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(const SnackBar(content: Text('Skipped'))),
-                    },
-              ),
-              ResponsiveUtils.spacing(context),
-            ],
-          ),
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+          AppHeader(
+          title: L.of(context).onboardingStep1,
+          subtitle: L
+              .of(context)
+              .whatIsYourMainIncomeSource,
+          step: currentStep + 1,
+          totalSteps: 3,
         ),
-      ),
+        ResponsiveUtils.spacing(context),
+
+        // Income Source Grid
+        _buildGridView(
+          incomeSource,
+          crossAxisCount,
+          selectedIncomeSource,
+          ref,
+        ),
+        const Spacer(),
+        AppButton(
+          label: L
+              .of(context)
+              .next,
+          onPressed: () {
+            selectedIncomeSource != null
+                ? ref
+                .read(onboardingControllerProvider.notifier)
+                .nextStep()
+                : null;
+            Navigator.pushNamed(context, '/onboarding/next-screen');
+          },
+        ),
+        const SizedBox(height: 16),
+        SkipButton(onPressed: (){
+          ref.read(onboardingControllerProvider.notifier).skipToEnd();
+          Navigator.pushNamed(context, '/onboarding/next-screen');
+        }),
+      ResponsiveUtils.spacing(context),
+      ],
+    ),)
+    ,
+    )
+    ,
     );
   }
 
-  GridView buildGridView(
-    List<IncomeOption> incomeSource,
-    int Function() crossAxisCount,
-    String? selectedIncomeSource,
-    WidgetRef ref,
-  ) {
+  GridView _buildGridView(List<IncomeOption> incomeSource,
+      int Function() crossAxisCount,
+      String? selectedIncomeSource,
+      WidgetRef ref,) {
     return GridView.builder(
       itemCount: incomeSource.length,
       shrinkWrap: true,
@@ -109,7 +115,9 @@ class IncomeSourceSelectionScreen extends ConsumerWidget {
           icon: source.icon,
           isSelected: selectedIncomeSource == source.label,
           onTap: () {
-            ref.read(selectedIncomeSourceProvider.notifier).state =
+            ref
+                .read(selectedIncomeSourceProvider.notifier)
+                .state =
                 source.label;
           },
         );
