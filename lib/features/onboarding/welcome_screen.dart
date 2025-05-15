@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/core/themes/app_colors.dart';
 import 'package:pocketa/core/utils/responsive_utils.dart';
 import 'package:pocketa/core/widgets/language_toggle.dart';
-import 'package:pocketa/l10n/app_localization.dart';
 
 import '../../config/provider/theme_provider.dart';
 import '../../core/component/app_button.dart';
+import '../../l10n/app_localization.dart';
 
 class WelcomeScreen extends ConsumerWidget {
   const WelcomeScreen({super.key});
@@ -28,8 +28,8 @@ class WelcomeScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(),
-               Expanded(
-                 child: CircleAvatar(
+              Expanded(
+                child: CircleAvatar(
                   radius: 40,
                   backgroundColor: AppColors.primary,
                   child: Text(
@@ -40,13 +40,13 @@ class WelcomeScreen extends ConsumerWidget {
                       color: Colors.white,
                     ),
                   ),
-                               ),
-               ),
+                ),
+              ),
               ResponsiveUtils.spacing(context),
-              Text(L.of(context).appName, style: theme.textTheme.displayLarge),
+              Text(context.l10n.appName, style: theme.textTheme.displayLarge),
               Spacer(),
               Text(
-                L.of(context).welcomeMessage,
+                context.l10n.welcomeMessage,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontSize: ResponsiveUtils.font(context, 24),
@@ -54,13 +54,13 @@ class WelcomeScreen extends ConsumerWidget {
               ),
               ResponsiveUtils.spacing(context),
               Text(
-                L.of(context).tagLine,
+                context.l10n.tagLine,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.titleMedium,
               ),
               const Spacer(),
               AppButton(
-                label: L.of(context).getStarted,
+                label: context.l10n.getStarted,
                 onPressed:
                     () => Navigator.pushNamed(
                       context,

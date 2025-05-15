@@ -5,9 +5,9 @@ import '../../../l10n/app_localization.dart';
 
 List<IncomeOption> getIncomeOptions(BuildContext context) {
   return [
-    IncomeOption(label: L.of(context).freelance, icon: Icons.laptop_mac),
-    IncomeOption(label: L.of(context).job, icon: Icons.work),
-    IncomeOption(label: L.of(context).familySupport, icon: Icons.group),
-    IncomeOption(label: L.of(context).other, icon: Icons.more_horiz),
+    IncomeOption(label: context.l10n.freelance, icon: Icons.laptop_mac),
+    IncomeOption(label: context.l10n.job, icon: Icons.work),
+    IncomeOption(label: context.l10n.familySupport, icon: Icons.group),
+    IncomeOption(label: context.l10n.other, icon: Icons.more_horiz),
   ];
 }

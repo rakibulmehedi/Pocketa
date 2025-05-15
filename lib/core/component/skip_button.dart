@@ -12,7 +12,7 @@ class SkipButton extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed, // ✅ Function is now being called correctly
         child: Text(
-          L.of(context).skip,
+          context.l10n.skip,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: Theme.of(context).primaryColor,
             fontWeight: FontWeight.w500,

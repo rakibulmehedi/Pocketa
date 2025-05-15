@@ -50,10 +50,8 @@ class IncomeSourceSelectionScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
           AppHeader(
-          title: L.of(context).onboardingStep1,
-          subtitle: L
-              .of(context)
-              .whatIsYourMainIncomeSource,
+          title: context.l10n.onboardingStep1,
+          subtitle: context.l10n.whatIsYourMainIncomeSource,
           step: currentStep + 1,
           totalSteps: 3,
         ),
@@ -68,9 +66,7 @@ class IncomeSourceSelectionScreen extends ConsumerWidget {
         ),
         const Spacer(),
         AppButton(
-          label: L
-              .of(context)
-              .next,
+          label: context.l10n.next,
           onPressed: () {
             selectedIncomeSource != null
                 ? ref
