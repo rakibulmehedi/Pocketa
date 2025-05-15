@@ -1,5 +1,6 @@
 // lib/core/components/app_button.dart
 import 'package:flutter/material.dart';
+import 'package:pocketa/core/utils/responsive_utils.dart';
 
 import '../themes/app_colors.dart';
 
@@ -24,14 +25,17 @@ class AppButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: isPrimary ? AppColors.primary : Colors.grey[300],
           foregroundColor: isPrimary ? Colors.white : AppColors.textDark,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 18),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
         ),
         child: Text(
           label,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            fontSize: ResponsiveUtils.font(context, 16),
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );

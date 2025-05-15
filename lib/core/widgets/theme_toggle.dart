@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../provider/theme_provider.dart';
+
+import '../../config/provider/theme_provider.dart';
+
 
 class ThemeToggle extends ConsumerWidget {
   const ThemeToggle({super.key});
@@ -26,9 +28,7 @@ class ThemeToggle extends ConsumerWidget {
         },
         title: Text(
           'Dark Mode',
-          style: theme.textTheme.titleMedium?.copyWith(
-            color: isDark ? Colors.white : Colors.black87,
-          ),
+          style: theme.textTheme.titleMedium
         ),
         secondary: Icon(
           isDark ? Icons.dark_mode : Icons.light_mode,
