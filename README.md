@@ -122,12 +122,3 @@ Developed by **Rakibul Islam Mehedi**
 
 > "Track smarter. Save better. Live freely."
 
-```
-
----
-
-Would you like me to:
-
-- Generate this as an actual `README.md` file you can copy into your project?
-- Or tailor this for GitHub, GitLab, or Flutter’s pub.dev?
-```
