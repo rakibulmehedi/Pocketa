@@ -4,17 +4,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/core/themes/app_colors.dart';
 import 'package:pocketa/core/utils/responsive_utils.dart';
 import 'package:pocketa/core/widgets/language_toggle.dart';
+import 'package:pocketa/core/widgets/theme_toggle.dart';
 
-import '../../config/provider/theme_provider.dart';
-import '../../core/component/app_button.dart';
-import '../../l10n/app_localization.dart';
+import '../../../config/provider/theme_provider.dart';
+import '../../../core/component/app_button.dart';
+import '../../../l10n/app_localization.dart';
 
 class WelcomeScreen extends ConsumerWidget {
   const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDark = ref.watch(isDarkModeProvider);
+    final bool isDark = ref.watch(isDarkModeProvider);
     final theme = Theme.of(context);
     final _languageToggleRow = const LanguageToggleRow();
 
@@ -59,12 +60,14 @@ class WelcomeScreen extends ConsumerWidget {
                 style: theme.textTheme.titleMedium,
               ),
               const Spacer(),
+              ThemeToggle(),
+              const SizedBox(height: 16,),
               AppButton(
                 label: context.l10n.getStarted,
                 onPressed:
                     () => Navigator.pushNamed(
                       context,
-                      '/onboarding/income-source',
+                      '/onboarding',
                     ),
                 isPrimary: true,
               ),

@@ -6,9 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'config/provider/language_provider.dart';
 import 'config/provider/theme_provider.dart';
 import 'core/themes/app_theme.dart';
-import 'features/onboarding/income_source_selection_screen.dart';
-import 'features/onboarding/splash_screen.dart';
-import 'features/onboarding/welcome_screen.dart';
+import 'features/onboarding/view/income_source_selection_screen.dart';
+import 'features/onboarding/view/onboarding_screen.dart';
+import 'features/onboarding/view/splash_screen.dart';
+import 'features/onboarding/view/welcome_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'l10n/app_localization.dart';
@@ -53,6 +54,7 @@ class PocketaApp extends ConsumerWidget {
       routes: {
         '/': (context) => const SplashScreen(),
         '/welcome': (context) => const WelcomeScreen(),
+        '/onboarding': (context) => const OnboardingScreen(),
         '/onboarding/income-source':
             (context) => const IncomeSourceSelectionScreen(),
         'onboarding/income-range':

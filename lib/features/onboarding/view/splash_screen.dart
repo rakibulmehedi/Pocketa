@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:pocketa/core/themes/app_colors.dart';
-import 'package:pocketa/features/onboarding/welcome_screen.dart';
+import 'package:pocketa/features/onboarding/view/welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

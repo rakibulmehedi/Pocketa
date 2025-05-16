@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/core/themes/app_colors.dart';
 import 'package:pocketa/core/utils/responsive_utils.dart';
+import '../../config/provider/theme_provider.dart';
 
-class OnboardingChip extends StatelessWidget {
+/// ✅ OnboardingChip:
+/// - এটি একটি custom choice chip widget
+/// - responsive, theme-aware, এবং selectable
+
+class OnboardingChip extends ConsumerWidget {
   final String label;
   final IconData icon;
   final bool isSelected;
@@ -17,61 +23,83 @@ class OnboardingChip extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = ref.watch(isDarkModeProvider);
     final theme = Theme.of(context);
-    final width = MediaQuery.of(context).size.width;
+    final size = MediaQuery.of(context).size;
 
-    final iconSize = ResponsiveUtils.width(context, 0.15); // ~8% of width
-    final verticalPadding = ResponsiveUtils.height(context, 0.02); // ~2% of height
-    final horizontalPadding = ResponsiveUtils.width(context, 0.04); // ~4% of width
-    final fontSize = ResponsiveUtils.width(context, 0.040); // ~3.5% of width
+    /// ✅ Responsive icon size — screen width অনুসারে ঠিক করি
+    final iconSize = ResponsiveUtils.icon(context, 42);
+    final fontSize = ResponsiveUtils.font(context, 14);
+
+    /// ✅ Color calculate
+    final primaryColor = theme.primaryColor;
+
+    final borderColor = isSelected
+        ? primaryColor
+        : AppColors.grey.withOpacity(0.4);
+
+    final iconColor = isSelected
+        ? primaryColor
+        : AppColors.grey;
+
+    final textColor = isSelected
+        ? primaryColor
+        : isDark
+        ? AppColors.textLight
+        : AppColors.grey;
+
+    final backgroundColor = isSelected
+        ? primaryColor.withOpacity(0.08)
+        : isDark
+        ? AppColors.textDark.withOpacity(0.2)
+        : AppColors.primary.withOpacity(0.03);
 
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         constraints: BoxConstraints(
-          minWidth: width * 0.35,
-          maxWidth: width * 0.60,
+          /// ✅ Responsive width constraints (min & max)
+          minWidth: size.width * 0.25,
+          maxWidth: size.width * 0.35,
         ),
         padding: EdgeInsets.symmetric(
-          vertical: verticalPadding,
-          horizontal: horizontalPadding,
+          horizontal: size.width * 0.04,
+          vertical: size.height * 0.02,
         ),
         decoration: BoxDecoration(
-          color: isSelected ? theme.primaryColor.withOpacity(0.1) : Colors.white,
+          color: backgroundColor,
           border: Border.all(
-            color: isSelected ? theme.primaryColor : Colors.grey.shade300,
+            color: borderColor,
             width: 1.5,
           ),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            )
+            if (isSelected)
+              BoxShadow(
+                color: primaryColor.withOpacity(0.15),
+                blurRadius: 6,
+                offset: const Offset(0, 3),
+              ),
           ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
           children: [
             Icon(
               icon,
               size: iconSize,
-              color: isSelected ? AppColors.primary : Colors.grey,
+              color: iconColor,
             ),
             const SizedBox(height: 8),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                label,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  fontSize: fontSize,
-                  color: isSelected ? theme.primaryColor : Colors.black87,
-                ),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w500,
+                fontSize: fontSize,
+                color: textColor,
               ),
             ),
           ],
