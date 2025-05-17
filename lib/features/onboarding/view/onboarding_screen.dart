@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/features/onboarding/view/income_source_selection_screen.dart';
+import 'package:pocketa/features/onboarding/view/income_source_selection_view.dart';
 import 'package:pocketa/features/onboarding/view/widget/onboarding_bottom_nav.dart';
 import 'package:pocketa/l10n/app_localization.dart';
 

@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'config/provider/language_provider.dart';
 import 'config/provider/theme_provider.dart';
 import 'core/themes/app_theme.dart';
-import 'features/onboarding/view/income_source_selection_screen.dart';
+import 'features/onboarding/view/income_source_selection_view.dart';
 import 'features/onboarding/view/onboarding_screen.dart';
 import 'features/onboarding/view/splash_screen.dart';
 import 'features/onboarding/view/welcome_screen.dart';

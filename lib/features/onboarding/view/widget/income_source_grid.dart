@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/component/onboarding_chip.dart';
 import '../../../../core/utils/responsive_utils.dart';
 import '../../data/income_options_data.dart';
-import '../income_source_selection_screen.dart';
+import '../income_source_selection_view.dart';
 
 class IncomeSourceGrid extends ConsumerWidget {
   const IncomeSourceGrid({super.key});

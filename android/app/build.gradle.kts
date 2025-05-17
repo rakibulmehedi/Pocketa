@@ -8,7 +8,8 @@ plugins {
 android {
     namespace = "com.nexarise.pocketa.pocketa"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"
+    ndkVersion = flutter.ndkVersion
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

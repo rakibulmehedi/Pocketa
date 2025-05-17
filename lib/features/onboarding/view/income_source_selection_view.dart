@@ -20,17 +20,15 @@ class IncomeSourceSelectionScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor:
           isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
-      body: SafeArea(
-        child: Padding(
-          padding: ResponsiveUtils.horizontalPadding(context),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ResponsiveUtils.spacing(context, multiplier: 1.5),
-              const IncomeSourceGrid(),
-              ResponsiveUtils.spacing(context, multiplier: 2),
-            ],
-          ),
+      body: Padding(
+        padding: ResponsiveUtils.horizontalPadding(context),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ResponsiveUtils.spacing(context, multiplier: 1.5),
+            const IncomeSourceGrid(),
+            ResponsiveUtils.spacing(context, multiplier: 2),
+          ],
         ),
       ),
     );
