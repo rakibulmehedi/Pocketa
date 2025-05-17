@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:pocketa/core/themes/app_colors.dart';
 import '../../l10n/app_localization.dart';
 
 class SkipButton extends StatelessWidget {
   final VoidCallback onPressed;
+  final bool isDark;
 
-  const SkipButton({super.key, required this.onPressed});
+  const SkipButton({super.key, required this.onPressed, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,7 @@ class SkipButton extends StatelessWidget {
         child: Text(
           context.l10n.skip,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(context).primaryColor,
+            color: isDark ?  AppColors.grey : AppColors.primary,
             fontWeight: FontWeight.w500,
           ),
         ),

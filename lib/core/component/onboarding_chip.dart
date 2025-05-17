@@ -24,11 +24,12 @@ class OnboardingChip extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    /// ✅ Theme & Responsive
     final isDark = ref.watch(isDarkModeProvider);
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
 
-    /// ✅ Responsive icon size — screen width অনুসারে ঠিক করি
+    /// ✅ Responsive size calculate
     final iconSize = ResponsiveUtils.icon(context, 42);
     final fontSize = ResponsiveUtils.font(context, 14);
 

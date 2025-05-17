@@ -6,7 +6,7 @@ import '../themes/app_colors.dart';
 
 class AppButton extends StatelessWidget {
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final bool isPrimary;
 
   const AppButton({
@@ -21,11 +21,11 @@ class AppButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: isPrimary ? onPressed : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: isPrimary ? AppColors.primary : Colors.grey[300],
+          backgroundColor: isPrimary ? AppColors.primary : Colors.grey,
           foregroundColor: isPrimary ? Colors.white : AppColors.textDark,
-          padding: const EdgeInsets.symmetric(vertical: 18),
+          padding: ResponsiveUtils.verticalPadding(context),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

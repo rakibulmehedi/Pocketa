@@ -1,15 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final onboardingControllerProvider =
-StateNotifierProvider<OnboardingController, int>((ref) {
-  return OnboardingController();
-});
+    StateNotifierProvider<OnboardingController, int>((ref) {
+      return OnboardingController();
+    });
 
 class OnboardingController extends StateNotifier<int> {
   OnboardingController() : super(0); // initial page index 0 (step 1)
 
   void nextStep() {
     if (state < 2) state++;
+  }
+
+  void setStep(int step) {
+    state = step;
   }
 
   void previousStep() {

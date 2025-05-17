@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/features/onboarding/view/income_source_selection_screen.dart';
+import 'package:pocketa/features/onboarding/view/widget/onboarding_bottom_nav.dart';
 import 'package:pocketa/l10n/app_localization.dart';
 
 import '../../../config/provider/theme_provider.dart';
-import '../../../core/component/skip_button.dart';
+import '../../../core/component/app_header.dart';
 import '../../../core/themes/app_colors.dart';
 import '../../../core/utils/responsive_utils.dart';
 import '../../../core/widgets/app_bar.dart';
@@ -24,112 +25,120 @@ class OnboardingScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    /// ✅ Provider 들
+    /// ✅ Providers
     final controller = ref.watch(pageControllerProvider);
     final viewModel = ref.watch(onboardingViewModelProvider);
     final currentIndex = ref.watch(currentPageProvider);
     final isDark = ref.watch(isDarkModeProvider);
     final selectedIncomeSource = ref.watch(selectedIncomeSourceProvider);
+    final currentStep = ref.watch(onboardingControllerProvider);
+
+    final isLast = currentIndex == onboardingContent.length - 1;
+    final isValid = selectedIncomeSource != null;
+
+    Map<String, String> headerText() {
+      switch (currentIndex) {
+        case 0:
+          return {
+            'title': context.l10n.onboardingStep1,
+            'subtitle': context.l10n.whatIsYourMainIncomeSource,
+          };
+        case 1:
+          return {
+            'title': context.l10n.onboardingStep2,
+            'subtitle': context.l10n.selectMonthlyIncome,
+          };
+        case 2:
+          return {
+            'title': context.l10n.onboardingStep3,
+            'subtitle': context.l10n.setupYourBudgetCategories,
+          };
+        default:
+          return {'title': '', 'subtitle': ''};
+      }
+    }
 
     return Scaffold(
       backgroundColor:
           isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
 
       /// ✅ Custom AppBar
-      appBar: const AppAppBar(showBackButton: true),
+      appBar: AppAppBar(
+        showBackButton: true,
+        onBack: () {
+          if (currentIndex > 0) {
+            controller.previousPage(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.ease,
+            );
+            ref.read(onboardingControllerProvider.notifier).previousStep();
+          } else {
+            Navigator.pop(context);
+          }
+        },
+      ),
 
       /// ✅ Bottom Navigation Bar
-      bottomNavigationBar: Padding(
-        padding: ResponsiveUtils.symmetricPadding(
-          context,
-          horizontal: 0.06,
-          vertical: 0.02,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            /// 🔸 CTA Button (Next/Get Started)
-            ElevatedButton(
-              onPressed:
-                  selectedIncomeSource != null
-                      ? () {
-                        if (currentIndex == onboardingContent.length - 1) {
-                          viewModel.completeOnboarding(context);
-                        } else {
-                          controller.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.ease,
-                          );
-                        }
-
-                        /// ✅ Step update ও Navigate করা
-                        ref
-                            .read(onboardingControllerProvider.notifier)
-                            .nextStep();
-                        Navigator.pushNamed(context, '/onboarding/next-screen');
-                      }
-                      : null,
-
-              child: Text(
-                currentIndex == onboardingContent.length - 1
-                    ? context.l10n.getStarted
-                    : context.l10n.next,
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            /// 🔸 Optional skip button
-            SkipButton(
-              onPressed: () {
-                ref.read(onboardingControllerProvider.notifier).skipToEnd();
-                Navigator.pushNamed(context, '/onboarding/next-screen');
-              },
-            ),
-          ],
-        ),
+      bottomNavigationBar: OnboardingBottomNav(
+        isLast,
+        isValid,
+        selectedIncomeSource,
+        currentIndex,
       ),
 
       /// ✅ Main Content: PageView + Dots + CTA Button
       body: Column(
         children: [
-          Expanded(
-            child: PageView.builder(
-              controller: controller,
-              itemCount: onboardingContent.length,
-              onPageChanged: viewModel.onPageChanged,
-              itemBuilder: (_, index) {
-                switch (index) {
-                  case 0:
-                    return const IncomeSourceSelectionScreen();
-                  case 1:
-                    return const IncomeSourceSelectionScreen();
-                  case 2:
-                    return const IncomeSourceSelectionScreen();
-                }
-              },
+          Padding(
+            padding: ResponsiveUtils.horizontalPadding(context),
+            child: AppHeader(
+              title: headerText()['title']!,
+              subtitle: headerText()['subtitle']!,
+              step: currentStep + 1,
+              totalSteps: 3,
             ),
           ),
+          Expanded(child: _buildPageView(controller, viewModel, ref)),
 
           /// 🔹 Dot Indicator: কোন পেজে আছো তা দেখায়
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              onboardingContent.length,
-              (index) => AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                margin: const EdgeInsets.all(4),
-                height: 8,
-                width: currentIndex == index ? 24 : 8,
-                decoration: BoxDecoration(
-                  color: currentIndex == index ? Colors.blue : Colors.grey,
-                  borderRadius: BorderRadius.circular(4),
-                ),
+          _buildDotIndicatorRow(currentIndex),
+        ],
+      ),
+    );
+  }
+
+  Row _buildDotIndicatorRow(int currentIndex) {
+    return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+            onboardingContent.length,
+            (index) => AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              margin: const EdgeInsets.all(4),
+              height: 8,
+              width: currentIndex == index ? 24 : 8,
+              decoration: BoxDecoration(
+                color: currentIndex == index ? Colors.blue : Colors.grey,
+                borderRadius: BorderRadius.circular(4),
               ),
             ),
           ),
-        ],
-      ),
+        );
+  }
+
+  PageView _buildPageView(
+    PageController controller,
+    OnboardingViewModel viewModel,
+    WidgetRef ref,
+  ) {
+    return PageView.builder(
+      controller: controller,
+      itemCount: onboardingContent.length,
+      onPageChanged: (index) {
+        viewModel.onPageChanged(index);
+        ref.read(onboardingControllerProvider.notifier).setStep(index);
+      },
+      itemBuilder: (_, index) => onboardingContent[index],
     );
   }
 }

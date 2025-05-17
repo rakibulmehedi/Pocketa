@@ -1,12 +1,8 @@
-class OnboardingData {
-  final String title;
-  final String description;
+import 'package:flutter/material.dart';
+import 'package:pocketa/features/onboarding/view/income_source_selection_screen.dart';
 
-  OnboardingData({required this.title, required this.description});
-}
-
-final onboardingContent = <OnboardingData>[
-  OnboardingData(title: "Track", description: "Track your daily expenses."),
-  OnboardingData(title: "Budget", description: "Plan your spending."),
-  OnboardingData(title: "Analyze", description: "Visualize your usage."),
+final List<Widget> onboardingContent = [
+  const IncomeSourceSelectionScreen(),
+  const IncomeSourceSelectionScreen(),
+  const IncomeSourceSelectionScreen(),
 ];
