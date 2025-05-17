@@ -118,7 +118,7 @@ class OnboardingScreen extends ConsumerWidget {
               height: 8,
               width: currentIndex == index ? 24 : 8,
               decoration: BoxDecoration(
-                color: currentIndex == index ? Colors.blue : Colors.grey,
+                color: currentIndex == index ? AppColors.primary : Colors.grey,
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
