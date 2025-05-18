@@ -69,7 +69,7 @@ class WelcomeScreen extends ConsumerWidget {
                       context,
                       '/onboarding',
                     ),
-                isPrimary: true,
+                isEnabled: true,
               ),
               ResponsiveUtils.spacing(context),
               _languageToggleRow,

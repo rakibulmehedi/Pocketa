@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class IncomeOption {
+class GridItemModel {
   final String label;
   final IconData icon;
 
-  const IncomeOption({
+  const GridItemModel({
     required this.label,
     required this.icon,
   });

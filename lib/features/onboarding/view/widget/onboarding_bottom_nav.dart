@@ -10,18 +10,18 @@ import '../../../../core/utils/responsive_utils.dart';
 import '../../controller/onboarding_controller.dart';
 
 class OnboardingBottomNav extends ConsumerWidget {
-  final isLast;
-  final isValid;
-  final selectedData;
-  final currentIndex;
+  final bool isLast;
+  final bool isValid;
+  final String? selectedData;
+  final int currentIndex;
 
   const OnboardingBottomNav(
-    this.isLast,
-    this.isValid,
-    this.selectedData,
-    this.currentIndex, {
-    super.key,
-  });
+      this.isLast,
+      this.isValid,
+      this.selectedData,
+      this.currentIndex, {
+        super.key,
+      });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,14 +29,7 @@ class OnboardingBottomNav extends ConsumerWidget {
     final controller = ref.watch(pageControllerProvider);
     final viewModel = ref.watch(onboardingViewModelProvider);
 
-    void _handleOnboardingNext(
-      BuildContext context,
-      WidgetRef ref,
-      PageController controller,
-      OnboardingViewModel viewModel,
-      int currentIndex,
-      bool isLast,
-    ) {
+    void _handleOnboardingNext() {
       if (isLast) {
         viewModel.completeOnboarding(context);
       } else {
@@ -59,35 +52,38 @@ class OnboardingBottomNav extends ConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          /// 🔸 CTA Button (Next/Get Started)
-          AppButton(
-            label: isLast ? context.l10n.getStarted : context.l10n.next,
-            onPressed:
-                (isValid || isLast)
-                    ? () => _handleOnboardingNext(
-                      context,
-                      ref,
-                      controller,
-                      viewModel,
-                      currentIndex,
-                      isLast,
-                    )
-                    : null,
-            isPrimary: isValid || isLast,
+          Row(
+            children: [
+              if (currentIndex > 0)
+                Expanded(
+                  child: AppButton(
+                    label: context.l10n.back,
+                    onPressed: () {
+                      controller.previousPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeIn,
+                      );
+                      ref
+                          .read(onboardingControllerProvider.notifier)
+                          .previousStep();
+                    },
+                    isEnabled: true,
+                    type: AppButtonType.secondary,
+                  ),
+                ),
+              if (currentIndex > 0) const SizedBox(width: 12),
+              Expanded(
+                child: AppButton(
+                  label: isLast
+                      ? context.l10n.getStarted
+                      : context.l10n.next,
+                  onPressed: (isValid || isLast) ? _handleOnboardingNext : null,
+                  isEnabled: isValid || isLast,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
-
-          /// 🔸 Optional skip button
-          if (!isLast)
-            SkipButton(
-              isDark: isDark,
-              onPressed: () {
-                ref.read(onboardingControllerProvider.notifier).skipToEnd();
-                ref.read(currentPageProvider.notifier).state = 2;
-                controller.jumpToPage(2);
-                // Navigator.pushNamed(context, '/onboarding/next-screen');
-              },
-            ),
+          ResponsiveUtils.spacing(context),
         ],
       ),
     );

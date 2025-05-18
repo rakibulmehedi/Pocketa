@@ -8,36 +8,26 @@ import 'package:pocketa/features/onboarding/data/onboarding_data.dart';
 
 import '../model/onboarding_state.dart';
 
-class IncomeRangeSelectionView extends ConsumerWidget {
-  const IncomeRangeSelectionView({super.key});
+class BudgetCategoriesSelectionView extends ConsumerWidget {
+  const BudgetCategoriesSelectionView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = ref.watch(isDarkModeProvider);
     final onboardingState = ref.watch(onboardingStateProvider);
-    final selected = onboardingState.incomeRange;
-    final selectedCurrency = onboardingState.selectedCurrency;
-    IconData icon() {
-      if (selectedCurrency == '৳ BDT') return Icons.attach_money;
-      if (selectedCurrency == '\$ USD') return Icons.monetization_on_outlined;
-      if (selectedCurrency == '€ EUR') return Icons.monetization_on_sharp;
-      if (selectedCurrency == '₹ INR') return Icons.money_sharp;
-      if (selectedCurrency == '¥ JPY') return Icons.attach_money;
-      return Icons.attach_money;
-    }
-
-    final incomeRanges = getIncomeRanges(context, icon());
+    final selected = onboardingState.selectedCategories;
+    final categories = getCategories(context, Icons.attach_money_outlined);
 
     return Scaffold(
       backgroundColor:
-          isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       body: Expanded(
         child: ListView.separated(
           shrinkWrap: true,
           padding: ResponsiveUtils.horizontalPadding(context),
-          itemCount: incomeRanges.length,
+          itemCount: categories.length,
           itemBuilder: (context, index) {
-            final range = incomeRanges[index];
+            final range = categories[index];
             final icon = range.icon;
             return SelectableCard(
               label: range.label,
@@ -48,14 +38,14 @@ class IncomeRangeSelectionView extends ConsumerWidget {
                     .read(onboardingStateProvider.notifier)
                     .setIncomeRange(range.label);
               },
-              isGrid: false,
-              iconSize: 24,
+              isGrid: true,
+              iconSize: 38,
               fontSize: 18,
             );
           },
           separatorBuilder:
               (BuildContext context, int index) =>
-                  ResponsiveUtils.spacing(context),
+              ResponsiveUtils.spacing(context),
         ),
       ),
     );

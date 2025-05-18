@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/features/onboarding/view/income_source_selection_view.dart';
+import 'package:pocketa/features/onboarding/model/onboarding_state.dart';
 import 'package:pocketa/features/onboarding/view/widget/onboarding_bottom_nav.dart';
 import 'package:pocketa/l10n/app_localization.dart';
 
 import '../../../config/provider/theme_provider.dart';
 import '../../../core/component/app_header.dart';
+import '../../../core/component/skip_button.dart';
 import '../../../core/themes/app_colors.dart';
 import '../../../core/utils/responsive_utils.dart';
 import '../../../core/widgets/app_bar.dart';
@@ -30,32 +31,32 @@ class OnboardingScreen extends ConsumerWidget {
     final viewModel = ref.watch(onboardingViewModelProvider);
     final currentIndex = ref.watch(currentPageProvider);
     final isDark = ref.watch(isDarkModeProvider);
-    final selectedIncomeSource = ref.watch(selectedIncomeSourceProvider);
+
+    final onboardingState = ref.watch(onboardingStateProvider);
+    final selectedIncomeSource = onboardingState.incomeSource;
     final currentStep = ref.watch(onboardingControllerProvider);
 
     final isLast = currentIndex == onboardingContent.length - 1;
-    final isValid = selectedIncomeSource != null;
+    final isStepValid = onboardingState.isStepValid(currentIndex);
 
-    Map<String, String> headerText() {
-      switch (currentIndex) {
-        case 0:
-          return {
-            'title': context.l10n.onboardingStep1,
-            'subtitle': context.l10n.whatIsYourMainIncomeSource,
-          };
-        case 1:
-          return {
-            'title': context.l10n.onboardingStep2,
-            'subtitle': context.l10n.selectMonthlyIncome,
-          };
-        case 2:
-          return {
-            'title': context.l10n.onboardingStep3,
-            'subtitle': context.l10n.setupYourBudgetCategories,
-          };
-        default:
-          return {'title': '', 'subtitle': ''};
-      }
+    Map<String, String> _getHeaderText(BuildContext context, int index) {
+      final l10n = context.l10n;
+      return switch (index) {
+        0 => {
+          'title': l10n.onboardingStep1,
+          'subtitle': l10n.whatIsYourMainIncomeSource,
+        },
+        1 => {'title': l10n.onboardingStep2, 'subtitle': l10n.selectCurrency},
+        2 => {
+          'title': l10n.onboardingStep2,
+          'subtitle': l10n.selectMonthlyIncome,
+        },
+        3 => {
+          'title': l10n.onboardingStep3,
+          'subtitle': l10n.setupYourBudgetCategories,
+        },
+        _ => {'title': '', 'subtitle': ''},
+      };
     }
 
     return Scaffold(
@@ -64,12 +65,33 @@ class OnboardingScreen extends ConsumerWidget {
 
       /// ✅ Custom AppBar
       appBar: AppAppBar(
+        centerTitle: true,
+        title: _getHeaderText(context, currentIndex)['title']!,
         showBackButton: true,
+        actions: [
+          /// 🔸 Optional skip button
+          if (!isLast)
+            AnimatedOpacity(
+              opacity: isLast ? 0.0 : 1.0,
+              duration: const Duration(milliseconds: 300),
+              child: SkipButton(
+                isDark: isDark,
+                onPressed: () {
+                  ref.read(onboardingControllerProvider.notifier).skipToEnd();
+                  ref.read(currentPageProvider.notifier).state = 2;
+                  controller.jumpToPage(2);
+                  // Navigator.pushNamed(context, '/onboarding/next-screen');
+                },
+              ),
+            ),
+        ],
         onBack: () {
-          if (currentIndex > 0) {
+          final current = ref.read(currentPageProvider);
+          if (current > 0) {
+            ref.read(currentPageProvider.notifier).state = current - 1;
             controller.previousPage(
               duration: const Duration(milliseconds: 300),
-              curve: Curves.ease,
+              curve: Curves.easeOut,
             );
             ref.read(onboardingControllerProvider.notifier).previousStep();
           } else {
@@ -81,7 +103,7 @@ class OnboardingScreen extends ConsumerWidget {
       /// ✅ Bottom Navigation Bar
       bottomNavigationBar: OnboardingBottomNav(
         isLast,
-        isValid,
+        isStepValid,
         selectedIncomeSource,
         currentIndex,
       ),
@@ -90,12 +112,12 @@ class OnboardingScreen extends ConsumerWidget {
       body: Column(
         children: [
           Padding(
-            padding: ResponsiveUtils.horizontalPadding(context),
-            child: AppHeader(
-              title: headerText()['title']!,
-              subtitle: headerText()['subtitle']!,
+            padding: ResponsiveUtils.symmetricPadding(context),
+            child: OnboardingHeader(
+              title: _getHeaderText(context, currentIndex)['subtitle']!,
               step: currentStep + 1,
-              totalSteps: 3,
+              totalSteps: 4,
+              isDark: isDark,
             ),
           ),
           Expanded(child: _buildPageView(controller, viewModel, ref)),
@@ -109,21 +131,21 @@ class OnboardingScreen extends ConsumerWidget {
 
   Row _buildDotIndicatorRow(int currentIndex) {
     return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            onboardingContent.length,
-            (index) => AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              margin: const EdgeInsets.all(4),
-              height: 8,
-              width: currentIndex == index ? 24 : 8,
-              decoration: BoxDecoration(
-                color: currentIndex == index ? AppColors.primary : Colors.grey,
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        onboardingContent.length,
+        (index) => AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          margin: const EdgeInsets.all(4),
+          height: 8,
+          width: currentIndex == index ? 24 : 8,
+          decoration: BoxDecoration(
+            color: currentIndex == index ? AppColors.primary : Colors.grey,
+            borderRadius: BorderRadius.circular(4),
           ),
-        );
+        ),
+      ),
+    );
   }
 
   PageView _buildPageView(

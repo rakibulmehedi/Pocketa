@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/core/themes/app_colors.dart';
 import 'package:pocketa/core/utils/responsive_utils.dart';
+import 'package:pocketa/features/onboarding/data/onboarding_data.dart';
 
-import 'package:pocketa/features/onboarding/view/widget/income_source_grid.dart';
+import 'package:pocketa/features/onboarding/view/widget/app_grid.dart';
 
 import '../../../config/provider/theme_provider.dart';
-
-final selectedIncomeSourceProvider = StateProvider<String?>((ref) => null);
+import '../model/onboarding_state.dart';
 
 class IncomeSourceSelectionScreen extends ConsumerWidget {
   const IncomeSourceSelectionScreen({super.key});
@@ -17,18 +17,23 @@ class IncomeSourceSelectionScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bool isDark = ref.watch(isDarkModeProvider);
 
+    final onboardingState = ref.watch(onboardingStateProvider);
+    final selected = onboardingState.incomeSource;
+    final gridItems = getIncomeOptions(context);
+
     return Scaffold(
       backgroundColor:
           isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       body: Padding(
         padding: ResponsiveUtils.horizontalPadding(context),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ResponsiveUtils.spacing(context, multiplier: 1.5),
-            const IncomeSourceGrid(),
-            ResponsiveUtils.spacing(context, multiplier: 2),
-          ],
+        child: Expanded(
+          child: AppGrid(
+            items: gridItems,
+            selectedLabel: selected,
+            onSelect: (label) {
+              ref.read(onboardingStateProvider.notifier).setIncomeSource(label);
+            },
+          ),
         ),
       ),
     );

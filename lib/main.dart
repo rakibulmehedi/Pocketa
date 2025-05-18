@@ -28,7 +28,7 @@ void main() {
 class PocketaApp extends ConsumerWidget {
   const PocketaApp({super.key});
 
-  // This widget is the root of your application.
+  // This widget is the root of this application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = ref.watch(isDarkModeProvider);
