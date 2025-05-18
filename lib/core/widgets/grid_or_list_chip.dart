@@ -8,6 +8,7 @@ class AppChip extends ConsumerWidget {
   final bool isGrid;
   final String label;
   final IconData icon;
+  final Color color;
   final double iconSize;
   final double fontSize;
   final bool isSelected;
@@ -15,6 +16,7 @@ class AppChip extends ConsumerWidget {
 
   const AppChip({
     super.key,
+    required this.color,
     required this.label,
     required this.icon,
     required this.isSelected,
@@ -27,30 +29,27 @@ class AppChip extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = ref.watch(isDarkModeProvider);
+
+    final Color primaryColor = color;
     final theme = Theme.of(context);
 
-    final Color primaryColor = theme.primaryColor;
-    final Color iconColor = isSelected ? primaryColor : AppColors.grey;
-    final Color textColor =
-        isSelected
-            ? primaryColor
-            : isDark
-            ? AppColors.textLight
-            : AppColors.grey;
+    final iconColor = isSelected ? primaryColor : AppColors.grey;
+    final textColor = isSelected
+        ? primaryColor
+        : (isDark ? AppColors.textLight : AppColors.textDark);
 
-    final Color backgroundColor =
-        isSelected
-            ? primaryColor.withOpacity(0.08)
-            : isDark
-            ? AppColors.textDark.withOpacity(0.2)
-            : AppColors.primary.withOpacity(0.03);
+    final backgroundColor = isSelected
+        ? primaryColor.withOpacity(0.08)
+        : (isDark
+        ? AppColors.textDark.withOpacity(0.2)
+        : AppColors.primary.withOpacity(0.03));
 
-    final Color borderColor =
-        isSelected ? primaryColor : AppColors.grey.withOpacity(0.4);
+    final borderColor =
+    isSelected ? primaryColor : AppColors.grey.withOpacity(0.4);
 
-    final EdgeInsets padding = EdgeInsets.symmetric(
-      horizontal: ResponsiveUtils.width(context, 0.04),
-      vertical: ResponsiveUtils.height(context, 0.02),
+    final padding = EdgeInsets.symmetric(
+      horizontal: ResponsiveUtilities.width(context, 0.04),
+      vertical: ResponsiveUtilities.height(context, 0.02),
     );
 
     return InkWell(
@@ -62,34 +61,27 @@ class AppChip extends ConsumerWidget {
           color: backgroundColor,
           border: Border.all(
             color: borderColor,
-            width: ResponsiveUtils.width(context, 0.003),
+            width: ResponsiveUtilities.width(context, 0.003),
           ),
           borderRadius: BorderRadius.circular(16),
-          boxShadow:
-              isSelected
-                  ? [
-                    BoxShadow(
-                      color: primaryColor.withOpacity(0.15),
-                      blurRadius: 6,
-                      offset: const Offset(0, 3),
-                    ),
-                  ]
-                  : [],
+          boxShadow: isSelected
+              ? [
+            BoxShadow(
+              color: primaryColor.withOpacity(0.15),
+              blurRadius: 6,
+              offset: const Offset(0, 3),
+            ),
+          ]
+              : [],
         ),
-        child:
-            isGrid
-                ? _buildGridContent(context, iconColor, textColor)
-                : _buildListContent(context, iconColor, textColor),
+        child: isGrid
+            ? _buildGridContent(theme, iconColor, textColor)
+            : _buildListContent(theme, iconColor, textColor),
       ),
     );
   }
 
-  Widget _buildGridContent(
-    BuildContext context,
-    Color iconColor,
-    Color textColor,
-  ) {
-    final theme = Theme.of(context);
+  Widget _buildGridContent(ThemeData theme, Color iconColor, Color textColor) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -108,12 +100,7 @@ class AppChip extends ConsumerWidget {
     );
   }
 
-  Widget _buildListContent(
-    BuildContext context,
-    Color iconColor,
-    Color textColor,
-  ) {
-    final theme = Theme.of(context);
+  Widget _buildListContent(ThemeData theme, Color iconColor, Color textColor) {
     return Row(
       children: [
         CircleAvatar(
@@ -125,7 +112,7 @@ class AppChip extends ConsumerWidget {
           child: Text(
             label,
             style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
               fontSize: fontSize,
               color: textColor,
             ),

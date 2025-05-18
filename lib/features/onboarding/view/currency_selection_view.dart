@@ -10,7 +10,7 @@ class CurrencySelectionView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
 
     return Padding(
-      padding: ResponsiveUtils.horizontalPadding(context),
+      padding: ResponsiveUtilities.symmetricPadding(context),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

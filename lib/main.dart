@@ -2,6 +2,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pocketa/config/router/routes.dart';
 
 import 'config/provider/language_provider.dart';
 import 'config/provider/theme_provider.dart';
@@ -28,13 +29,12 @@ void main() {
 class PocketaApp extends ConsumerWidget {
   const PocketaApp({super.key});
 
-  // This widget is the root of this application.
+  // This widgets is the root of this application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = ref.watch(isDarkModeProvider);
     final lang = ref.watch(languageProvider);
     return MaterialApp(
-      useInheritedMediaQuery: true,
       locale:
           lang == AppLanguage.bangla ? const Locale('bn') : const Locale('en'),
       supportedLocales: const [Locale('en'), Locale('bn')],
@@ -51,15 +51,7 @@ class PocketaApp extends ConsumerWidget {
       darkTheme: AppTheme.darkTheme(context, lang),
       themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
       initialRoute: '/',
-      routes: {
-        '/': (context) => const SplashScreen(),
-        '/welcome': (context) => const WelcomeScreen(),
-        '/onboarding': (context) => const OnboardingScreen(),
-        '/onboarding/income-source':
-            (context) => const IncomeSourceSelectionScreen(),
-        'onboarding/income-range':
-            (context) => const IncomeSourceSelectionScreen(),
-      },
+      routes: appRoutes
     );
   }
 }

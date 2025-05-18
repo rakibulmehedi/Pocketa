@@ -32,8 +32,8 @@ class OnboardingHeader extends StatelessWidget {
       padding:
           padding ??
           EdgeInsets.only(
-            top: ResponsiveUtils.height(context, 0.01),
-            bottom: ResponsiveUtils.height(context, 0.02),
+            top: ResponsiveUtilities.height(context, 0.01),
+            bottom: ResponsiveUtilities.height(context, 0.02),
           ),
       child: Column(
         crossAxisAlignment: alignment,
@@ -51,11 +51,11 @@ class OnboardingHeader extends StatelessWidget {
                       value: value,
                       backgroundColor: Colors.grey.shade300,
                       color: theme.primaryColor,
-                      minHeight: ResponsiveUtils.height(context, 0.008),
+                      minHeight: ResponsiveUtilities.height(context, 0.008),
                     ),
                   ),
             ),
-            SizedBox(height: ResponsiveUtils.height(context, 0.015)),
+            SizedBox(height: ResponsiveUtilities.height(context, 0.015)),
           ],
           Text(
             title,

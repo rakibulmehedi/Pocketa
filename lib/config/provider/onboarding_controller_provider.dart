@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final onboardingControllerProvider =
-    StateNotifierProvider<OnboardingController, int>((ref) {
+    StateNotifierProvider.autoDispose<OnboardingController, int>((ref) {
       return OnboardingController();
     });
 
@@ -9,7 +9,7 @@ class OnboardingController extends StateNotifier<int> {
   OnboardingController() : super(0); // initial page index 0 (step 1)
 
   void nextStep() {
-    if (state < 2) state++;
+    if (state < 3) state++;
   }
 
   void setStep(int step) {
@@ -21,10 +21,10 @@ class OnboardingController extends StateNotifier<int> {
   }
 
   void skipToEnd() {
-    state = 2;
+    state = 3;
   }
 
   void goToStep(int step) {
-    if (step >= 0 && step <= 2) state = step;
+    if (step >= 0 && step <= 3) state = step;
   }
 }

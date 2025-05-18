@@ -5,10 +5,10 @@ import 'package:pocketa/core/themes/app_colors.dart';
 import 'package:pocketa/core/utils/responsive_utils.dart';
 import 'package:pocketa/features/onboarding/data/onboarding_data.dart';
 
-import 'package:pocketa/features/onboarding/view/widget/app_grid.dart';
+import 'package:pocketa/core/widgets/app_grid.dart';
 
 import '../../../config/provider/theme_provider.dart';
-import '../model/onboarding_state.dart';
+import '../../../config/provider/onboarding_state.dart';
 
 class IncomeSourceSelectionScreen extends ConsumerWidget {
   const IncomeSourceSelectionScreen({super.key});
@@ -25,15 +25,13 @@ class IncomeSourceSelectionScreen extends ConsumerWidget {
       backgroundColor:
           isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       body: Padding(
-        padding: ResponsiveUtils.horizontalPadding(context),
-        child: Expanded(
-          child: AppGrid(
-            items: gridItems,
-            selectedLabel: selected,
-            onSelect: (label) {
-              ref.read(onboardingStateProvider.notifier).setIncomeSource(label);
-            },
-          ),
+        padding: ResponsiveUtilities.horizontalPadding(context),
+        child: AppGrid(
+          items: gridItems,
+          selectedLabel: selected,
+          onSelect: (label) {
+            ref.read(onboardingStateProvider.notifier).setIncomeSource(label);
+          },
         ),
       ),
     );

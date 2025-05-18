@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/component/selectable_card.dart';
-import '../../../../core/utils/responsive_utils.dart';
-import '../../model/grid_item_model.dart';
+import '../component/selectable_card.dart';
+import '../utils/responsive_utils.dart';
+import '../../features/onboarding/model/grid_item_model.dart';
 
 class AppGrid extends ConsumerWidget {
   final List<GridItemModel> items;
@@ -24,14 +24,15 @@ class AppGrid extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GridView.builder(
+      shrinkWrap: true,
       itemCount: items.length,
       padding: const EdgeInsets.all(8),
       physics: const BouncingScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: ResponsiveUtils.gridCrossAxisCount(context),
-        crossAxisSpacing: ResponsiveUtils.gridAxisSpacing(context),
-        mainAxisSpacing: ResponsiveUtils.gridAxisSpacing(context),
-        childAspectRatio: ResponsiveUtils.gridChildAspectRatio(context),
+        crossAxisCount: ResponsiveUtilities.gridCrossAxisCount(context),
+        crossAxisSpacing: ResponsiveUtilities.gridAxisSpacing(context),
+        mainAxisSpacing: ResponsiveUtilities.gridAxisSpacing(context),
+        childAspectRatio: ResponsiveUtilities.gridChildAspectRatio(context),
       ),
       itemBuilder: (_, index) {
         final item = items[index];
@@ -48,6 +49,7 @@ class AppGrid extends ConsumerWidget {
           isSelected: isSelected,
           onTap: () => onSelect(item.label),
           isGrid: true,
+          color: item.color,
         );
       },
     );

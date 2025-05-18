@@ -8,6 +8,7 @@ class SelectableCard extends ConsumerWidget {
   final String label;
   final double fontSize;
   final IconData icon;
+  final Color color;
   final double iconSize;
   final bool isSelected;
   final VoidCallback onTap;
@@ -15,6 +16,7 @@ class SelectableCard extends ConsumerWidget {
   const SelectableCard({
     super.key,
     required this.label,
+    required this.color,
     required this.icon,
     required this.isSelected,
     required this.onTap,
@@ -33,6 +35,7 @@ class SelectableCard extends ConsumerWidget {
       iconSize: iconSize,
       fontSize: fontSize,
       isGrid: isGrid,
+      color: color,
     );
   }
 }

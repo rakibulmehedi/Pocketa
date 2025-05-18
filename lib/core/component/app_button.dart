@@ -65,7 +65,7 @@ class AppButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
           foregroundColor: foregroundColor,
-          padding: ResponsiveUtils.verticalPadding(context, percent: 0.02),
+          padding: ResponsiveUtilities.verticalPadding(context, percent: 0.02),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
             side: BorderSide(color: borderColor, width: 1.5),
@@ -83,7 +83,7 @@ class AppButton extends StatelessWidget {
             : Text(
           label,
           style: TextStyle(
-            fontSize: ResponsiveUtils.font(context, 16),
+            fontSize: ResponsiveUtilities.font(context, 16),
             fontWeight: FontWeight.w600,
           ),
         ),

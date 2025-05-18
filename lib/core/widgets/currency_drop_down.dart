@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/core/utils/responsive_utils.dart';
-import 'package:pocketa/features/onboarding/model/onboarding_state.dart';
+import 'package:pocketa/config/provider/onboarding_state.dart';
 
 import '../../config/provider/providers.dart';
 
@@ -23,8 +23,8 @@ class CurrencyDropdown extends ConsumerWidget {
         labelStyle: Theme.of(context).textTheme.bodyMedium,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         contentPadding: EdgeInsets.symmetric(
-          horizontal: ResponsiveUtils.width(context, 0.04),
-          vertical: ResponsiveUtils.height(context, 0.02),
+          horizontal: ResponsiveUtilities.width(context, 0.04),
+          vertical: ResponsiveUtilities.height(context, 0.02),
         ),
       ),
       items:

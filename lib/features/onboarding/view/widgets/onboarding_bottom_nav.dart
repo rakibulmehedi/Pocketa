@@ -5,9 +5,8 @@ import 'package:pocketa/features/onboarding/view_model/onboarding_view_model.dar
 import 'package:pocketa/l10n/app_localization.dart';
 
 import '../../../../core/component/app_button.dart';
-import '../../../../core/component/skip_button.dart';
 import '../../../../core/utils/responsive_utils.dart';
-import '../../controller/onboarding_controller.dart';
+import '../../../../config/provider/onboarding_controller_provider.dart';
 
 class OnboardingBottomNav extends ConsumerWidget {
   final bool isLast;
@@ -38,13 +37,11 @@ class OnboardingBottomNav extends ConsumerWidget {
           curve: Curves.easeIn,
         );
       }
-
       ref.read(onboardingControllerProvider.notifier).nextStep();
-      Navigator.pushNamed(context, '/onboarding/next-screen');
     }
 
     return Padding(
-      padding: ResponsiveUtils.symmetricPadding(
+      padding: ResponsiveUtilities.symmetricPadding(
         context,
         horizontal: 0.06,
         vertical: 0.02,
@@ -83,7 +80,7 @@ class OnboardingBottomNav extends ConsumerWidget {
               ),
             ],
           ),
-          ResponsiveUtils.spacing(context),
+          ResponsiveUtilities.spacing(context),
         ],
       ),
     );

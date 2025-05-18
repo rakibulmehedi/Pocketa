@@ -384,7 +384,7 @@ packages:
   provider:
     dependency: transitive
     description:
-      name: provider
+      name: providers
       sha256: "4abbd070a04e9ddc287673bf5a030c7ca8b685ff70218720abab8b092f53dd84"
       url: "https://pub.dev"
     source: hosted

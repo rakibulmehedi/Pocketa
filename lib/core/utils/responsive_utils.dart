@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 /// A responsive utility class for scaling UI elements based on screen size
 /// across phones, tablets, laptops, and desktops using Material Design
 /// breakpoints and principles.
-class ResponsiveUtils {
+class ResponsiveUtilities {
   static double screenWidth(BuildContext context) =>
       MediaQuery.of(context).size.width;
 

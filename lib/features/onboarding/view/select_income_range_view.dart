@@ -6,7 +6,7 @@ import 'package:pocketa/core/themes/app_colors.dart';
 import 'package:pocketa/core/utils/responsive_utils.dart';
 import 'package:pocketa/features/onboarding/data/onboarding_data.dart';
 
-import '../model/onboarding_state.dart';
+import '../../../config/provider/onboarding_state.dart';
 
 class IncomeRangeSelectionView extends ConsumerWidget {
   const IncomeRangeSelectionView({super.key});
@@ -31,32 +31,37 @@ class IncomeRangeSelectionView extends ConsumerWidget {
     return Scaffold(
       backgroundColor:
           isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
-      body: Expanded(
-        child: ListView.separated(
-          shrinkWrap: true,
-          padding: ResponsiveUtils.horizontalPadding(context),
-          itemCount: incomeRanges.length,
-          itemBuilder: (context, index) {
-            final range = incomeRanges[index];
-            final icon = range.icon;
-            return SelectableCard(
-              label: range.label,
-              icon: icon,
-              isSelected: selected == range.label,
-              onTap: () {
-                ref
-                    .read(onboardingStateProvider.notifier)
-                    .setIncomeRange(range.label);
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.separated(
+              shrinkWrap: true,
+              padding: ResponsiveUtilities.horizontalPadding(context),
+              itemCount: incomeRanges.length,
+              itemBuilder: (context, index) {
+                final range = incomeRanges[index];
+                final icon = range.icon;
+                return SelectableCard(
+                  label: range.label,
+                  icon: icon,
+                  isSelected: selected == range.label,
+                  onTap: () {
+                    ref
+                        .read(onboardingStateProvider.notifier)
+                        .setIncomeRange(range.label);
+                  },
+                  isGrid: false,
+                  iconSize: 24,
+                  fontSize: 18,
+                  color: AppColors.primary,
+                );
               },
-              isGrid: false,
-              iconSize: 24,
-              fontSize: 18,
-            );
-          },
-          separatorBuilder:
-              (BuildContext context, int index) =>
-                  ResponsiveUtils.spacing(context),
-        ),
+              separatorBuilder:
+                  (BuildContext context, int index) =>
+                      ResponsiveUtilities.spacing(context),
+            ),
+          ),
+        ],
       ),
     );
   }

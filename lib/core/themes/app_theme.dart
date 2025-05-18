@@ -34,19 +34,19 @@ class AppTheme {
         textTheme: TextTheme(
           displayLarge: getFontStyle(
             lang,
-            ResponsiveUtils.font(context, 32),
+            ResponsiveUtilities.font(context, 32),
             FontWeight.bold,
             AppColors.primary,
           ),
           titleMedium: getFontStyle(
             lang,
-            ResponsiveUtils.font(context, 18),
+            ResponsiveUtilities.font(context, 18),
             FontWeight.w500,
             AppColors.textDark,
           ),
           bodyMedium: getFontStyle(
             lang,
-            ResponsiveUtils.font(context, 14),
+            ResponsiveUtilities.font(context, 14),
             FontWeight.normal,
             AppColors.grey,
           ),
@@ -61,7 +61,7 @@ class AppTheme {
             ),
             textStyle: getFontStyle(
               lang,
-              ResponsiveUtils.font(context, 16),
+              ResponsiveUtilities.font(context, 16),
               FontWeight.w600,
               Colors.white,
             ),
@@ -80,7 +80,7 @@ class AppTheme {
           ),
           labelStyle: getFontStyle(
             lang,
-            ResponsiveUtils.font(context, 14),
+            ResponsiveUtilities.font(context, 14),
             FontWeight.normal,
             AppColors.grey,
           ),
@@ -100,19 +100,19 @@ class AppTheme {
         textTheme: TextTheme(
           displayLarge: getFontStyle(
             lang,
-            ResponsiveUtils.font(context, 32),
+            ResponsiveUtilities.font(context, 32),
             FontWeight.bold,
             AppColors.primary,
           ),
           titleMedium: getFontStyle(
             lang,
-            ResponsiveUtils.font(context, 18),
+            ResponsiveUtilities.font(context, 18),
             FontWeight.w500,
             AppColors.textLight,
           ),
           bodyMedium: getFontStyle(
             lang,
-            ResponsiveUtils.font(context, 14),
+            ResponsiveUtilities.font(context, 14),
             FontWeight.normal,
             AppColors.grey,
           ),
@@ -127,7 +127,7 @@ class AppTheme {
             ),
             textStyle: getFontStyle(
               lang,
-              ResponsiveUtils.font(context, 16),
+              ResponsiveUtilities.font(context, 16),
               FontWeight.w600,
               Colors.white,
             ),
@@ -146,7 +146,7 @@ class AppTheme {
           ),
           labelStyle: getFontStyle(
             lang,
-            ResponsiveUtils.font(context, 14),
+            ResponsiveUtilities.font(context, 14),
             FontWeight.normal,
             AppColors.grey,
           ),

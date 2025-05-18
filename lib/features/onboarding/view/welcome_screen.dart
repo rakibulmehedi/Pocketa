@@ -24,7 +24,7 @@ class WelcomeScreen extends ConsumerWidget {
           isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       body: SafeArea(
         child: Padding(
-          padding: ResponsiveUtils.horizontalPadding(context),
+          padding: ResponsiveUtilities.horizontalPadding(context),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -36,24 +36,24 @@ class WelcomeScreen extends ConsumerWidget {
                   child: Text(
                     'P',
                     style: TextStyle(
-                      fontSize: ResponsiveUtils.font(context, 48),
+                      fontSize: ResponsiveUtilities.font(context, 48),
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
                 ),
               ),
-              ResponsiveUtils.spacing(context),
+              ResponsiveUtilities.spacing(context),
               Text(context.l10n.appName, style: theme.textTheme.displayLarge),
               Spacer(),
               Text(
                 context.l10n.welcomeMessage,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontSize: ResponsiveUtils.font(context, 24),
+                  fontSize: ResponsiveUtilities.font(context, 24),
                 ),
               ),
-              ResponsiveUtils.spacing(context),
+              ResponsiveUtilities.spacing(context),
               Text(
                 context.l10n.tagLine,
                 textAlign: TextAlign.center,
@@ -71,7 +71,7 @@ class WelcomeScreen extends ConsumerWidget {
                     ),
                 isEnabled: true,
               ),
-              ResponsiveUtils.spacing(context),
+              ResponsiveUtilities.spacing(context),
               _languageToggleRow,
               const SizedBox(height: 24),
             ],

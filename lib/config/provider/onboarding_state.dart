@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final onboardingStateProvider =
-    StateNotifierProvider<OnboardingStateNotifier, OnboardingState>((ref) {
+    StateNotifierProvider.autoDispose<OnboardingStateNotifier, OnboardingState>((ref) {
       return OnboardingStateNotifier();
     });
 
