@@ -5,6 +5,7 @@ import 'package:pocketa/core/component/selectable_card.dart';
 import 'package:pocketa/core/themes/app_colors.dart';
 import 'package:pocketa/core/utils/responsive_utils.dart';
 import 'package:pocketa/features/onboarding/data/onboarding_data.dart';
+import 'package:pocketa/features/onboarding/view/widget/app_grid.dart';
 
 import '../model/onboarding_state.dart';
 
@@ -20,33 +21,20 @@ class BudgetCategoriesSelectionView extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor:
-      isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
-      body: Expanded(
-        child: ListView.separated(
-          shrinkWrap: true,
-          padding: ResponsiveUtils.horizontalPadding(context),
-          itemCount: categories.length,
-          itemBuilder: (context, index) {
-            final range = categories[index];
-            final icon = range.icon;
-            return SelectableCard(
-              label: range.label,
-              icon: icon,
-              isSelected: selected == range.label,
-              onTap: () {
-                ref
-                    .read(onboardingStateProvider.notifier)
-                    .setIncomeRange(range.label);
-              },
-              isGrid: true,
-              iconSize: 38,
-              fontSize: 18,
-            );
-          },
-          separatorBuilder:
-              (BuildContext context, int index) =>
-              ResponsiveUtils.spacing(context),
-        ),
+          isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      body: AppGrid(
+        isMultiSelect: true,
+        items: categories,
+        selectedLabels: selected,
+        onSelect: (label) {
+          final current = List<String>.from(selected);
+          if (current.contains(label)) {
+            current.remove(label);
+          } else {
+            current.add(label);
+          }
+          ref.read(onboardingStateProvider.notifier).setCategories(current);
+        },
       ),
     );
   }
