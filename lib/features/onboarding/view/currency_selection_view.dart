@@ -6,7 +6,7 @@ import '../../../config/provider/onboarding_state.dart';
 import '../../../config/provider/theme_provider.dart';
 import '../../../core/themes/app_colors.dart';
 import '../../../core/utils/responsive_utils.dart';
-import '../../../core/widgets/country_picker_dialouge.dart';
+import '../../../core/widgets/country_picker_dialog.dart';
 
 class CurrencySelectionView extends ConsumerWidget {
   const CurrencySelectionView({super.key});
@@ -39,7 +39,6 @@ class CurrencySelectionView extends ConsumerWidget {
           onPressed: () => _showDialog(context),
           child: Row(
             children: [
-
               // Label Text
               Expanded(
                 child: Text(

@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum AppLanguage { bangla, english }
 
 final languageProvider = StateNotifierProvider<LanguageNotifier, AppLanguage>(
-      (ref) => LanguageNotifier(),
+  (ref) => LanguageNotifier(),
 );
 
 class LanguageNotifier extends StateNotifier<AppLanguage> {

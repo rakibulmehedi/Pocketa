@@ -2,8 +2,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final isDarkModeProvider =
-StateNotifierProvider<ThemeNotifier, bool>((ref) => ThemeNotifier());
+final isDarkModeProvider = StateNotifierProvider<ThemeNotifier, bool>(
+  (ref) => ThemeNotifier(),
+);
 
 class ThemeNotifier extends StateNotifier<bool> {
   ThemeNotifier() : super(false) {

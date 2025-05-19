@@ -4,9 +4,9 @@ import 'package:pocketa/config/provider/theme_provider.dart';
 import 'package:pocketa/features/onboarding/view_model/onboarding_view_model.dart';
 import 'package:pocketa/l10n/app_localization.dart';
 
+import '../../../../config/provider/onboarding_controller_provider.dart';
 import '../../../../core/component/app_button.dart';
 import '../../../../core/utils/responsive_utils.dart';
-import '../../../../config/provider/onboarding_controller_provider.dart';
 
 class OnboardingBottomNav extends ConsumerWidget {
   final bool isLast;
@@ -15,12 +15,12 @@ class OnboardingBottomNav extends ConsumerWidget {
   final int currentIndex;
 
   const OnboardingBottomNav(
-      this.isLast,
-      this.isValid,
-      this.selectedData,
-      this.currentIndex, {
-        super.key,
-      });
+    this.isLast,
+    this.isValid,
+    this.selectedData,
+    this.currentIndex, {
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -71,9 +71,7 @@ class OnboardingBottomNav extends ConsumerWidget {
               if (currentIndex > 0) const SizedBox(width: 12),
               Expanded(
                 child: AppButton(
-                  label: isLast
-                      ? context.l10n.getStarted
-                      : context.l10n.next,
+                  label: isLast ? context.l10n.getStarted : context.l10n.next,
                   onPressed: (isValid || isLast) ? _handleOnboardingNext : null,
                   isEnabled: isValid || isLast,
                 ),

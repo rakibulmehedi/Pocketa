@@ -18,6 +18,7 @@ class MyCountryPicker extends ConsumerWidget {
     final isDark = ref.watch(isDarkModeProvider);
 
     return CountryPickerDialog(
+      isDividerEnabled: true,
       titlePadding: ResponsiveUtilities.symmetricPadding(context),
       searchInputDecoration: const InputDecoration(
         hintText: 'Search...',

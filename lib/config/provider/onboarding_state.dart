@@ -1,9 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final onboardingStateProvider =
-    StateNotifierProvider.autoDispose<OnboardingStateNotifier, OnboardingState>((ref) {
-      return OnboardingStateNotifier();
-    });
+    StateNotifierProvider.autoDispose<OnboardingStateNotifier, OnboardingState>(
+      (ref) {
+        return OnboardingStateNotifier();
+      },
+    );
 
 class OnboardingState {
   final String? incomeSource;
@@ -75,10 +77,10 @@ class OnboardingStateNotifier extends StateNotifier<OnboardingState> {
   void setCurrency(String? currency) {
     state = state.copyWith(selectedCurrency: currency);
   }
+
   void setCurrencyIsoCode(String isoCode) {
     state = state.copyWith(selectedCurrencyIso: isoCode);
   }
-
 
   void reset() {
     state = OnboardingState();

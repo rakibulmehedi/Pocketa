@@ -4,13 +4,13 @@ import 'package:pocketa/config/provider/onboarding_state.dart';
 import 'package:pocketa/features/onboarding/data/onboarding_data.dart';
 import 'package:pocketa/features/onboarding/view/widgets/onboarding_bottom_nav.dart';
 
+import '../../../config/provider/onboarding_controller_provider.dart';
 import '../../../config/provider/theme_provider.dart';
 import '../../../core/component/app_header.dart';
 import '../../../core/component/skip_button.dart';
 import '../../../core/themes/app_colors.dart';
 import '../../../core/utils/responsive_utils.dart';
 import '../../../core/widgets/app_bar.dart';
-import '../../../config/provider/onboarding_controller_provider.dart';
 import '../data/onboarding_content.dart';
 import '../view_model/onboarding_view_model.dart';
 

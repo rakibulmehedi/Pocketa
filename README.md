@@ -38,12 +38,12 @@ A modern, cross-platform mobile app to track expenses, manage budgets, and gain 
 ```
 
 lib/
-├── core/           # Constants, themes, utils, reusable widgets
-├── data/           # Models, repositories, datasources
-├── domain/         # Entities, usecases, abstract repositories
-├── features/       # Feature modules (auth, expense, dashboard, etc.)
-├── config/         # App-wide providers, router, theme setup
-└── main.dart       # Entry point
+├── core/ # Constants, themes, utils, reusable widgets
+├── data/ # Models, repositories, datasources
+├── domain/ # Entities, usecases, abstract repositories
+├── features/ # Feature modules (auth, expense, dashboard, etc.)
+├── config/ # App-wide providers, router, theme setup
+└── main.dart # Entry point
 
 ````
 

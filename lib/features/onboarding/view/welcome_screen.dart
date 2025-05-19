@@ -61,14 +61,10 @@ class WelcomeScreen extends ConsumerWidget {
               ),
               const Spacer(),
               ThemeToggle(),
-              const SizedBox(height: 16,),
+              const SizedBox(height: 16),
               AppButton(
                 label: context.l10n.getStarted,
-                onPressed:
-                    () => Navigator.pushNamed(
-                      context,
-                      '/onboarding',
-                    ),
+                onPressed: () => Navigator.pushNamed(context, '/onboarding'),
                 isEnabled: true,
               ),
               ResponsiveUtilities.spacing(context),
