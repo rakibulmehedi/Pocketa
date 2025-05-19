@@ -1,13 +1,10 @@
 // lib/core/components/app_button.dart
 import 'package:flutter/material.dart';
 import 'package:pocketa/core/utils/responsive_utils.dart';
+
 import '../themes/app_colors.dart';
 
-enum AppButtonType {
-  primary,
-  secondary,
-  outline,
-}
+enum AppButtonType { primary, secondary, outline }
 
 class AppButton extends StatelessWidget {
   final String label;
@@ -38,9 +35,8 @@ class AppButton extends StatelessWidget {
 
     switch (type) {
       case AppButtonType.primary:
-        backgroundColor = disabled
-            ? AppColors.primary.withOpacity(0.4)
-            : AppColors.primary;
+        backgroundColor =
+            disabled ? AppColors.primary.withOpacity(0.4) : AppColors.primary;
         foregroundColor = Colors.white;
         borderColor = Colors.transparent;
         break;
@@ -71,22 +67,23 @@ class AppButton extends StatelessWidget {
             side: BorderSide(color: borderColor, width: 1.5),
           ),
         ),
-        child: isLoading
-            ? const SizedBox(
-          height: 22,
-          width: 22,
-          child: CircularProgressIndicator(
-            strokeWidth: 2.5,
-            color: Colors.white,
-          ),
-        )
-            : Text(
-          label,
-          style: TextStyle(
-            fontSize: ResponsiveUtilities.font(context, 16),
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        child:
+            isLoading
+                ? const SizedBox(
+                  height: 22,
+                  width: 22,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    color: Colors.white,
+                  ),
+                )
+                : Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: ResponsiveUtilities.font(context, 16),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
       ),
     );
   }

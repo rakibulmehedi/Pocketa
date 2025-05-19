@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../features/onboarding/model/grid_item_model.dart';
 import '../component/selectable_card.dart';
 import '../utils/responsive_utils.dart';
-import '../../features/onboarding/model/grid_item_model.dart';
 
 class AppGrid extends ConsumerWidget {
   final List<GridItemModel> items;

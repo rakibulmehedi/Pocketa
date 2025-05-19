@@ -15,6 +15,4 @@ class SharedPrefServices {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_onboardingKey) ?? false;
   }
-
-
 }

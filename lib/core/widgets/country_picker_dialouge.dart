@@ -34,7 +34,6 @@ class MyCountryPicker extends ConsumerWidget {
 
         ref.read(onboardingStateProvider.notifier).setCurrency(currency);
         ref.read(onboardingStateProvider.notifier).setCurrencyIsoCode(isoCode);
-
       },
       itemBuilder: (Country country) {
         final countryName = country.name ?? 'Unknown Country';

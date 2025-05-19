@@ -1,9 +1,10 @@
 // lib/core/theme/app_theme.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import '../../config/provider/language_provider.dart';
-import 'app_colors.dart';
 import '../utils/responsive_utils.dart';
+import 'app_colors.dart';
 
 TextStyle getFontStyle(
   AppLanguage lang,

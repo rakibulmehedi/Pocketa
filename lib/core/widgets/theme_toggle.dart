@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/provider/theme_provider.dart';
 
-
 class ThemeToggle extends ConsumerWidget {
   const ThemeToggle({super.key});
 
@@ -24,12 +23,10 @@ class ThemeToggle extends ConsumerWidget {
       child: SwitchListTile(
         value: isDark,
         onChanged: (val) {
-          ref.read(isDarkModeProvider.notifier).state = val; // Professional: Uses Notifier method
+          ref.read(isDarkModeProvider.notifier).state =
+              val; // Professional: Uses Notifier method
         },
-        title: Text(
-          'Dark Mode',
-          style: theme.textTheme.titleMedium
-        ),
+        title: Text('Dark Mode', style: theme.textTheme.titleMedium),
         secondary: Icon(
           isDark ? Icons.dark_mode : Icons.light_mode,
           color: isDark ? Colors.amberAccent : Colors.blueGrey,
