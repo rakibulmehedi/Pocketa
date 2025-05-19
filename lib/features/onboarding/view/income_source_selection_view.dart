@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/core/themes/app_colors.dart';
 import 'package:pocketa/core/utils/responsive_utils.dart';
-import 'package:pocketa/features/onboarding/data/onboarding_data.dart';
 
 import 'package:pocketa/core/widgets/app_grid.dart';
 
 import '../../../config/provider/theme_provider.dart';
 import '../../../config/provider/onboarding_state.dart';
+import '../data/income_source_data.dart';
 
 class IncomeSourceSelectionScreen extends ConsumerWidget {
   const IncomeSourceSelectionScreen({super.key});

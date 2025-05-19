@@ -7,7 +7,8 @@ import '../utils/responsive_utils.dart';
 class AppChip extends ConsumerWidget {
   final bool isGrid;
   final String label;
-  final IconData icon;
+  final IconData? icon;
+  final Widget? widgetAsIcon;
   final Color color;
   final double iconSize;
   final double fontSize;
@@ -18,13 +19,17 @@ class AppChip extends ConsumerWidget {
     super.key,
     required this.color,
     required this.label,
-    required this.icon,
+    this.icon,
+    this.widgetAsIcon,
     required this.isSelected,
     required this.onTap,
     required this.iconSize,
     required this.fontSize,
     required this.isGrid,
-  });
+  }) : assert(
+         icon != null || widgetAsIcon != null,
+         'Either icon or widgetAsIcon must be provided',
+       );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,49 +39,84 @@ class AppChip extends ConsumerWidget {
     final theme = Theme.of(context);
 
     final iconColor = isSelected ? primaryColor : AppColors.grey;
-    final textColor = isSelected
-        ? primaryColor
-        : (isDark ? AppColors.textLight : AppColors.textDark);
+    final textColor =
+        isSelected
+            ? primaryColor
+            : (isDark ? AppColors.textLight : AppColors.textDark);
 
-    final backgroundColor = isSelected
-        ? primaryColor.withOpacity(0.08)
-        : (isDark
-        ? AppColors.textDark.withOpacity(0.2)
-        : AppColors.primary.withOpacity(0.03));
+    final backgroundColor =
+        isSelected
+            ? primaryColor.withOpacity(0.08)
+            : (isDark
+                ? AppColors.textDark.withOpacity(0.2)
+                : AppColors.primary.withOpacity(0.03));
 
     final borderColor =
-    isSelected ? primaryColor : AppColors.grey.withOpacity(0.4);
+        isSelected ? primaryColor : AppColors.grey.withOpacity(0.4);
 
     final padding = EdgeInsets.symmetric(
-      horizontal: ResponsiveUtilities.width(context, 0.04),
-      vertical: ResponsiveUtilities.height(context, 0.02),
+      horizontal: ResponsiveUtilities.width(context, 0.03),
+      vertical: ResponsiveUtilities.height(context, 0.01),
     );
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: padding,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          border: Border.all(
-            color: borderColor,
-            width: ResponsiveUtilities.width(context, 0.003),
-          ),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: isSelected
-              ? [
-            BoxShadow(
-              color: primaryColor.withOpacity(0.15),
-              blurRadius: 6,
-              offset: const Offset(0, 3),
+    return Semantics(
+      selected: isSelected,
+      label: label,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: padding,
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            border: Border.all(
+              color: borderColor,
+              width: ResponsiveUtilities.width(context, 0.003),
             ),
-          ]
-              : [],
+            borderRadius: BorderRadius.circular(16),
+            boxShadow:
+                isSelected
+                    ? [
+                      BoxShadow(
+                        color: primaryColor.withOpacity(0.15),
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
+                      ),
+                    ]
+                    : [],
+          ),
+          child:
+              isGrid
+                  ? _buildGridContent(theme, iconColor, textColor)
+                  : _buildListContent(theme, iconColor, textColor),
         ),
-        child: isGrid
-            ? _buildGridContent(theme, iconColor, textColor)
-            : _buildListContent(theme, iconColor, textColor),
+      ),
+    );
+  }
+
+  /// Icon widget
+  Widget _childWidget(Color iconColor) {
+    if (icon != null) {
+      return Icon(icon, size: iconSize, color: iconColor);
+    } else if (widgetAsIcon != null) {
+      return Center(child: widgetAsIcon);
+    } else {
+      return const SizedBox(); // fallback (won't happen due to assert)
+    }
+  }
+
+  /// Text widget
+  Text _text(ThemeData theme, Color textColor) {
+    return Text(
+      label,
+      textAlign: TextAlign.center,
+      softWrap: true,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 2,
+      style: theme.textTheme.bodyMedium?.copyWith(
+        fontWeight: FontWeight.w500,
+        fontSize: fontSize,
+        color: textColor,
       ),
     );
   }
@@ -85,17 +125,9 @@ class AppChip extends ConsumerWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, size: iconSize, color: iconColor),
+        _childWidget(iconColor),
         const SizedBox(height: 8),
-        Text(
-          label,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w500,
-            fontSize: fontSize,
-            color: textColor,
-          ),
-        ),
+        _text(theme, textColor),
       ],
     );
   }
@@ -104,20 +136,11 @@ class AppChip extends ConsumerWidget {
     return Row(
       children: [
         CircleAvatar(
-          backgroundColor: Colors.grey[200],
-          child: Icon(icon, size: iconSize, color: iconColor),
+          backgroundColor: Colors.grey[300],
+          foregroundColor: iconColor,
+          child: Center(child: _childWidget(iconColor)),
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            label,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-              fontSize: fontSize,
-              color: textColor,
-            ),
-          ),
-        ),
+        Expanded(child: _text(theme, textColor)),
       ],
     );
   }

@@ -46,8 +46,8 @@ class AppButton extends StatelessWidget {
         break;
 
       case AppButtonType.secondary:
-        backgroundColor = isDark ? Colors.grey[700]! : Colors.grey[300]!;
-        foregroundColor = theme.textTheme.bodyMedium!.color!;
+        backgroundColor = isDark ? Colors.grey[500]! : Colors.grey[300]!;
+        foregroundColor = isDark ? AppColors.textLight : AppColors.textDark;
         borderColor = Colors.transparent;
         break;
 

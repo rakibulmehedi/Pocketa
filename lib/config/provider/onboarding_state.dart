@@ -10,12 +10,14 @@ class OnboardingState {
   final String? incomeRange;
   final List<String> selectedCategories;
   final String? selectedCurrency;
+  final String? selectedCurrencyIso;
 
   OnboardingState({
     this.incomeSource,
     this.incomeRange,
     this.selectedCategories = const [],
-    this.selectedCurrency,
+    this.selectedCurrency = 'BDT',
+    this.selectedCurrencyIso = 'BD',
   });
 
   OnboardingState copyWith({
@@ -23,12 +25,14 @@ class OnboardingState {
     String? incomeRange,
     List<String>? selectedCategories,
     String? selectedCurrency,
+    String? selectedCurrencyIso,
   }) {
     return OnboardingState(
       incomeSource: incomeSource ?? this.incomeSource,
       incomeRange: incomeRange ?? this.incomeRange,
       selectedCategories: selectedCategories ?? this.selectedCategories,
       selectedCurrency: selectedCurrency ?? this.selectedCurrency,
+      selectedCurrencyIso: selectedCurrencyIso ?? this.selectedCurrencyIso,
     );
   }
 
@@ -71,6 +75,10 @@ class OnboardingStateNotifier extends StateNotifier<OnboardingState> {
   void setCurrency(String? currency) {
     state = state.copyWith(selectedCurrency: currency);
   }
+  void setCurrencyIsoCode(String isoCode) {
+    state = state.copyWith(selectedCurrencyIso: isoCode);
+  }
+
 
   void reset() {
     state = OnboardingState();
