@@ -1,4 +1,4 @@
-```md
+
 # 💰 POCKETA - Expense Management System
 
 A modern, cross-platform mobile app to track expenses, manage budgets, and gain financial awareness — built with **Flutter**, **Riverpod**, and **clean architecture (MVVM)**.
