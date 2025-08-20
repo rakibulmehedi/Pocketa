@@ -1,0 +1,9 @@
+{
+  "@@locale": "en",
+  "appTitle": "Pocketa",
+  "welcome": "Welcome",
+  "language_en": "English",
+  "language_bn": "Bangla",
+  "switchLanguage": "Switch language",
+  "homeGreeting": "Hi, {name}!"
+}

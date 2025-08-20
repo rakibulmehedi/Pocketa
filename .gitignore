@@ -1,0 +1,80 @@
+# ------------------------------------------------------------------
+# Flutter / Dart / Pub
+# ------------------------------------------------------------------
+.dart_tool/
+.packages
+.pub/
+build/
+flutter_*.png
+
+# Flutter gen-l10n generated files (safe to regenerate)
+lib/l10n/*.g.dart
+lib/generated_plugin_registrant.dart
+
+# Riverpod / Freezed / json_serializable build artifacts
+*.freezed.dart
+*.g.dart
+
+# ------------------------------------------------------------------
+# Android
+# ------------------------------------------------------------------
+local.properties
+**/android/.gradle/
+**/android/captures/
+**/android/app/debug
+**/android/app/profile
+**/android/app/release
+*.keystore
+*.jks
+
+# ------------------------------------------------------------------
+# iOS
+# ------------------------------------------------------------------
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral/
+**/ios/.generated/
+*.xcworkspace
+!default.xcworkspace
+*.xcuserdata
+*.xcuserstate
+
+# ------------------------------------------------------------------
+# macOS
+# ------------------------------------------------------------------
+**/macos/Pods/
+**/macos/Flutter/ephemeral/
+
+# ------------------------------------------------------------------
+# Windows
+# ------------------------------------------------------------------
+**/windows/flutter/ephemeral/
+
+# ------------------------------------------------------------------
+# Linux
+# ------------------------------------------------------------------
+**/linux/flutter/ephemeral/
+
+# ------------------------------------------------------------------
+# IDE / Editor
+# ------------------------------------------------------------------
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# ------------------------------------------------------------------
+# Misc
+# ------------------------------------------------------------------
+*.log
+*.lock
+*.tmp
+*.swp
+.DS_Store
+*.pem
+*.crt
+*.key

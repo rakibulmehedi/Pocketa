@@ -1,0 +1,48 @@
+# -----------------------------------------------------------------------------
+# Line endings - সবসময় LF (cross-platform safe)
+# -----------------------------------------------------------------------------
+* text=auto eol=lf
+
+# -----------------------------------------------------------------------------
+# Source code languages - GitHub Linguist এর জন্য
+# -----------------------------------------------------------------------------
+*.dart text diff=dart
+*.yaml text
+*.arb  text
+*.json text
+*.md   text
+*.sh   text eol=lf
+
+# -----------------------------------------------------------------------------
+# Binary files - diff/merge disable
+# -----------------------------------------------------------------------------
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.svg  text    # SVG is XML, keep as text for diffs
+*.ttf  binary
+*.otf  binary
+*.woff binary
+*.woff2 binary
+*.keystore binary
+*.jks  binary
+
+# -----------------------------------------------------------------------------
+# Platform specific ignores
+# -----------------------------------------------------------------------------
+*.xcworkspace binary
+*.xcuserstate binary
+*.xcuserdata binary
+*.a        binary
+*.so       binary
+*.dylib    binary
+*.dll      binary
+*.exe      binary
+
+# -----------------------------------------------------------------------------
+# Flutter / Dart specific diff driver
+# -----------------------------------------------------------------------------
+[diff "dart"]
+  xfuncname = "^((class|mixin|extension|typedef|enum) [^ {]+|[ ]*(?:abstract[ ]+)?(?:static[ ]+)?(?:final[ ]+)?[A-Za-z0-9_<>]+[ ]+[A-Za-z0-9_<>]+\\()"
