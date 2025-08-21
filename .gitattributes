@@ -4,7 +4,7 @@
 * text=auto eol=lf
 
 # -----------------------------------------------------------------------------
-# Source code languages - GitHub Linguist এর জন্য
+# Source code languages - Linguist এর জন্য
 # -----------------------------------------------------------------------------
 *.dart text diff=dart
 *.yaml text
@@ -16,33 +16,36 @@
 # -----------------------------------------------------------------------------
 # Binary files - diff/merge disable
 # -----------------------------------------------------------------------------
-*.png  binary
-*.jpg  binary
-*.jpeg binary
-*.gif  binary
-*.ico  binary
-*.svg  text    # SVG is XML, keep as text for diffs
-*.ttf  binary
-*.otf  binary
-*.woff binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.ttf   binary
+*.otf   binary
+*.woff  binary
 *.woff2 binary
 *.keystore binary
-*.jks  binary
+*.jks   binary
+
+# SVG ফাইলগুলো XML, তাই text হিসেবে diff করা যাবে
+*.svg   text
 
 # -----------------------------------------------------------------------------
-# Platform specific ignores
+# Platform specific binaries
 # -----------------------------------------------------------------------------
 *.xcworkspace binary
 *.xcuserstate binary
 *.xcuserdata binary
-*.a        binary
-*.so       binary
-*.dylib    binary
-*.dll      binary
-*.exe      binary
+*.a      binary
+*.so     binary
+*.dylib  binary
+*.dll    binary
+*.exe    binary
 
 # -----------------------------------------------------------------------------
-# Flutter / Dart specific diff driver
+# Lock files
 # -----------------------------------------------------------------------------
-[diff "dart"]
-  xfuncname = "^((class|mixin|extension|typedef|enum) [^ {]+|[ ]*(?:abstract[ ]+)?(?:static[ ]+)?(?:final[ ]+)?[A-Za-z0-9_<>]+[ ]+[A-Za-z0-9_<>]+\\()"
+pubspec.lock text
+yarn.lock    text
+package-lock.json text
