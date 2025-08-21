@@ -1,9 +1,295 @@
 {
   "@@locale": "en",
+  "english": "English",
+  "bengali": "বাংলা",
   "appTitle": "Pocketa",
-  "welcome": "Welcome",
+  "tagline": "Own your money. Own your future.",
+  "ok": "OK",
+  "cancel": "Cancel",
+  "close": "Close",
+  "save": "Save",
+  "delete": "Delete",
+  "edit": "Edit",
+  "back": "Back",
+  "next": "Next",
+  "skip": "Skip",
+  "finish": "Finish",
+  "continuee": "Continue",
+  "retry": "Retry",
+  "confirm": "Confirm",
+  "search": "Search",
+  "apply": "Apply",
+  "clear": "Clear",
+  "yes": "Yes",
+  "no": "No",
+
+  "welcomeTitle": "Welcome to Pocketa",
+  "welcomeSubtitle": "Clarity with every taka you spend.",
+  "getStarted": "Let’s begin",
+  "introTrackTitle": "Track expenses",
+  "introTrackSubtitle": "See where your money goes, instantly.",
+  "introBudgetTitle": "Stay on budget",
+  "introBudgetSubtitle": "Set a limit, stay in control.",
+  "introControlTitle": "Be in control",
+  "introControlSubtitle": "Your money. Your rules.",
+
+  "login": "Log in",
+  "signup": "Create account",
+  "logout": "Log out",
+  "email": "Email",
+  "password": "Password",
+  "confirmPassword": "Confirm password",
+  "name": "Name",
+  "forgotPassword": "Forgot password?",
+  "resetPassword": "Reset password",
+  "orContinueWith": "Or continue with",
+
+  "homeGreeting": "Hi, {name}!",
+  "@homeGreeting": {
+    "description": "Greets the user by name on the home screen",
+    "placeholders": { "name": {} }
+  },
+  "dashboard": "Dashboard",
+  "totalBalance": "Total balance",
+  "income": "Income",
+  "expense": "Expenses",
+  "net": "Net",
+  "monthlySummary": "This month",
+  "recentTransactions": "Recent activity",
+  "viewAll": "View all",
+
+  "transactions": "Transactions",
+  "addTransaction": "Add transaction",
+  "editTransaction": "Edit transaction",
+  "deleteTransaction": "Delete transaction",
+  "transactionAdded": "Transaction added ✔",
+  "transactionUpdated": "Transaction updated",
+  "transactionDeleted": "Transaction removed",
+  "amount": "Amount",
+  "category": "Category",
+  "note": "Note",
+  "date": "Date",
+  "type": "Type",
+  "incomeType": "Income",
+  "expenseType": "Expense",
+  "transfer": "Transfer",
+  "noTransactions": "No records yet. Start now!",
+
+  "budgets": "Budgets",
+  "setBudget": "Set a budget",
+  "budgetLimit": "Budget limit",
+  "remaining": "Remaining",
+  "spent": "Spent",
+  "budgetExceeded": "Limit crossed 🚨",
+  "budgetLeft": "{amount} left",
+  "@budgetLeft": {
+    "description": "Shows remaining budget amount",
+    "placeholders": { "amount": {} }
+  },
+  "noBudgets": "No budgets yet",
+  "createFirstBudget": "Create your first budget",
+
+  "wallets": "Wallets",
+  "addWallet": "Add wallet",
+  "editWallet": "Edit wallet",
+  "deleteWallet": "Delete wallet",
+  "walletName": "Wallet name",
+  "walletType": "Wallet type",
+  "initialBalance": "Starting balance",
+  "cash": "Cash",
+  "bank": "Bank",
+  "mobileMoney": "Mobile money",
+  "chooseWallet": "Choose wallet",
+  "noWallets": "No wallets yet",
+
+  "food": "Food",
+  "transport": "Transport",
+  "shopping": "Shopping",
+  "entertainment": "Entertainment",
+  "utilities": "Utilities",
+  "bills": "Bills",
+  "health": "Health",
+  "education": "Education",
+  "rent": "Rent",
+  "salary": "Salary",
+  "investment": "Investment",
+  "gift": "Gift",
+  "others": "Others",
+
+  "insights": "Insights",
+  "weeklySpending": "This week",
+  "monthlyReport": "Monthly report",
+  "topCategories": "Top categories",
+  "spendingTrend": "Spending trend",
+  "exportReport": "Export report",
+
+  "filters": "Filters",
+  "all": "All",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "thisWeek": "This week",
+  "thisMonth": "This month",
+  "lastMonth": "Last month",
+  "customRange": "Custom range",
+  "fromDate": "From",
+  "toDate": "To",
+
+  "settings": "Settings",
+  "appearance": "Appearance",
+  "theme": "Theme",
+  "systemDefault": "System default",
+  "darkMode": "Dark",
+  "lightMode": "Light",
+  "language": "Language",
   "language_en": "English",
   "language_bn": "Bangla",
   "switchLanguage": "Switch language",
-  "homeGreeting": "Hi, {name}!"
+  "currency": "Currency",
+  "security": "Security",
+  "biometrics": "Biometrics",
+  "pinCode": "PIN code",
+  "autoBackup": "Auto backup",
+  "sync": "Sync",
+  "about": "About",
+  "version": "Version {version}",
+  "@version": {
+    "description": "App version label with version value",
+    "placeholders": { "version": {} }
+  },
+
+  "export": "Export",
+  "exportCSV": "Export CSV",
+  "exportPDF": "Export PDF",
+  "exportSuccess": "Export ready ✅",
+  "exportFailed": "Export failed",
+  "share": "Share",
+  "download": "Download",
+
+  "notifications": "Notifications",
+  "notifBudgetExceeded": "Overspent on {category}",
+  "@notifBudgetExceeded": {
+    "description": "Notification when a category budget is exceeded",
+    "placeholders": { "category": {} }
+  },
+  "notifBudgetRemaining": "{amount} left for {category}",
+  "@notifBudgetRemaining": {
+    "description": "Notification showing remaining budget in a category",
+    "placeholders": { "category": {}, "amount": {} }
+  },
+  "notifLowBalance": "Low balance in {wallet}",
+  "@notifLowBalance": {
+    "description": "Notification when a wallet balance is low",
+    "placeholders": { "wallet": {} }
+  },
+  "notifBackupSuccess": "Backup saved",
+  "notifBackupFailed": "Backup failed",
+  "notifDailySummaryReady": "Your daily summary is here",
+  "notifWeeklySummaryReady": "Weekly summary is ready",
+
+  "errorsTitle": "Something went wrong",
+  "errorGeneric": "Try again.",
+  "errorNetwork": "No internet connection.",
+  "errorTimeout": "Request timed out.",
+  "errorUnauthorized": "Please log in.",
+  "errorForbidden": "Not allowed.",
+  "errorNotFound": "Not found.",
+  "errorValidation": "Check the fields.",
+  "errorRequired": "{field} is required",
+  "@errorRequired": {
+    "description": "Shown when a required field is empty",
+    "placeholders": { "field": {} }
+  },
+  "errorMinLength": "{field} must be at least {min} characters",
+  "@errorMinLength": {
+    "description": "Minimum length validation error",
+    "placeholders": { "field": {}, "min": {} }
+  },
+  "errorMaxLength": "{field} must be at most {max} characters",
+  "@errorMaxLength": {
+    "description": "Maximum length validation error",
+    "placeholders": { "field": {}, "max": {} }
+  },
+  "errorMinValue": "{field} must be at least {min}",
+  "@errorMinValue": {
+    "description": "Minimum numeric value validation error",
+    "placeholders": { "field": {}, "min": {} }
+  },
+  "errorMaxValue": "{field} must be at most {max}",
+  "@errorMaxValue": {
+    "description": "Maximum numeric value validation error",
+    "placeholders": { "field": {}, "max": {} }
+  },
+  "errorAmountPositive": "Amount must be positive",
+  "errorSelectWallet": "Pick a wallet",
+  "errorSelectCategory": "Pick a category",
+
+  "emptyTitle": "Nothing here yet",
+  "emptyTransactions": "Add your first transaction.",
+  "emptyBudgets": "Create a budget to get started.",
+  "emptyWallets": "Add a wallet to begin.",
+  "emptySearch": "No results found",
+
+  "accessibilityLanguageSwitch": "Switch app language",
+  "accessibilityAddTransaction": "Add a new transaction",
+  "accessibilityBack": "Go back",
+
+  "permissionStorageTitle": "Storage permission",
+  "permissionStorageDesc": "Allow access to save exports and backups.",
+  "permissionDenied": "Permission denied",
+  "permissionOpenSettings": "Open settings",
+
+  "updateAvailable": "Update available",
+  "updateNow": "Update now",
+  "later": "Later",
+
+  "recurringTransactions": "Recurring transactions",
+  "addRecurring": "Add recurring",
+  "editRecurring": "Edit recurring",
+  "deleteRecurring": "Delete recurring",
+  "nextOccurrence": "Next on {date}",
+  "@nextOccurrence": {
+    "description": "Shows the next date of a recurring item",
+    "placeholders": { "date": {} }
+  },
+
+  "goals": "Goals",
+  "createGoal": "New goal",
+  "editGoal": "Edit goal",
+  "deleteGoal": "Delete goal",
+  "goalName": "Goal name",
+  "goalTargetAmount": "Target amount",
+  "goalSavedAmount": "Saved amount",
+  "goalDeadline": "Deadline",
+  "goalProgress": "Progress",
+  "goalCompleted": "Goal done 🎉",
+  "noGoals": "No goals yet",
+
+  "countTransactions": "{count, plural, =0 {No transactions} one {1 transaction} other {{count} transactions}}",
+  "@countTransactions": {
+    "description": "Pluralized count of transactions",
+    "placeholders": { "count": {} }
+  },
+  "countBudgets": "{count, plural, =0 {No budgets} one {1 budget} other {{count} budgets}}",
+  "@countBudgets": {
+    "description": "Pluralized count of budgets",
+    "placeholders": { "count": {} }
+  },
+  "countWallets": "{count, plural, =0 {No wallets} one {1 wallet} other {{count} wallets}}",
+  "@countWallets": {
+    "description": "Pluralized count of wallets",
+    "placeholders": { "count": {} }
+  },
+  "daysStreak": "On budget for {days, plural, one {# day} other {# days}} 🎉",
+  "@daysStreak": {
+    "description": "Shows user's consecutive days staying within budget",
+    "placeholders": { "days": {} }
+  },
+
+  "nudgeReviewSpend": "Check your {category} spending",
+  "@nudgeReviewSpend": {
+    "description": "Nudge to review a category",
+    "placeholders": { "category": {} }
+  },
+  "nudgeLowerLimitNextMonth": "Set a lower limit next month?",
+  "nudgeTrySavingsPlan": "Try a savings plan today"
 }

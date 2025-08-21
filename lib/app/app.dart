@@ -30,7 +30,6 @@ class PocketaApp extends ConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-    
     );
   }
 }
