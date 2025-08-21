@@ -33,10 +33,15 @@ class LanguageToggleBtn extends ConsumerWidget {
         ),
       ],
       selected: {selected},
-      // একটিমাত্র সিলেকশন
       multiSelectionEnabled: false,
-      showSelectedIcon: false, // পরিচ্ছন্ন লুক
+      showSelectedIcon: false,
+
       style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.all(
+          Theme.of(
+            context,
+          ).colorScheme.surfaceContainerLow.withValues(alpha: .2),
+        ),
         minimumSize: WidgetStateProperty.all(const Size(140, 44)),
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
