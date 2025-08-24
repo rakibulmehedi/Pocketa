@@ -5,6 +5,10 @@
 .packages
 .pub/
 build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-versions
+fvm_config.json
 flutter_*.png
 
 # Flutter gen-l10n generated files (safe to regenerate)
@@ -26,6 +30,8 @@ local.properties
 **/android/app/release
 *.keystore
 *.jks
+.gradle/
+gradle-wrapper.jar
 
 # ------------------------------------------------------------------
 # iOS
@@ -41,22 +47,34 @@ local.properties
 !default.xcworkspace
 *.xcuserdata
 *.xcuserstate
+DerivedData/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
 
 # ------------------------------------------------------------------
 # macOS
 # ------------------------------------------------------------------
 **/macos/Pods/
 **/macos/Flutter/ephemeral/
+DerivedData/
 
 # ------------------------------------------------------------------
 # Windows
 # ------------------------------------------------------------------
 **/windows/flutter/ephemeral/
+**/windows/.vs/
+**/windows/x64/Debug/
+**/windows/x64/Release/
 
 # ------------------------------------------------------------------
 # Linux
 # ------------------------------------------------------------------
 **/linux/flutter/ephemeral/
+**/linux/build/
 
 # ------------------------------------------------------------------
 # IDE / Editor
@@ -66,6 +84,14 @@ local.properties
 *.iml
 *.ipr
 *.iws
+
+# ------------------------------------------------------------------
+# Node / Web (if using web or npm packages)
+# ------------------------------------------------------------------
+node_modules/
+package-lock.json
+yarn.lock
+.pnpm-debug.log
 
 # ------------------------------------------------------------------
 # Misc
@@ -78,3 +104,12 @@ local.properties
 *.pem
 *.crt
 *.key
+*.orig
+*.bak
+*.rej
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+Thumbs.db

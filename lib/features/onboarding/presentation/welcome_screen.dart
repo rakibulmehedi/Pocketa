@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/app/theme/gradient.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pocketa/core/theme/gradient.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:pocketa/widgets/custom_buttons.dart';
 import 'package:pocketa/widgets/language_toggle_button.dart';
@@ -11,6 +12,7 @@ class WelcomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       body: Stack(
@@ -45,7 +47,10 @@ class WelcomeScreen extends ConsumerWidget {
                   _Content(theme: theme),
                   const SizedBox(height: 20),
                   // Get Started Button
-                  const _GetStartedButton(),
+                  // const _GetStartedButton(),
+                  PositiveButton(label: l10n.getStarted, onPressed: () {
+                    context.go('/');
+                  }),
                 ],
               ),
             ),
@@ -116,11 +121,3 @@ class _TopBar extends StatelessWidget {
   }
 }
 
-class _GetStartedButton extends StatelessWidget {
-  const _GetStartedButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return const PositiveButton();
-  }
-}

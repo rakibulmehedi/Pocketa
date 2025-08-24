@@ -5,12 +5,12 @@ import 'package:pocketa/features/onboarding/presentation/welcome_screen.dart';
 GoRouter buildRouter() => GoRouter(
   routes: [
     GoRoute(
-      path: 'dashboard',
+      path: '/',
       name: 'dashboard',
       builder: (ctx, state) => const DashboardScreen(),
     ),
     GoRoute(
-      path: '/',
+      path: '/welcome',
       name: 'welcome',
       builder: (ctx, state) => WelcomeScreen(),
     ),

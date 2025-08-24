@@ -23,12 +23,12 @@ class LanguageToggleBtn extends ConsumerWidget {
       segments: <ButtonSegment<AppLanguage>>[
         ButtonSegment(
           value: AppLanguage.en,
-          label: Text(t.english), // লোকালাইজড
+          label: Text(t.english),
           icon: const Icon(Icons.language),
         ),
         ButtonSegment(
           value: AppLanguage.bn,
-          label: Text(t.bengali), // লোকালাইজড
+          label: Text(t.bengali),
           icon: const Icon(Icons.translate),
         ),
       ],

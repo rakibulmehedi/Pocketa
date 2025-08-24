@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/app/router.dart';
-import 'package:pocketa/app/theme/app_theme.dart';
 import 'package:pocketa/core/locale/local_notifier.dart';
+import 'package:pocketa/core/routing/router.dart';
+import 'package:pocketa/core/theme/app_theme.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 
 class PocketaApp extends ConsumerWidget {
@@ -20,7 +20,7 @@ class PocketaApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.dark,
 
       locale: locale,
       supportedLocales: const [Locale('en'), Locale('bn')],

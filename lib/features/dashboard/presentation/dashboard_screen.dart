@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pocketa/features/transaction/presentation/screens/transaction_screen.dart';
+import 'package:pocketa/widgets/app_header.dart';
 
 /// Global nav index state (survives across widgets)
 final navIndexProvider = StateProvider<int>((ref) => 0);
@@ -9,11 +11,10 @@ class DashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 1) Read current index from Riverpod
     final index = ref.watch(navIndexProvider);
 
-    // 2) Destinations (icons + labels)
-    final destinations = const [
+    // Destinations & Pages
+    const destinations = [
       NavigationDestination(
         icon: Icon(Icons.home_outlined),
         label: 'Dashboard',
@@ -30,74 +31,68 @@ class DashboardScreen extends ConsumerWidget {
         icon: Icon(Icons.account_balance_wallet_outlined),
         label: 'Wallets',
       ),
-      // You can add Profile later if you want
     ];
 
-    // 3) Pages for each destination (keep them lightweight for now)
-    final pages = <Widget>[
-      const _DashboardBody(),
-      const Center(child: Text('Transactions')),
-      const Center(child: Text('Budget')),
-      const Center(child: Text('Wallets')),
+    final pages = const <Widget>[
+      _DashboardBody(),
+      TransactionScreen(),
+      Center(child: Text('Budget')),
+      Center(child: Text('Wallets')),
     ];
+
+    // Dynamic title based on index
+    final String title = switch (index) {
+      0 => 'Dashboard',
+      1 => 'Transactions',
+      2 => 'Budget',
+      3 => 'Wallets',
+      _ => 'Pocketa',
+    };
 
     return Scaffold(
-      // 4) NavigationBar (Material 3). Theme comes from AppTheme.
+      drawer: const Drawer(child: SafeArea(child: Text('Drawer'))),
+
       bottomNavigationBar: NavigationBar(
         destinations: destinations,
         selectedIndex: index,
-        onDestinationSelected: (int i) {
+        onDestinationSelected: (i) {
           ref.read(navIndexProvider.notifier).state = i;
         },
       ),
-
-      // 5) Persist page state across tabs with IndexedStack
-      body: IndexedStack(index: index, children: pages),
+      body: SafeArea(
+        child: Builder(
+          builder: (scaffoldCtx) => Column(
+            children: [
+              AppHeader(
+                title: title,
+                showBack: false,
+                onMenuTap: () => Scaffold.of(scaffoldCtx).openDrawer(),
+              ),
+              const SizedBox(height: 8),
+              // Body
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: IndexedStack(index: index, children: pages),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
 
-/// Split the dashboard header into its own widget (clean & testable)
+/// Split the dashboard content
 class _DashboardBody extends StatelessWidget {
   const _DashboardBody();
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Header(),
-            const SizedBox(height: 16),
-            const Text('Coming soon: overview cards & insights'),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class Header extends StatelessWidget {
-  const Header({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const Text(
-          'Dashboard',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
-        ),
-        const Spacer(),
-        const CircleAvatar(
-          radius: 18,
-          foregroundImage: NetworkImage(
-            'https://avatars.githubusercontent.com/u/125388734?v=4',
-          ),
-        ),
-      ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [Text('Coming soon: overview cards & insights')],
     );
   }
 }
