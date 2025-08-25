@@ -3,8 +3,6 @@ description: "Clean Architecture-based Expense Management App built with Flutter
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
-
 environment:
   sdk: ^3.8.1
 
@@ -12,30 +10,31 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.6.1
+  hive: ^2.2.3
   hive_flutter: ^1.1.0
-  shared_preferences: ^2.5.3
-  cupertino_icons: ^1.0.8
+  shared_preferences: ^2.3.2
   go_router: ^16.2.0
   intl: ^0.20.2
   uuid: ^4.5.1
   logger: ^2.6.1
-  freezed_annotation: ^3.1.0
-  json_annotation: ^4.9.0
+  google_fonts: ^6.3.0
 
-  equatable: ^2.0.7
+  # Freezed + JSON (stable combo with hive_generator)
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.8.1
+
   flutter_localizations:
     sdk: flutter
-  fl_chart: ^1.0.0
-  google_fonts: ^6.3.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   flutter_lints: ^5.0.0
-  build_runner: ^2.7.0
-  freezed: ^3.2.0
-  json_serializable: ^6.10.0
+
+  build_runner: ^2.4.11
+  hive_generator: ^2.0.1
+  freezed: ^2.4.7
+  json_serializable: ^6.7.1
 
 
 flutter:
