@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/features/transaction/presentation/screens/transaction_screen.dart';
+import 'package:pocketa/features/transaction/screens/transaction_screen.dart';
 import 'package:pocketa/widgets/app_header.dart';
 
 /// Global nav index state (survives across widgets)

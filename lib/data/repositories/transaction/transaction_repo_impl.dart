@@ -1,9 +1,12 @@
 import 'package:hive/hive.dart';
+import 'package:pocketa/core/enums/transaction_enums.dart';
 import 'package:pocketa/data/models/transaction/transaction_model.dart';
+import 'package:pocketa/domain/entities/transaction_entity.dart';
+import 'package:pocketa/domain/repositories/transaction_repository.dart';
 
-class TransactionRepo {
+class TransactionRepoImpl implements TransactionRepository {
   final Box<Transaction> _box;
-  const TransactionRepo(this._box);
+  const TransactionRepoImpl(this._box);
 
   // -------Helpers------- //
   DateTime _startOfMonth(int year, int month) => DateTime.utc(year, month, 1);
@@ -11,22 +14,23 @@ class TransactionRepo {
       ? DateTime.utc(year + 1, 1, 1)
       : DateTime.utc(year, month + 1, 1);
 
+  // ভিতরে ইন্টারনালি আমরা Hive model (Transaction) নিয়ে কাজ করছি
   Iterable<Transaction> _allIter({bool includeDeleted = false}) sync* {
-    for (final transaction in _box.values) {
-      if (!includeDeleted && transaction.isDeleted) continue;
-      yield transaction;
+    for (final t in _box.values) {
+      if (!includeDeleted && t.isDeleted) continue;
+      yield t;
     }
   }
 
   Iterable<Transaction> _filter({
     DateTime? from, // inclusive
     DateTime? to, // exclusive
-    String? walletId, // filter by wallet
-    Category? category, // filter by category
-    TransactionType? type, // filter by type
-    bool includeDeleted = false, // include deleted transactions
+    String? walletId,
+    Category? category,
+    TransactionType? type,
+    bool includeDeleted = false,
   }) {
-    final src = _allIter(includeDeleted: includeDeleted); // source iterable
+    final src = _allIter(includeDeleted: includeDeleted);
     return src.where((t) {
       final afterFrom = from == null || !t.date.isBefore(from);
       final beforeTo = to == null || t.date.isBefore(to);
@@ -40,41 +44,38 @@ class TransactionRepo {
     });
   }
 
-  // CRUD operations //
-  Future<void> upsert(Transaction transaction) async {
-    await _box.put(transaction.id, transaction);
+  // ---------------- CRUD (Entity signatures) ----------------
+  @override
+  Future<void> upsert(TransactionEntity e) async {
+    await _box.put(e.id, e.toModel()); // <-- Entity -> Model
   }
 
-  /// Read operations - get by id only
-  Transaction? get(String id) => _box.get(id); // get by id
+  @override
+  TransactionEntity? get(String id) {
+    return _box.get(id)?.toEntity(); // <-- Model -> Entity
+  }
 
-  /// hard delete - permanently removes the transaction from the box
-  Future<void> deleteHard(String id) async =>
-      await _box.delete(id); // hard delete
+  @override
+  Future<void> deleteHard(String id) async => _box.delete(id);
 
-  /// soft delete - marks the transaction as deleted without removing it from the box
-  /// this allows for potential recovery or auditing
+  @override
   Future<void> deleteSoft(String id) async {
-    final transaction = _box.get(id);
-    if (transaction != null) {
-      final deletedTransaction = transaction.copyWith(isDeleted: true);
-      await _box.put(id, deletedTransaction);
+    final t = _box.get(id);
+    if (t != null) {
+      await _box.put(id, t.copyWith(isDeleted: true));
     }
   }
 
-  // Query operations //
-
-  /// get all transactions, sorted by date descending and optionally include deleted transactions
-  List<Transaction> all({bool includeDeleted = false}) {
-    final transactionList = _allIter(
-      includeDeleted: includeDeleted,
-    ).toList(); // convert to list for sorting
-    transactionList.sort((a, b) => b.date.compareTo(a.date));
-    return transactionList; // return sorted list
+  // ---------------- Queries (Entity lists / numbers) ----------------
+  @override
+  List<TransactionEntity> all({bool includeDeleted = false}) {
+    final list = _allIter(includeDeleted: includeDeleted).toList()
+      ..sort((a, b) => b.date.compareTo(a.date));
+    return list.map((t) => t.toEntity()).toList(); // <-- map to Entity
   }
 
-  /// get transactions for a specific month and year, optionally filtered by wallet id and includeDeleted flag
-  List<Transaction> byMonth(
+  @override
+  List<TransactionEntity> byMonth(
     int year,
     int month, {
     String? walletId,
@@ -82,17 +83,16 @@ class TransactionRepo {
   }) {
     final from = _startOfMonth(year, month);
     final to = _startOfNextMonth(year, month);
-    final transactionList = _filter(
+    final list = _filter(
       from: from,
       to: to,
       walletId: walletId,
       includeDeleted: includeDeleted,
-    ).toList();
-    transactionList.sort((a, b) => b.date.compareTo(a.date));
-    return transactionList; // return sorted list
+    ).toList()..sort((a, b) => b.date.compareTo(a.date));
+    return list.map((t) => t.toEntity()).toList(); // <-- map to Entity
   }
 
-  /// total amount for a specific type (income, expense, transfer) in a specific month and year for a specific wallet if provided or all wallets if not provided
+  @override
   double totalAmountByType(
     TransactionType type,
     int year,
@@ -102,40 +102,38 @@ class TransactionRepo {
   }) {
     final from = _startOfMonth(year, month);
     final to = _startOfNextMonth(year, month);
-    final transactions = _filter(
-      // filter transactions by type and date range and wallet if provided
+    return _filter(
       from: from,
       to: to,
       walletId: walletId,
       type: type,
       includeDeleted: includeDeleted,
-    ).where((t) => t.type == type).fold<double>(0, (sum, t) => sum + t.amount);
-    return transactions; // return the total amount
+    ).fold<double>(0.0, (sum, t) => sum + t.amount);
   }
 
-  /// balance = income - expense + transfer_in - transfer_out for a specific wallet if provided or all wallets if not provided (transfer considered for balance calculation purpose)
+  @override
   double balanceForWallet(String walletId, {bool includeDeleted = false}) {
     double balance = 0.0;
-    for (final transaction in _filter(
+    for (final t in _filter(
       walletId: walletId,
       includeDeleted: includeDeleted,
     )) {
-      switch (transaction.type) {
+      switch (t.type) {
         case TransactionType.income:
-          if (transaction.walletId == walletId) balance += transaction.amount;
+          if (t.walletId == walletId) balance += t.amount;
           break;
         case TransactionType.expense:
-          if (transaction.walletId == walletId) balance -= transaction.amount;
+          if (t.walletId == walletId) balance -= t.amount;
           break;
         case TransactionType.transfer:
-          if (transaction.walletId == walletId) balance -= transaction.amount;
-          if (transaction.walletId == walletId) balance += transaction.amount;
+          if (t.walletId == walletId) balance -= t.amount; // out
+          if (t.targetWalletId == walletId) balance += t.amount; // in
+          break;
       }
     }
     return balance;
   }
 
-  /// net = income - expense for the month for a specific wallet if provided or all wallets if not provided (transfer ignored for net calculation purpose)
   double netForMonth(
     int year,
     int month, {
@@ -146,23 +144,19 @@ class TransactionRepo {
     final to = _startOfNextMonth(year, month);
     double income = 0.0, expense = 0.0;
 
-    for (final transaction in _filter(
+    for (final t in _filter(
       from: from,
       to: to,
       walletId: walletId,
       includeDeleted: includeDeleted,
     )) {
-      if (transaction.type == TransactionType.income) {
-        income += transaction.amount;
-      }
-      if (transaction.type == TransactionType.expense) {
-        expense += transaction.amount;
-      }
+      if (t.type == TransactionType.income) income += t.amount;
+      if (t.type == TransactionType.expense) expense += t.amount;
     }
-    return income - expense; // net = income - expense
+    return income - expense;
   }
 
-  /// Category-wise net (Income +, Expense -) in a month
+  @override
   double totalForCategory(
     Category category,
     int year,
@@ -179,14 +173,14 @@ class TransactionRepo {
       to: to,
       walletId: walletId,
       includeDeleted: includeDeleted,
-    ).where((transaction) => transaction.category == category)) {
+    ).where((x) => x.category == category)) {
       if (t.type == TransactionType.income) sum += t.amount;
       if (t.type == TransactionType.expense) sum -= t.amount;
     }
     return sum;
   }
 
-  /// Category + Type (pure sum, not netting)
+  @override
   double totalForCategoryType(
     Category category,
     TransactionType type,
@@ -208,7 +202,7 @@ class TransactionRepo {
   }
 
   // --------- Transfer Analytics ---------
-  /// total transfer amount in a month (volume, both direction counted positive)
+  @override
   double totalTransferForMonth(
     int year,
     int month, {
@@ -222,7 +216,7 @@ class TransactionRepo {
     includeDeleted: includeDeleted,
   );
 
-  /// Transfer volume touching a wallet (counts in/out as positive)
+  @override
   double totalTransferForWallet(
     String walletId, {
     bool includeDeleted = false,
@@ -232,7 +226,7 @@ class TransactionRepo {
         .fold<double>(0.0, (sum, t) => sum + t.amount);
   }
 
-  /// Transfer volume from -> to (directional)
+  @override
   double totalTransferBetweenWallets(
     String fromWalletId,
     String toWalletId, {
