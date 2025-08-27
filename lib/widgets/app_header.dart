@@ -12,11 +12,12 @@ class AppHeader extends StatelessWidget {
     required this.onMenuTap,
   });
 
+  // Rakibul Islam Mehedi
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [

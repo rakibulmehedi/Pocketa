@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/features/transaction/screens/transaction_screen.dart';
+import 'package:pocketa/features/transaction/screens/transaction_list_screen.dart';
 import 'package:pocketa/widgets/app_header.dart';
 
 /// Global nav index state (survives across widgets)
@@ -35,7 +35,7 @@ class DashboardScreen extends ConsumerWidget {
 
     final pages = const <Widget>[
       _DashboardBody(),
-      TransactionScreen(),
+      TransactionListScreen(),
       Center(child: Text('Budget')),
       Center(child: Text('Wallets')),
     ];
@@ -68,7 +68,7 @@ class DashboardScreen extends ConsumerWidget {
                 showBack: false,
                 onMenuTap: () => Scaffold.of(scaffoldCtx).openDrawer(),
               ),
-              const SizedBox(height: 8),
+        
               // Body
               Expanded(
                 child: Padding(

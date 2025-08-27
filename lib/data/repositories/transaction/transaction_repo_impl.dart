@@ -14,7 +14,6 @@ class TransactionRepoImpl implements TransactionRepository {
       ? DateTime.utc(year + 1, 1, 1)
       : DateTime.utc(year, month + 1, 1);
 
-  // ভিতরে ইন্টারনালি আমরা Hive model (Transaction) নিয়ে কাজ করছি
   Iterable<Transaction> _allIter({bool includeDeleted = false}) sync* {
     for (final t in _box.values) {
       if (!includeDeleted && t.isDeleted) continue;
