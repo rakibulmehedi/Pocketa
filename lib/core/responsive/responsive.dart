@@ -36,6 +36,11 @@ extension ContextX on BuildContext {
   double get height => mq.size.height;
   DeviceSizeClass get sizeClass => deviceClassOf(width);
 
+  // Handy boolean getters (what your UI uses)
+  bool get isCompact => sizeClass == DeviceSizeClass.phone;
+  bool get isMedium => sizeClass == DeviceSizeClass.tablet;
+  bool get isExpanded => sizeClass == DeviceSizeClass.desktop;
+
   /// Adaptive horizontal padding
   EdgeInsets get screenPadding {
     switch (sizeClass) {
@@ -44,7 +49,6 @@ extension ContextX on BuildContext {
       case DeviceSizeClass.tablet:
         return const EdgeInsets.symmetric(horizontal: 32, vertical: 12);
       case DeviceSizeClass.phone:
-      default:
         return const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
     }
   }
@@ -57,7 +61,6 @@ extension ContextX on BuildContext {
       case DeviceSizeClass.tablet:
         return 720;
       case DeviceSizeClass.phone:
-      default:
         return double.infinity;
     }
   }
@@ -70,7 +73,6 @@ extension ContextX on BuildContext {
       case DeviceSizeClass.tablet:
         return 2;
       case DeviceSizeClass.phone:
-      default:
         return 1;
     }
   }

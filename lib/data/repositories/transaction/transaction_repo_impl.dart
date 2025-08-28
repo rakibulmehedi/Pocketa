@@ -133,6 +133,7 @@ class TransactionRepoImpl implements TransactionRepository {
     return balance;
   }
 
+  @override
   double netForMonth(
     int year,
     int month, {

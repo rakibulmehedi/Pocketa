@@ -1,0 +1,30 @@
+name: release-please
+
+on:
+  push:
+    branches: [ main ]   # or your default branch
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/release-please-action@v4
+        with:
+          release-type: dart    
+          package-name: pocketa
+          changelog-types: >
+            [
+              {"type":"feat","section":"Features","hidden":false},
+              {"type":"fix","section":"Fixes","hidden":false},
+              {"type":"docs","section":"Docs","hidden":false},
+              {"type":"refactor","section":"Refactors","hidden":false},
+              {"type":"perf","section":"Performance","hidden":false},
+              {"type":"test","section":"Tests","hidden":false},
+              {"type":"chore","section":"Chores","hidden":false},
+              {"type":"build","section":"Build","hidden":false},
+              {"type":"ci","section":"CI","hidden":false}
+            ]

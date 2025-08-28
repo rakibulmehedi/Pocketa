@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/features/transaction/screens/transaction_list_screen.dart';
-import 'package:pocketa/widgets/app_header.dart';
 
 /// Global nav index state (survives across widgets)
 final navIndexProvider = StateProvider<int>((ref) => 0);
@@ -40,18 +39,13 @@ class DashboardScreen extends ConsumerWidget {
       Center(child: Text('Wallets')),
     ];
 
-    // Dynamic title based on index
-    final String title = switch (index) {
-      0 => 'Dashboard',
-      1 => 'Transactions',
-      2 => 'Budget',
-      3 => 'Wallets',
-      _ => 'Pocketa',
-    };
-
     return Scaffold(
-      drawer: const Drawer(child: SafeArea(child: Text('Drawer'))),
-
+      // drawer: const Drawer(child: SafeArea(child: Text('Drawer'))),
+      // appBar: CustomAppBar(
+      //   title: title,
+      //   showBack: false,
+      //   onMenuTap: () => Scaffold.of(context).openDrawer(),
+      // ),
       bottomNavigationBar: NavigationBar(
         destinations: destinations,
         selectedIndex: index,
@@ -59,27 +53,7 @@ class DashboardScreen extends ConsumerWidget {
           ref.read(navIndexProvider.notifier).state = i;
         },
       ),
-      body: SafeArea(
-        child: Builder(
-          builder: (scaffoldCtx) => Column(
-            children: [
-              AppHeader(
-                title: title,
-                showBack: false,
-                onMenuTap: () => Scaffold.of(scaffoldCtx).openDrawer(),
-              ),
-        
-              // Body
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: IndexedStack(index: index, children: pages),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: IndexedStack(index: index, children: pages),
     );
   }
 }

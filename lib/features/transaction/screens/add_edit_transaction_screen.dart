@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pocketa/widgets/custom_app_bar.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:pocketa/widgets/section_card.dart';
@@ -124,8 +125,11 @@ class _AddEditTransactionScreenState
 
     await ref.read(addTxProvider).call(entity);
 
-    if (mounted) {
-      _showSnack(isEdit ? 'Transaction updated' : 'Transaction added');
+    if (!mounted) return;
+    _showSnack(isEdit ? 'Transaction updated' : 'Transaction added');
+    if (context.canPop()) {
+      context.pop();
+    } else {
       context.go('/');
     }
   }
@@ -153,8 +157,9 @@ class _AddEditTransactionScreenState
     final isEdit = widget.initial != null;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(isEdit ? 'Edit Transaction' : 'Add Transaction'),
+      appBar: CustomAppBar(
+        title: (isEdit ? 'Edit Transaction' : 'Add Transaction'),
+        showBack: true,
         actions: [
           if (isEdit)
             IconButton(
@@ -168,11 +173,11 @@ class _AddEditTransactionScreenState
                     content: const Text('This action cannot be undone.'),
                     actions: [
                       TextButton(
-                        onPressed: () => context.pop(false),
+                        onPressed: () => Navigator.of(ctx).pop(false),
                         child: const Text('Cancel'),
                       ),
                       FilledButton(
-                        onPressed: () => context.pop(true),
+                        onPressed: () => Navigator.of(ctx).pop(true),
                         child: const Text('Delete'),
                       ),
                     ],
@@ -180,9 +185,12 @@ class _AddEditTransactionScreenState
                 );
                 if (ok == true) {
                   await ref.read(deleteTxProvider).call(widget.initial!.id);
-                  if (context.mounted) {
+                  if (!mounted) return;
+                  _showSnack('Deleted');
+                  if (context.canPop()) {
                     context.pop();
-                    _showSnack('Deleted');
+                  } else {
+                    context.go('/');
                   }
                 }
               },
@@ -235,7 +243,7 @@ class _AddEditTransactionScreenState
               ],
             ),
 
-            // AMOUNT + CURRENCY (FIXED: no Expanded inside Column)
+            // AMOUNT + CURRENCY
             SectionCard(
               title: 'Amount',
               trailing: IconButton(
@@ -248,7 +256,6 @@ class _AddEditTransactionScreenState
                   builder: (ctx, c) {
                     final isNarrow = c.maxWidth < 480;
 
-                    // Common, non-flex children
                     final amountField = AmountField(
                       controller: _amountController,
                       currencySymbol: AppCurrencies.symbol(_currency),
@@ -275,7 +282,6 @@ class _AddEditTransactionScreenState
                     );
 
                     if (isNarrow) {
-                      // Column branch → NO Expanded here
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -286,7 +292,6 @@ class _AddEditTransactionScreenState
                       );
                     }
 
-                    // Wide → Row branch (Expanded allowed horizontally)
                     return Row(
                       children: [
                         Expanded(child: amountField),

@@ -40,7 +40,6 @@ class AppTheme {
       surfaceContainerHighest: surfaceContainerHighest,
     );
 
-    // Bilingual typography (Roboto + Noto Sans Bengali)
     final textTheme = AppTypography.build(brightness);
 
     return ThemeData(
@@ -85,14 +84,14 @@ class AppTheme {
         backgroundColor: scheme.surface,
         indicatorColor: scheme.primaryContainer,
         elevation: 0,
-        iconTheme: MaterialStateProperty.resolveWith((states) {
-          final selected = states.contains(MaterialState.selected);
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
           return IconThemeData(
             color: selected ? scheme.primary : scheme.onSurfaceVariant,
           );
         }),
-        labelTextStyle: MaterialStateProperty.resolveWith((states) {
-          final selected = states.contains(MaterialState.selected);
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
           final baseStyle = textTheme.labelMedium!;
           return baseStyle.copyWith(
             color: selected ? scheme.primary : scheme.onSurfaceVariant,
@@ -125,50 +124,50 @@ class AppTheme {
   // Button styles (DRY)
   // --------------------------
   static ButtonStyle _baseRoundedBtn(ColorScheme s) => ButtonStyle(
-    shape: MaterialStatePropertyAll(
+    shape: WidgetStatePropertyAll(
       RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
     ),
-    padding: const MaterialStatePropertyAll(
+    padding: const WidgetStatePropertyAll(
       EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     ),
-    elevation: const MaterialStatePropertyAll(0),
+    elevation: const WidgetStatePropertyAll(0),
   );
 
   static ButtonStyle _textBtnStyle(ColorScheme s) =>
       _baseRoundedBtn(s).copyWith(
-        foregroundColor: MaterialStatePropertyAll(s.primary),
-        padding: const MaterialStatePropertyAll(
+        foregroundColor: WidgetStatePropertyAll(s.primary),
+        padding: const WidgetStatePropertyAll(
           EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         ),
-        minimumSize: const MaterialStatePropertyAll(Size(0, 40)),
+        minimumSize: const WidgetStatePropertyAll(Size(0, 40)),
       );
 
   static ButtonStyle _elevatedBtnStyle(ColorScheme s) =>
       _baseRoundedBtn(s).copyWith(
-        backgroundColor: MaterialStatePropertyAll(s.primary),
-        foregroundColor: MaterialStatePropertyAll(s.onPrimary),
-        minimumSize: const MaterialStatePropertyAll(Size(200, 48)),
+        backgroundColor: WidgetStatePropertyAll(s.primary),
+        foregroundColor: WidgetStatePropertyAll(s.onPrimary),
+        minimumSize: const WidgetStatePropertyAll(Size(200, 48)),
       );
 
   static ButtonStyle _filledBtnStyle(ColorScheme s) =>
       _baseRoundedBtn(s).copyWith(
-        backgroundColor: MaterialStatePropertyAll(s.primaryContainer),
-        foregroundColor: MaterialStatePropertyAll(s.onPrimaryContainer),
-        minimumSize: const MaterialStatePropertyAll(Size(200, 48)),
+        backgroundColor: WidgetStatePropertyAll(s.primaryContainer),
+        foregroundColor: WidgetStatePropertyAll(s.onPrimaryContainer),
+        minimumSize: const WidgetStatePropertyAll(Size(200, 48)),
       );
 
   static ButtonStyle _outlinedBtnStyle(ColorScheme s) =>
       _baseRoundedBtn(s).copyWith(
-        side: MaterialStatePropertyAll(BorderSide(color: s.outline)),
-        foregroundColor: MaterialStatePropertyAll(s.primary),
-        minimumSize: const MaterialStatePropertyAll(Size(200, 48)),
+        side: WidgetStatePropertyAll(BorderSide(color: s.outline)),
+        foregroundColor: WidgetStatePropertyAll(s.primary),
+        minimumSize: const WidgetStatePropertyAll(Size(200, 48)),
       );
 
   // --------------------------
   // Inputs
   // --------------------------
   static InputDecorationTheme _inputTheme(ColorScheme s) {
-    OutlineInputBorder _o(Color c, [double w = 1]) => OutlineInputBorder(
+    OutlineInputBorder o(Color c, [double w = 1]) => OutlineInputBorder(
       borderRadius: BorderRadius.circular(14),
       borderSide: BorderSide(color: c, width: w),
     );
@@ -183,10 +182,10 @@ class AppTheme {
         fontWeight: FontWeight.w600,
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      enabledBorder: _o(s.outlineVariant),
-      focusedBorder: _o(s.primary, 1.6),
-      errorBorder: _o(s.error),
-      focusedErrorBorder: _o(s.error, 1.6),
+      enabledBorder: o(s.outlineVariant),
+      focusedBorder: o(s.primary, 1.6),
+      errorBorder: o(s.error),
+      focusedErrorBorder: o(s.error, 1.6),
     );
   }
 }
