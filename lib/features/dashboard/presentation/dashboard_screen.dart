@@ -39,21 +39,24 @@ class DashboardScreen extends ConsumerWidget {
       Center(child: Text('Wallets')),
     ];
 
-    return Scaffold(
-      // drawer: const Drawer(child: SafeArea(child: Text('Drawer'))),
-      // appBar: CustomAppBar(
-      //   title: title,
-      //   showBack: false,
-      //   onMenuTap: () => Scaffold.of(context).openDrawer(),
-      // ),
-      bottomNavigationBar: NavigationBar(
-        destinations: destinations,
-        selectedIndex: index,
-        onDestinationSelected: (i) {
-          ref.read(navIndexProvider.notifier).state = i;
-        },
+    return WillPopScope(
+      onWillPop: () async {
+        if (index != 0) {
+          ref.read(navIndexProvider.notifier).state = 0;
+          return false;
+        }
+        return true;
+      },
+      child: Scaffold(
+        bottomNavigationBar: NavigationBar(
+          destinations: destinations,
+          selectedIndex: index,
+          onDestinationSelected: (i) {
+            ref.read(navIndexProvider.notifier).state = i;
+          },
+        ),
+        body: IndexedStack(index: index, children: pages),
       ),
-      body: IndexedStack(index: index, children: pages),
     );
   }
 }

@@ -81,7 +81,7 @@ class TransactionListScreen extends ConsumerWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.go('/add_edit_transaction'),
+        onPressed: () => context.push('/add_edit_transaction'),
         icon: const Icon(Icons.add),
         label: const Text('Add'),
       ),

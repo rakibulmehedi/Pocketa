@@ -1,3 +1,4 @@
+// app_text_form_field.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -5,8 +6,15 @@ class AppTextFormField extends StatelessWidget {
   final TextEditingController? controller;
   final String? initialValue;
   final String label;
+
   final IconData? prefixIcon;
   final Widget? suffix;
+
+  final String? prefixText;
+  final TextStyle? prefixStyle;
+  final String? suffixText;
+  final TextStyle? suffixStyle;
+
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
   final List<TextInputFormatter>? inputFormatters;
@@ -30,6 +38,10 @@ class AppTextFormField extends StatelessWidget {
     this.initialValue,
     this.prefixIcon,
     this.suffix,
+    this.prefixText, 
+    this.prefixStyle, 
+    this.suffixText, 
+    this.suffixStyle, 
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.done,
     this.inputFormatters,
@@ -71,6 +83,10 @@ class AppTextFormField extends StatelessWidget {
         hintText: hintText,
         helperText: helperText,
         prefixIcon: prefixIcon == null ? null : Icon(prefixIcon),
+        prefixText: prefixText,
+        prefixStyle: prefixStyle,
+        suffixText: suffixText,
+        suffixStyle: suffixStyle,
         suffixIcon: suffix,
       ),
     );

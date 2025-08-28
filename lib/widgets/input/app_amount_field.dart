@@ -1,3 +1,4 @@
+// app_amount_field.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pocketa/widgets/input/app_text_form_field.dart';
@@ -20,22 +21,12 @@ class AmountField extends StatelessWidget {
       controller: controller,
       label: label,
       hintText: '0.00',
-      prefixIcon: Icons.numbers,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
       ],
-      suffix: currencySymbol == null
-          ? null
-          : Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: Center(
-                child: Text(
-                  currencySymbol!,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-              ),
-            ),
+      prefixText: currencySymbol == null ? null : '${currencySymbol!} ',
+      prefixStyle: const TextStyle(fontWeight: FontWeight.w600),
       validator: (v) {
         if (v == null || v.trim().isEmpty) return 'Required';
         final d = double.tryParse(v);
