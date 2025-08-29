@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/features/transaction/providers/transaction_provider.dart';
+import 'package:pocketa/application/transaction/providers/transaction_provider.dart';
 import 'package:pocketa/domain/entities/transaction_entity.dart';
 
 class TransactionActions extends AsyncNotifier<void> {

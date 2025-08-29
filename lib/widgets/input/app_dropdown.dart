@@ -15,7 +15,7 @@ class AppDropdownField<T> extends StatelessWidget {
     required this.items,
     required this.onChanged,
     this.validator,
-    this.prefixIcon,
+    this.prefixIcon, required bool isDense,
   });
 
   @override

@@ -39,24 +39,15 @@ class DashboardScreen extends ConsumerWidget {
       Center(child: Text('Wallets')),
     ];
 
-    return WillPopScope(
-      onWillPop: () async {
-        if (index != 0) {
-          ref.read(navIndexProvider.notifier).state = 0;
-          return false;
-        }
-        return true;
-      },
-      child: Scaffold(
-        bottomNavigationBar: NavigationBar(
-          destinations: destinations,
-          selectedIndex: index,
-          onDestinationSelected: (i) {
-            ref.read(navIndexProvider.notifier).state = i;
-          },
-        ),
-        body: IndexedStack(index: index, children: pages),
+    return Scaffold(
+      bottomNavigationBar: NavigationBar(
+        destinations: destinations,
+        selectedIndex: index,
+        onDestinationSelected: (i) {
+          ref.read(navIndexProvider.notifier).state = i;
+        },
       ),
+      body: IndexedStack(index: index, children: pages),
     );
   }
 }

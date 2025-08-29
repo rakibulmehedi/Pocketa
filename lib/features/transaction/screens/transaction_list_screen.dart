@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 
 import 'package:pocketa/core/enums/transaction_enums.dart';
 import 'package:pocketa/core/utils/transaction_utils.dart';
-import 'package:pocketa/features/transaction/providers/transaction_provider.dart';
+import 'package:pocketa/application/transaction/providers/transaction_provider.dart';
 import 'package:pocketa/domain/entities/transaction_entity.dart';
 import 'package:pocketa/widgets/custom_silver_app_bar.dart';
 import 'package:pocketa/widgets/summary_header.dart';

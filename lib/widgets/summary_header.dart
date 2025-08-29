@@ -19,11 +19,12 @@ class SummaryHeader extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
+        borderRadius: BorderRadiusDirectional.only(
+          bottomEnd: const Radius.circular(20),
+          bottomStart: const Radius.circular(20),
+        ),
         gradient: LinearGradient(
-          colors: [
-            cs.primary,
-            cs.primaryContainer
-          ],
+          colors: [cs.primary, cs.primaryContainer],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
