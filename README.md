@@ -39,19 +39,19 @@ Personal finance for everyone — built with Flutter, Riverpod, and Clean Archit
 
 ```mermaid
 flowchart LR
-  subgraph Presentation [Presentation (MVVM)]
-    UI[Pages & Widgets] --> VM[ViewModel]
+  subgraph Presentation
+    UI[Pages & Widgets] --> VM[ViewModel (Riverpod)]
   end
 
-  subgraph Domain [Domain Layer]
-    UC[Use Cases] --> RepoIntf[(Repository Interface)]
+  subgraph Domain
+    UC[Use Cases] --> RepoIntf[Repository Interface]
     Entities[Entities / Value Objects]
   end
 
-  subgraph Data [Data Layer]
-    RepoImpl[Repository Impl] --> Mapper[DTO <-> Entity]
-    Mapper --> Hive[(Hive Local)]
-    Mapper --> Supabase[(Supabase Remote)]
+  subgraph Data
+    RepoImpl[Repository Impl] --> Mapper[Mapper]
+    Mapper --> Hive[Hive (Local)]
+    Mapper --> Supabase[Supabase (Remote)]
   end
 
   UI --> VM --> UC --> RepoIntf
