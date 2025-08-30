@@ -1,8 +1,8 @@
 import 'package:go_router/go_router.dart';
-import 'package:pocketa/features/dashboard/presentation/dashboard_screen.dart';
-import 'package:pocketa/features/onboarding/presentation/welcome_screen.dart';
-import 'package:pocketa/features/transaction/screens/add_edit_transaction_screen.dart';
-import 'package:pocketa/features/transaction/screens/transaction_list_screen.dart';
+import 'package:pocketa/features/dashboard/presentation/pages/dashboard_screen.dart';
+import 'package:pocketa/features/onboarding/presentation/pages/welcome_screen.dart';
+import 'package:pocketa/features/transaction/domain/domain.dart';
+import 'package:pocketa/features/transaction/presentation/pages/pages.dart';
 
 GoRouter buildRouter() => GoRouter(
   routes: [
@@ -18,11 +18,14 @@ GoRouter buildRouter() => GoRouter(
     ),
     GoRoute(
       path: '/add_edit_transaction',
-      name: 'add or edit transaction',
-      builder: (context, state) => AddEditTransactionScreen(),
+      name: 'add_edit_tx',
+      builder: (context, state) {
+        final tx = state.extra as TransactionEntity?;
+        return AddEditTransactionScreen(initial: tx,);
+      },
     ),
     GoRoute(
-      path: '/transactions',
+      path: '/transactions/add_edit',
       name: 'transactions',
       builder: (context, state) => TransactionListScreen(),
     ),

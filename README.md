@@ -67,3 +67,41 @@ Key paths referenced in the app:
 - `lib/widgets/input/app_text_form_field.dart`: Text input field.
 
 This structure keeps domain rules independent, isolates data access, and groups UI by feature for scalability.
+## Architecture
+
+This app follows a feature-first MVVM + Clean Architecture:
+
+```
+lib/
+  core/                    # cross-cutting concerns (routing, theme, locale, utils)
+  shared/widgets/          # reusable UI components (inputs, app bars, surfaces)
+  features/
+    transaction/
+      presentation/
+        pages/             # UI pages (screens)
+        viewmodels/        # Riverpod viewmodels/providers/state
+      domain/
+        entities/          # business entities
+        repositories/      # abstract repository contracts
+        usecases/          # application-specific business rules
+      data/
+        models/            # persistence models (Hive)
+        repositories/      # repository implementations
+    dashboard/
+      presentation/pages/
+    onboarding/
+      presentation/pages/
+```
+
+Barrel files simplify imports:
+- `features/transaction/domain/domain.dart`
+- `features/transaction/data/data.dart`
+- `features/transaction/presentation/pages/pages.dart`
+- `features/transaction/presentation/viewmodels/viewmodels.dart`
+- `shared/widgets/widgets.dart` (includes `shared/widgets/input/input.dart`)
+
+Run code generation after moving files:
+
+```
+flutter pub run build_runner build --delete-conflicting-outputs
+```
