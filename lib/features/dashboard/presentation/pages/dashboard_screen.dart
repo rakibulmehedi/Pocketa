@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/responsive/responsive_scaffold.dart';
 import 'package:pocketa/features/transaction/presentation/pages/pages.dart';
 
 /// Global nav index state (survives across widgets)
