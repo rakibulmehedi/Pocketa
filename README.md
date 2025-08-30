@@ -38,24 +38,24 @@ Personal finance for everyone — built with Flutter, Riverpod, and Clean Archit
 ## 🏛️ Clean Architecture Overview
 
 ```mermaid
-flowchart LR
+graph LR
   subgraph Presentation
-    UI[Pages & Widgets] --> VM[ViewModel (Riverpod)]
+    UI[Pages and Widgets] --> VM[ViewModel]
   end
 
   subgraph Domain
     UC[Use Cases] --> RepoIntf[Repository Interface]
-    Entities[Entities / Value Objects]
+    Entities[Entities]
   end
 
   subgraph Data
-    RepoImpl[Repository Impl] --> Mapper[Mapper]
-    Mapper --> Hive[Hive (Local)]
-    Mapper --> Supabase[Supabase (Remote)]
+    RepoImpl[Repository Impl] --> Map[Mapper]
+    Map --> Hive[Hive Local]
+    Map --> Supabase[Supabase Remote]
   end
 
   UI --> VM --> UC --> RepoIntf
-  RepoIntf -. implemented by .-> RepoImpl
+  RepoIntf -.-> RepoImpl
 ```
 
 ---
@@ -137,13 +137,13 @@ sequenceDiagram
 ## 📦 Providers (Riverpod)
 
 ```mermaid
-flowchart LR
-  Box[Hive Box (Transaction)] --> RepoImpl
+graph LR
+  Box[Hive Box Transaction] --> RepoImpl
   RepoImpl --> RepoIntf[TransactionRepository]
   RepoIntf --> UC_Add[UseCase: Add]
   RepoIntf --> UC_Del[UseCase: Delete]
   RepoIntf --> UC_Sum[UseCase: GetSummary]
-  Box -. watch() .-> Stream[allTransactionsProvider]
+  Box -.-> Stream[allTransactionsProvider]
   Stream --> UI[TransactionListScreen]
   UC_Add --> FormVM[transactionFormProvider]
   UI --> FormVM
