@@ -39,23 +39,23 @@ Personal finance for everyone — built with Flutter, Riverpod, and Clean Archit
 
 ```mermaid
 flowchart LR
-  subgraph Presentation[Presentation (MVVM)]
-    UI[Pages/Widgets] --> VM[ViewModel (Riverpod Notifier)]
+  subgraph Presentation
+    UI[Pages & Widgets] --> VM[ViewModel (Riverpod)]
   end
 
-  subgraph Domain[Domain Layer]
-    UC[Use Cases] --> RepoIntf[(Repository Interface)]
+  subgraph Domain
+    UC[Use Cases] --> RepoIntf[Repository Interface]
     Entities[Entities / Value Objects]
   end
 
-  subgraph Data[Data Layer]
-    RepoImpl[Repository Impl] --> Mapper[DTO <-> Entity]
-    Mapper --> Hive[(Hive Local)]
-    Mapper --> Supabase[(Supabase Remote)]
+  subgraph Data
+    RepoImpl[Repository Impl] --> Mapper[Mapper]
+    Mapper --> Hive[Hive (Local)]
+    Mapper --> Supabase[Supabase (Remote)]
   end
 
   UI --> VM --> UC --> RepoIntf
-  RepoIntf -.implemented by .-> RepoImpl
+  RepoIntf -. implemented by .-> RepoImpl
 ```
 
 ---
@@ -138,12 +138,12 @@ sequenceDiagram
 
 ```mermaid
 flowchart LR
-  Box[Hive Box<Transaction>] --> RepoImpl
+  Box[Hive Box (Transaction)] --> RepoImpl
   RepoImpl --> RepoIntf[TransactionRepository]
   RepoIntf --> UC_Add[UseCase: Add]
   RepoIntf --> UC_Del[UseCase: Delete]
   RepoIntf --> UC_Sum[UseCase: GetSummary]
-  Box -.watch().-> Stream[allTransactionsProvider]
+  Box -. watch() .-> Stream[allTransactionsProvider]
   Stream --> UI[TransactionListScreen]
   UC_Add --> FormVM[transactionFormProvider]
   UI --> FormVM
@@ -225,4 +225,3 @@ Add app screenshots here when ready — Dashboard, Add/Edit Tx, Onboarding.
 **Rakibul Islam Mehedi**  
 Flutter Developer & Tech Entrepreneur  
 Building Pocketa to help users in Bangladesh manage money with better awareness & habits.
-
