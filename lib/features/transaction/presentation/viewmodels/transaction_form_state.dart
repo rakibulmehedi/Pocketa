@@ -1,7 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pocketa/core/enums/transaction_enums.dart';
 import 'package:pocketa/core/utils/date_time_utc_converter.dart';
-import 'package:pocketa/features/transaction/domain/domain.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
+
 
 part 'transaction_form_state.freezed.dart';
 part 'transaction_form_state.g.dart';
@@ -17,6 +18,8 @@ class TransactionFormState with _$TransactionFormState {
     @Default('BDT') String currency,
     @Default(0.00) double amount,
     @Default(<String>[]) List<String> tags,
+    String? walletId,
+    String? targetWalletId,
   }) = _TransactionFormState;
 
   factory TransactionFormState.initial() =>
@@ -30,6 +33,8 @@ class TransactionFormState with _$TransactionFormState {
         dateUtc: e.date,
         currency: e.currency,
         tags: List<String>.from(e.tags ?? const []),
+        walletId: e.walletId,
+        targetWalletId: e.targetWalletId
       );
 
   factory TransactionFormState.fromJson(Map<String, dynamic> json) =>

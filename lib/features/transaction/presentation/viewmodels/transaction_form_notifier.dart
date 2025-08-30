@@ -1,19 +1,30 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/viewmodels.dart';
 import 'package:pocketa/core/enums/transaction_enums.dart';
-import 'package:pocketa/features/transaction/domain/domain.dart';
 
 final transactionFormProvider =
     StateNotifierProvider.autoDispose<
       TransactionFormNotifier,
       TransactionFormState
     >((ref) => TransactionFormNotifier());
+
 class TransactionFormNotifier extends StateNotifier<TransactionFormState> {
   TransactionFormNotifier() : super(TransactionFormState.initial());
 
   void initializeForm(TransactionEntity? e) {
     if (e == null) return;
-    state = TransactionFormState.fromEntity(e);
+    state = state.copyWith(
+      type: e.type,
+      amount: e.amount,
+      category: e.category,
+      dateUtc: e.date,
+      currency: e.currency,
+      tags: e.tags ?? const [],
+      walletId: e.walletId,
+      targetWalletId: e.targetWalletId,
+
+    );
   }
 
   // Type
@@ -49,6 +60,15 @@ class TransactionFormNotifier extends StateNotifier<TransactionFormState> {
   void clearTags() => state = state.copyWith(tags: []);
   void setTags(List<String> tags) => state = state.copyWith(tags: tags);
   bool hasTag(String t) => state.tags.contains(t);
+
+  // Wallets
+  void setWalletId(String id) => state = state.copyWith(walletId: id);
+
+  void setTargetWalletId(String? id) =>
+      state = state.copyWith(targetWalletId: id);
+
+  void resetWallets() =>
+      state = state.copyWith(walletId: null, targetWalletId: null);
 
   // Bulk ops
   void updateForm(TransactionFormState newState) => state = newState;

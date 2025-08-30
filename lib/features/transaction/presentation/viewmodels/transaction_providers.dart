@@ -1,11 +1,18 @@
-// lib/features/transaction/presentation/viewmodels/transaction_providers.dart
+
 import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pocketa/core/enums/transaction_enums.dart';
 
-import 'package:pocketa/features/transaction/data/data.dart';
-import 'package:pocketa/features/transaction/domain/domain.dart';
+import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
+import 'package:pocketa/features/transaction/data/repositories/transaction_repo_impl.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:pocketa/features/transaction/domain/repositories/transaction_repository.dart';
+import 'package:pocketa/features/transaction/domain/usecases/add_transaction.dart';
+import 'package:pocketa/features/transaction/domain/usecases/delete_transaction.dart';
+import 'package:pocketa/features/transaction/domain/usecases/get_month_summary.dart';
+import 'package:pocketa/features/transaction/domain/usecases/get_transactions.dart';
+
 
 
 /// Hive Box Provider (typed)

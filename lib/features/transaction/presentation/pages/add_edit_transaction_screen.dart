@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:pocketa/features/wallets/presentations/widgets/wallet_picker.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:pocketa/features/transaction/presentation/viewmodels/viewmodels.dart';
 import 'package:pocketa/core/enums/transaction_enums.dart';
 import 'package:pocketa/core/utils/currency_utils.dart';
 import 'package:pocketa/core/utils/transaction_utils.dart';
-import 'package:pocketa/features/transaction/domain/domain.dart';
 
 import 'package:pocketa/shared/widgets/widgets.dart';
 
@@ -26,8 +27,6 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
 
   late final TextEditingController _amountCtrl;
   late final TextEditingController _noteCtrl;
-  late final TextEditingController _walletCtrl;
-  late final TextEditingController _targetWalletCtrl;
   late final TextEditingController _tagCtrl;
 
   @override
@@ -44,12 +43,6 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
       text: widget.initial?.amount.toString() ?? '',
     );
     _noteCtrl = TextEditingController(text: widget.initial?.note ?? '');
-    _walletCtrl = TextEditingController(
-      text: widget.initial?.walletId ?? 'Default',
-    );
-    _targetWalletCtrl = TextEditingController(
-      text: widget.initial?.targetWalletId ?? '',
-    );
     _tagCtrl = TextEditingController();
   }
 
@@ -57,8 +50,6 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
   void dispose() {
     _amountCtrl.dispose();
     _noteCtrl.dispose();
-    _walletCtrl.dispose();
-    _targetWalletCtrl.dispose();
     _tagCtrl.dispose();
     super.dispose();
   }
@@ -369,6 +360,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
 
   Widget _detailsCard(TransactionFormState form) {
     final notifier = ref.read(transactionFormProvider.notifier);
+
     return SectionCard(
       title: 'Details',
       trailing: IconButton(
@@ -377,18 +369,17 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
         icon: const Icon(Icons.schedule),
       ),
       children: [
+        const SizedBox(height: 8),
         AppDateTimeField(
           label: 'Date & Time',
           valueUtc: form.dateUtc,
           onChanged: notifier.setDateUtc,
         ),
-        
         const SizedBox(height: 12),
-        AppTextFormField(
+        WalletPicker(
+          valueId: form.walletId,
           label: 'Wallet',
-          controller: _walletCtrl,
-          prefixIcon: Icons.account_balance_wallet_outlined,
-          validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
+          onSelected: (w) => notifier.setTargetWalletId(w.id),
         ),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),
@@ -397,12 +388,10 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
                   key: const ValueKey('target'),
                   children: [
                     const SizedBox(height: 12),
-                    AppTextFormField(
+                    WalletPicker(
                       label: 'Target Wallet',
-                      controller: _targetWalletCtrl,
-                      prefixIcon: Icons.call_made_outlined,
-                      validator: (v) =>
-                          (v == null || v.trim().isEmpty) ? 'Required' : null,
+                      valueId: form.targetWalletId,
+                      onSelected: (w) => notifier.setTargetWalletId(w.id),
                     ),
                   ],
                 )
@@ -481,7 +470,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
       return;
     }
     if (form.type == TransactionType.transfer &&
-        _targetWalletCtrl.text.trim().isEmpty) {
+        (form.targetWalletId == null || form.targetWalletId!.isEmpty)) {
       _snack('Target wallet is required for transfer');
       return;
     }
@@ -495,9 +484,9 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
       date: form.dateUtc,
       type: form.type,
       category: form.category,
-      walletId: _walletCtrl.text.trim(),
+      walletId: form.walletId!,
       targetWalletId: form.type == TransactionType.transfer
-          ? _targetWalletCtrl.text.trim()
+          ? form.targetWalletId
           : null,
       note: _noteCtrl.text.trim().isEmpty ? null : _noteCtrl.text.trim(),
       tags: form.tags,

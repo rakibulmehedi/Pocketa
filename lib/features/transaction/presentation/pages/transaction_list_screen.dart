@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:pocketa/core/enums/transaction_enums.dart';
 import 'package:pocketa/core/utils/transaction_utils.dart';
-import 'package:pocketa/features/transaction/domain/domain.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/viewmodels.dart';
 import 'package:pocketa/shared/widgets/widgets.dart';
 
