@@ -13,5 +13,10 @@ class GetTransactions {
     int month, {
     String? walletId,
     bool includeDeleted = false,
-  }) => repository.byMonth(year, month, includeDeleted: includeDeleted);
+  }) => repository.byMonth(
+        year,
+        month,
+        walletId: walletId,
+        includeDeleted: includeDeleted,
+      );
 }

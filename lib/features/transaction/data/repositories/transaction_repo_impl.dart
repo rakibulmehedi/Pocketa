@@ -1,11 +1,10 @@
 import 'package:hive/hive.dart';
-import 'package:pocketa/core/enums/transaction_enums.dart';
 import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
 import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
 import 'package:pocketa/features/transaction/domain/repositories/transaction_repository.dart';
 
 class TransactionRepoImpl implements TransactionRepository {
-  final Box<Transaction> _box;
+  final Box<Transaction> _box; // Hive model class = Transaction (your DTO)
   const TransactionRepoImpl(this._box);
 
   // -------Helpers------- //
@@ -25,7 +24,7 @@ class TransactionRepoImpl implements TransactionRepository {
     DateTime? from, // inclusive
     DateTime? to, // exclusive
     String? walletId,
-    Category? category,
+    String? categoryId,
     TransactionType? type,
     bool includeDeleted = false,
   }) {
@@ -37,22 +36,20 @@ class TransactionRepoImpl implements TransactionRepository {
           walletId == null ||
           t.walletId == walletId ||
           t.targetWalletId == walletId;
-      final sameCategory = category == null || t.category == category;
+      final sameCat = categoryId == null || t.categoryId == categoryId;
       final sameType = type == null || t.type == type;
-      return afterFrom && beforeTo && sameWallet && sameCategory && sameType;
+      return afterFrom && beforeTo && sameWallet && sameCat && sameType;
     });
   }
 
-  // ---------------- CRUD (Entity signatures) ----------------
+  // ---------------- CRUD ----------------
   @override
   Future<void> upsert(TransactionEntity e) async {
-    await _box.put(e.id, e.toModel()); // <-- Entity -> Model
+    await _box.put(e.id, e.toModel());
   }
 
   @override
-  TransactionEntity? get(String id) {
-    return _box.get(id)?.toEntity(); // <-- Model -> Entity
-  }
+  TransactionEntity? get(String id) => _box.get(id)?.toEntity();
 
   @override
   Future<void> deleteHard(String id) async => _box.delete(id);
@@ -65,12 +62,12 @@ class TransactionRepoImpl implements TransactionRepository {
     }
   }
 
-  // ---------------- Queries (Entity lists / numbers) ----------------
+  // ---------------- Queries ----------------
   @override
   List<TransactionEntity> all({bool includeDeleted = false}) {
     final list = _allIter(includeDeleted: includeDeleted).toList()
       ..sort((a, b) => b.date.compareTo(a.date));
-    return list.map((t) => t.toEntity()).toList(); // <-- map to Entity
+    return list.map((t) => t.toEntity()).toList();
   }
 
   @override
@@ -88,7 +85,7 @@ class TransactionRepoImpl implements TransactionRepository {
       walletId: walletId,
       includeDeleted: includeDeleted,
     ).toList()..sort((a, b) => b.date.compareTo(a.date));
-    return list.map((t) => t.toEntity()).toList(); // <-- map to Entity
+    return list.map((t) => t.toEntity()).toList();
   }
 
   @override
@@ -156,9 +153,10 @@ class TransactionRepoImpl implements TransactionRepository {
     return income - expense;
   }
 
+  // ---------- Category analytics (by id) ----------
   @override
   double totalForCategory(
-    Category category,
+    String categoryId,
     int year,
     int month, {
     String? walletId,
@@ -166,23 +164,18 @@ class TransactionRepoImpl implements TransactionRepository {
   }) {
     final from = _startOfMonth(year, month);
     final to = _startOfNextMonth(year, month);
-    double sum = 0.0;
-
-    for (final t in _filter(
+    return _filter(
       from: from,
       to: to,
       walletId: walletId,
+      categoryId: categoryId,
       includeDeleted: includeDeleted,
-    ).where((x) => x.category == category)) {
-      if (t.type == TransactionType.income) sum += t.amount;
-      if (t.type == TransactionType.expense) sum -= t.amount;
-    }
-    return sum;
+    ).fold<double>(0.0, (sum, t) => sum + t.amount);
   }
 
   @override
   double totalForCategoryType(
-    Category category,
+    String categoryId,
     TransactionType type,
     int year,
     int month, {
@@ -192,16 +185,16 @@ class TransactionRepoImpl implements TransactionRepository {
     final from = _startOfMonth(year, month);
     final to = _startOfNextMonth(year, month);
     return _filter(
-          from: from,
-          to: to,
-          walletId: walletId,
-          includeDeleted: includeDeleted,
-        )
-        .where((t) => t.category == category && t.type == type)
-        .fold<double>(0.0, (sum, t) => sum + t.amount);
+      from: from,
+      to: to,
+      walletId: walletId,
+      categoryId: categoryId,
+      type: type,
+      includeDeleted: includeDeleted,
+    ).fold<double>(0.0, (sum, t) => sum + t.amount);
   }
 
-  // --------- Transfer Analytics ---------
+  // --------- Transfers ----------
   @override
   double totalTransferForMonth(
     int year,

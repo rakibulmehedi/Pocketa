@@ -28,7 +28,7 @@ WalletTypeDto _toDto(WalletType type) => WalletTypeDto.values[type.index];
 WalletType _fromDto(WalletTypeDto t) => WalletType.values[t.index];
 
 @freezed
-@HiveType(typeId: 21) // <-- unused id
+@HiveType(typeId: 21) 
 class WalletModel with _$WalletModel {
   const factory WalletModel({
     @HiveField(0) required String id,

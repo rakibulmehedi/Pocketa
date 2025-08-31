@@ -1,8 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pocketa/core/enums/transaction_enums.dart';
 import 'package:pocketa/core/utils/date_time_utc_converter.dart';
+import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
 import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
-
 
 part 'transaction_form_state.freezed.dart';
 part 'transaction_form_state.g.dart';
@@ -11,12 +10,12 @@ part 'transaction_form_state.g.dart';
 class TransactionFormState with _$TransactionFormState {
   const factory TransactionFormState({
     @Default(TransactionType.expense) TransactionType type,
-    @Default(Category.eatingOut) Category category,
+    String? categoryId,
 
     @DateTimeUtcConverter() required DateTime dateUtc,
 
     @Default('BDT') String currency,
-    @Default(0.00) double amount,
+    @Default(0.0) double amount,
     @Default(<String>[]) List<String> tags,
     String? walletId,
     String? targetWalletId,
@@ -28,13 +27,13 @@ class TransactionFormState with _$TransactionFormState {
   factory TransactionFormState.fromEntity(TransactionEntity e) =>
       TransactionFormState(
         type: e.type,
-        category: e.category,
         amount: e.amount,
-        dateUtc: e.date,
+        dateUtc: e.date.toUtc(),
         currency: e.currency,
         tags: List<String>.from(e.tags ?? const []),
         walletId: e.walletId,
-        targetWalletId: e.targetWalletId
+        targetWalletId: e.targetWalletId,
+        categoryId: e.categoryId,
       );
 
   factory TransactionFormState.fromJson(Map<String, dynamic> json) =>

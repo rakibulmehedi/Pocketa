@@ -1,4 +1,5 @@
-import 'package:pocketa/core/enums/transaction_enums.dart';
+
+import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
 import 'package:pocketa/features/transaction/domain/repositories/transaction_repository.dart';
 
 class GetMonthSummary {

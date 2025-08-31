@@ -1,11 +1,15 @@
-import 'package:pocketa/core/enums/transaction_enums.dart';
+
+import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
 
 class TransactionEntity {
   final String id;
   final double amount;
   final DateTime date;
   final TransactionType type;
-  final Category category;
+
+  /// New: user-defined category id (nullable for now)
+  final String? categoryId;
+
   final String walletId;
   final String? targetWalletId;
   final String? note;
@@ -22,7 +26,7 @@ class TransactionEntity {
     required this.amount,
     required this.date,
     required this.type,
-    required this.category,
+    this.categoryId,
     required this.walletId,
     this.targetWalletId,
     this.note,
@@ -40,7 +44,7 @@ class TransactionEntity {
     double? amount,
     DateTime? date,
     TransactionType? type,
-    Category? category,
+    String? categoryId,
     String? walletId,
     String? targetWalletId,
     String? note,
@@ -51,21 +55,23 @@ class TransactionEntity {
     bool? isSynced,
     String? attachmentUrl,
     bool? isDeleted,
-  }) => TransactionEntity(
-    id: id ?? this.id,
-    amount: amount ?? this.amount,
-    date: date ?? this.date,
-    type: type ?? this.type,
-    category: category ?? this.category,
-    walletId: walletId ?? this.walletId,
-    targetWalletId: targetWalletId,
-    note: note ?? this.note,
-    tags: tags ?? this.tags,
-    currency: currency ?? this.currency,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    isSynced: isSynced ?? this.isSynced,
-    attachmentUrl: attachmentUrl ?? this.attachmentUrl,
-    isDeleted: isDeleted ?? this.isDeleted,
-  );
+  }) {
+    return TransactionEntity(
+      id: id ?? this.id,
+      amount: amount ?? this.amount,
+      date: date ?? this.date,
+      type: type ?? this.type,
+      categoryId: categoryId ?? this.categoryId,
+      walletId: walletId ?? this.walletId,
+      targetWalletId: targetWalletId ?? this.targetWalletId,
+      note: note ?? this.note,
+      tags: tags ?? this.tags,
+      currency: currency ?? this.currency,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isSynced: isSynced ?? this.isSynced,
+      attachmentUrl: attachmentUrl ?? this.attachmentUrl,
+      isDeleted: isDeleted ?? this.isDeleted,
+    );
+  }
 }

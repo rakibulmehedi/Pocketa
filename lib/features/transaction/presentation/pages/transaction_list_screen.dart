@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-import 'package:pocketa/core/enums/transaction_enums.dart';
-import 'package:pocketa/core/utils/transaction_utils.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/viewmodels.dart';
+import 'package:pocketa/features/transaction/presentation/widgets/transaction_tile.dart';
 import 'package:pocketa/shared/widgets/widgets.dart';
 
 class TransactionListScreen extends ConsumerWidget {
@@ -65,7 +62,7 @@ class TransactionListScreen extends ConsumerWidget {
                       final isDivider = index.isOdd;
                       if (isDivider) return const Divider(height: 0);
                       final itemIndex = index ~/ 2;
-                      return _TransactionTile(
+                      return TransactionTile(
                         transaction: transactions[itemIndex],
                       );
                     }, childCount: transactions.length * 2 - 1),
@@ -87,67 +84,6 @@ class TransactionListScreen extends ConsumerWidget {
         icon: const Icon(Icons.add),
         label: const Text('Add'),
       ),
-    );
-  }
-}
-
-class _TransactionTile extends StatelessWidget {
-  final TransactionEntity transaction;
-  const _TransactionTile({required this.transaction});
-
-  @override
-  Widget build(BuildContext context) {
-    final date = DateFormat(
-      'EEE, dd MMM yyyy • hh:mm a',
-    ).format(transaction.date.toLocal());
-    final amountText = formatAmount(
-      transaction.type == TransactionType.expense
-          ? -transaction.amount
-          : transaction.amount,
-    );
-
-    IconData leadingIcon;
-    Color leadingColor;
-    switch (transaction.type) {
-      case TransactionType.income:
-        leadingIcon = Icons.arrow_downward_rounded;
-        leadingColor = Colors.green;
-        break;
-      case TransactionType.expense:
-        leadingIcon = Icons.arrow_upward_rounded;
-        leadingColor = Colors.red;
-        break;
-      case TransactionType.transfer:
-        leadingIcon = Icons.swap_horiz_rounded;
-        leadingColor = Colors.blueGrey;
-        break;
-    }
-
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: leadingColor.withOpacity(0.12),
-        child: Icon(leadingIcon, color: leadingColor),
-      ),
-      title: Text(
-        prettyCategory(transaction.category),
-        style: Theme.of(context).textTheme.bodyLarge,
-      ),
-      subtitle: Text(
-        transaction.note?.isNotEmpty == true
-            ? '${transaction.note}  •  $date'
-            : date,
-      ),
-      trailing: Text(
-        amountText,
-        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-          color: transaction.type == TransactionType.expense
-              ? Colors.red
-              : Colors.green,
-        ),
-      ),
-      onTap: () {
-        context.pushNamed('add_edit_tx', extra: transaction);
-      },
     );
   }
 }

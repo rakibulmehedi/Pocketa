@@ -1,10 +1,10 @@
-import 'package:pocketa/core/enums/transaction_enums.dart';
+
+import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
 import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
 
 abstract class TransactionRepository {
-  Future<void> upsert(TransactionEntity transaction);
+  Future<void> upsert(TransactionEntity e);
   TransactionEntity? get(String id);
-
   Future<void> deleteHard(String id);
   Future<void> deleteSoft(String id);
 
@@ -23,30 +23,34 @@ abstract class TransactionRepository {
     String? walletId,
     bool includeDeleted = false,
   });
+
+  double balanceForWallet(String walletId, {bool includeDeleted = false});
   double netForMonth(
     int year,
     int month, {
     String? walletId,
     bool includeDeleted = false,
   });
-  double balanceForWallet(String walletId, {bool includeDeleted = false});
 
+  // categoryId-based
   double totalForCategory(
-    Category category,
+    String categoryId,
     int year,
     int month, {
     String? walletId,
     bool includeDeleted = false,
   });
+
   double totalForCategoryType(
-    Category category,
+    String categoryId,
     TransactionType type,
     int year,
     int month, {
-    String walletId,
+    String? walletId,
     bool includeDeleted = false,
   });
 
+  // transfers
   double totalTransferForMonth(
     int year,
     int month, {

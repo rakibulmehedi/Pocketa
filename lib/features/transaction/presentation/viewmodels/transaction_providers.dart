@@ -2,7 +2,6 @@
 import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pocketa/core/enums/transaction_enums.dart';
 
 import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
 import 'package:pocketa/features/transaction/data/repositories/transaction_repo_impl.dart';
@@ -129,3 +128,5 @@ final monthNetProvider =
       );
       return income - expense;
     });
+
+    

@@ -1,18 +1,23 @@
+// lib/features/transaction/presentation/pages/add_edit_transaction_screen.dart
+
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
-import 'package:pocketa/features/wallets/presentations/widgets/wallet_picker.dart';
+import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
 import 'package:uuid/uuid.dart';
 
-import 'package:pocketa/features/transaction/presentation/viewmodels/viewmodels.dart';
-import 'package:pocketa/core/enums/transaction_enums.dart';
+import 'package:pocketa/core/constants/default_categories.dart';
 import 'package:pocketa/core/utils/currency_utils.dart';
 import 'package:pocketa/core/utils/transaction_utils.dart';
-
 import 'package:pocketa/shared/widgets/widgets.dart';
 
-// Inputs via shared barrel
+import 'package:pocketa/features/categories/presentations/widgets/category_chips_picker.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:pocketa/features/transaction/presentation/viewmodels/viewmodels.dart';
+import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
+import 'package:pocketa/features/wallets/presentations/viewmodels/wallet_providers.dart';
+import 'package:pocketa/features/wallets/presentations/widgets/wallet_picker_button.dart';
 
 class AddEditTransactionScreen extends ConsumerStatefulWidget {
   final TransactionEntity? initial;
@@ -29,28 +34,107 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
   late final TextEditingController _noteCtrl;
   late final TextEditingController _tagCtrl;
 
+  // listeners we remove on dispose
+  late ProviderSubscription<TransactionFormState> _typeSub;
+  late ProviderSubscription<AsyncValue<List<WalletEntity>>> _walletsSub;
+  VoidCallback? _amountCtrlListener;
+
   @override
   void initState() {
     super.initState();
 
-    // Hydrate provider with initial (edit mode)
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(transactionFormProvider.notifier).initializeForm(widget.initial);
-    });
-
-    // Prime controllers
+    // Controllers
     _amountCtrl = TextEditingController(
       text: widget.initial?.amount.toString() ?? '',
     );
     _noteCtrl = TextEditingController(text: widget.initial?.note ?? '');
     _tagCtrl = TextEditingController();
+
+    // 1) Hydrate edit-mode & set initial sensible defaults ONCE
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(transactionFormProvider.notifier).initializeForm(widget.initial);
+      _ensureDefaultsOnce();
+    });
+
+    // 2) Amount controller -> provider (outside build)
+    _amountCtrlListener = () {
+      final raw = _amountCtrl.text.replaceAll(',', '');
+      final parsed = double.tryParse(raw) ?? 0;
+      // microtask so this never runs inside current build frame
+      scheduleMicrotask(() {
+        if (!mounted) return;
+        ref.read(transactionFormProvider.notifier).setAmount(parsed);
+      });
+    };
+    _amountCtrl.addListener(_amountCtrlListener!);
+
+    // 3) On type change -> reset category to the first of that kind
+    _typeSub = ref.listenManual<TransactionFormState>(transactionFormProvider, (
+      prev,
+      next,
+    ) {
+      if (prev?.type != next.type) {
+        final kind = kindFromTxType(next.type);
+        final list = defaultCategoriesByKind(kind);
+        if (list.isNotEmpty) {
+          ref
+              .read(transactionFormProvider.notifier)
+              .setCategoryId(list.first.id);
+        }
+      }
+    });
+
+    // 4) When wallets stream becomes non-empty and wallet not chosen yet → set default
+    _walletsSub = ref.listenManual(walletsStreamProvider, (prev, next) {
+      next.whenData((list) {
+        final f = ref.read(transactionFormProvider);
+        if (f.walletId == null && list.isNotEmpty) {
+          final def = list.firstWhere(
+            (w) => w.isDefault,
+            orElse: () => list.first,
+          );
+          ref.read(transactionFormProvider.notifier).setWalletId(def.id);
+        }
+      });
+    });
+  }
+
+  void _ensureDefaultsOnce() {
+    final f = ref.read(transactionFormProvider);
+
+    // WALLET default (snapshot)
+    if (f.walletId == null) {
+      final wallets = ref
+          .read(walletsStreamProvider)
+          .maybeWhen(data: (l) => l, orElse: () => const <WalletEntity>[]);
+      if (wallets.isNotEmpty) {
+        final def = wallets.firstWhere(
+          (w) => w.isDefault,
+          orElse: () => wallets.first,
+        );
+        ref.read(transactionFormProvider.notifier).setWalletId(def.id);
+      }
+    }
+
+    // CATEGORY default (by type)
+    if (f.categoryId == null) {
+      final kind = kindFromTxType(f.type);
+      final list = defaultCategoriesByKind(kind);
+      if (list.isNotEmpty) {
+        ref.read(transactionFormProvider.notifier).setCategoryId(list.first.id);
+      }
+    }
   }
 
   @override
   void dispose() {
+    _amountCtrlListener?.call; // noop, just to silence analyzer if needed
+    _amountCtrl.removeListener(_amountCtrlListener!);
     _amountCtrl.dispose();
     _noteCtrl.dispose();
     _tagCtrl.dispose();
+    _typeSub.close();
+    _walletsSub.close();
     super.dispose();
   }
 
@@ -95,18 +179,14 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
                       ),
                     ) ??
                     false;
-
                 if (!sure) return;
 
                 try {
-                  // Soft delete (recommended for MVP). Hard চাইলে hard: true
                   await ref
                       .read(deleteTxProvider)
                       .call(widget.initial!.id, hard: false);
-
                   if (!mounted) return;
                   _snack('Transaction deleted');
-
                   context.canPop()
                       ? context.pop()
                       : context.goNamed('transactions');
@@ -237,6 +317,10 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
           child: AmountField(
             controller: _amountCtrl,
             currencySymbol: AppCurrencies.symbol(form.currency),
+            // If your AmountField supports onChanged, keep this; otherwise remove it.
+            onChanged: (txt) {
+              // already handled by controller listener; keep as NOP or light-parsing if you want
+            },
           ),
         );
 
@@ -267,7 +351,10 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
           trailing: IconButton(
             tooltip: 'Clear amount',
             icon: const Icon(Icons.clear),
-            onPressed: () => _amountCtrl.clear(),
+            onPressed: () {
+              _amountCtrl.clear();
+              nf.setAmount(0);
+            },
           ),
           children: [
             if (canRow)
@@ -290,13 +377,15 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
               ),
             const SizedBox(height: 8),
 
+            // Read-only preview (no provider writes here)
             ValueListenableBuilder<TextEditingValue>(
               valueListenable: _amountCtrl,
               builder: (context, value, _) {
-                final raw = double.tryParse(value.text) ?? 0;
+                final parsed =
+                    double.tryParse(value.text.replaceAll(',', '')) ?? 0;
                 final signed = form.type == TransactionType.expense
-                    ? -raw
-                    : raw;
+                    ? -parsed
+                    : parsed;
                 final color = form.type == TransactionType.expense
                     ? Colors.red
                     : (form.type == TransactionType.income
@@ -308,7 +397,11 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
                     Icon(Icons.equalizer_rounded, color: color),
                     const SizedBox(width: 6),
                     Text(
-                      formatAmount(signed, currency: form.currency),
+                      // symbol pass করুন (আপনার formatter এ symbol/code—যেটা নেয়)
+                      formatAmount(
+                        signed,
+                        currency: AppCurrencies.symbol(form.currency),
+                      ),
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         color: color,
@@ -326,33 +419,23 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
 
   Widget _categoryCard(TransactionFormState form) {
     final nf = ref.read(transactionFormProvider.notifier);
+    final kind = kindFromTxType(form.type);
+
     return SectionCard(
       title: 'Category',
       trailing: IconButton(
         tooltip: 'Reset',
         icon: const Icon(Icons.restart_alt),
-        onPressed: nf.resetCategory,
+        onPressed: () {
+          final list = defaultCategoriesByKind(kind);
+          if (list.isNotEmpty) nf.setCategoryId(list.first.id);
+        },
       ),
       children: [
-        AnimatedSize(
-          duration: const Duration(milliseconds: 180),
-          curve: Curves.easeOutCubic,
-          child: Wrap(
-            spacing: 8,
-            runSpacing: -6,
-            children: Category.values.map((c) {
-              final selected = form.category == c;
-              return ChoiceChip(
-                label: Text(prettyCategory(c)),
-                selected: selected,
-                onSelected: (_) => nf.setCategory(c),
-                avatar: selected ? const Icon(Icons.check, size: 16) : null,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              );
-            }).toList(),
-          ),
+        CategoryChipsPicker(
+          kind: kind,
+          selectedId: form.categoryId,
+          onSelected: (c) => nf.setCategoryId(c.id),
         ),
       ],
     );
@@ -376,27 +459,22 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
           onChanged: notifier.setDateUtc,
         ),
         const SizedBox(height: 12),
-        WalletPicker(
-          valueId: form.walletId,
+
+        WalletPickerButton(
+          walletId: form.walletId,
           label: 'Wallet',
-          onSelected: (w) => notifier.setTargetWalletId(w.id),
+          onSelected: (w) => notifier.setWalletId(w.id),
         ),
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child: form.type == TransactionType.transfer
-              ? Column(
-                  key: const ValueKey('target'),
-                  children: [
-                    const SizedBox(height: 12),
-                    WalletPicker(
-                      label: 'Target Wallet',
-                      valueId: form.targetWalletId,
-                      onSelected: (w) => notifier.setTargetWalletId(w.id),
-                    ),
-                  ],
-                )
-              : const SizedBox.shrink(key: ValueKey('no_target')),
-        ),
+
+        if (form.type == TransactionType.transfer)
+          Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: WalletPickerButton(
+              walletId: form.targetWalletId,
+              label: 'Target Wallet',
+              onSelected: (w) => notifier.setTargetWalletId(w.id),
+            ),
+          ),
       ],
     );
   }
@@ -458,32 +536,48 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
   }
 
   // ----------------- Submit -----------------
-
   Future<void> _submit() async {
     FocusScope.of(context).unfocus();
+
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     final form = ref.read(transactionFormProvider);
-    final amount = double.tryParse(_amountCtrl.text.trim());
-    if (amount == null || amount <= 0) {
+
+    // quick business rules
+    final msg = ref.read(transactionFormProvider.notifier).quickValidate();
+    if (msg != null) {
+      _snack(msg);
+      return;
+    }
+
+    // resolve amount (state is source of truth; fallback to controller)
+    var resolvedAmount = form.amount;
+    if (resolvedAmount <= 0 && _amountCtrl.text.isNotEmpty) {
+      resolvedAmount =
+          double.tryParse(_amountCtrl.text.replaceAll(',', '')) ?? 0;
+    }
+    if (resolvedAmount <= 0) {
       _snack('Enter a valid amount');
       return;
     }
+
+    // transfer guard (double check)
     if (form.type == TransactionType.transfer &&
         (form.targetWalletId == null || form.targetWalletId!.isEmpty)) {
       _snack('Target wallet is required for transfer');
       return;
     }
 
+    // build entity
     final isEdit = widget.initial != null;
     final id = isEdit ? widget.initial!.id : const Uuid().v4();
 
     final entity = TransactionEntity(
       id: id,
-      amount: amount,
+      amount: resolvedAmount,
       date: form.dateUtc,
       type: form.type,
-      category: form.category,
+      categoryId: form.categoryId!, // ensured non-null by validation/defaults
       walletId: form.walletId!,
       targetWalletId: form.type == TransactionType.transfer
           ? form.targetWalletId
