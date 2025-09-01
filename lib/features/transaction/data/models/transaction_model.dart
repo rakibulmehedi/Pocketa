@@ -1,9 +1,8 @@
 import 'package:hive/hive.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
 
 part 'transaction_model.g.dart';
 
-@HiveType(typeId: 10)
+@HiveType(typeId: 11)
 enum TransactionType {
   @HiveField(0)
   income,
@@ -13,52 +12,41 @@ enum TransactionType {
   transfer,
 }
 
-@HiveType(typeId: 2)
+@HiveType(typeId: 10)
 class Transaction extends HiveObject {
   @HiveField(0)
-  final String id;
-
+  String id;
   @HiveField(1)
-  final double amount;
-
+  double amount;
   @HiveField(2)
-  final DateTime date;
-
+  DateTime date;
   @HiveField(3)
-  final TransactionType type;
+  TransactionType type;
 
-  @HiveField(15)
-  final String? categoryId;
-
+  @HiveField(4)
+  String? categoryId;
   @HiveField(5)
-  final String walletId;
-
+  String walletId;
   @HiveField(6)
-  final String? targetWalletId;
-
+  String? targetWalletId;
   @HiveField(7)
-  final String? note;
-
+  String? note;
   @HiveField(8)
-  final List<String>? tags;
-
+  List<String>? tags;
   @HiveField(9)
-  final String currency;
-
+  String currency;
   @HiveField(10)
-  final DateTime? createdAt;
-
+  DateTime? createdAt;
   @HiveField(11)
-  final DateTime? updatedAt;
-
+  DateTime? updatedAt;
   @HiveField(12)
-  final bool isSynced;
-
+  bool isSynced;
   @HiveField(13)
-  final String? attachmentUrl;
-
+  String? attachmentUrl;
   @HiveField(14)
-  final bool isDeleted;
+  bool isDeleted;
+  @HiveField(15)
+  String? transferTo;
 
   Transaction({
     required this.id,
@@ -76,6 +64,7 @@ class Transaction extends HiveObject {
     this.isSynced = false,
     this.attachmentUrl,
     this.isDeleted = false,
+    this.transferTo,
   });
 
   Transaction copyWith({
@@ -94,6 +83,7 @@ class Transaction extends HiveObject {
     bool? isSynced,
     String? attachmentUrl,
     bool? isDeleted,
+    String? transferTo,
   }) {
     return Transaction(
       id: id ?? this.id,
@@ -111,64 +101,7 @@ class Transaction extends HiveObject {
       isSynced: isSynced ?? this.isSynced,
       attachmentUrl: attachmentUrl ?? this.attachmentUrl,
       isDeleted: isDeleted ?? this.isDeleted,
+      transferTo: transferTo ?? this.transferTo,
     );
   }
-
-  TransactionEntity toEntity() => TransactionEntity(
-    id: id,
-    amount: amount,
-    date: date,
-    type: type,
-    categoryId: categoryId,
-    walletId: walletId,
-    targetWalletId: targetWalletId,
-    note: note,
-    tags: tags,
-    currency: currency,
-    createdAt: createdAt,
-    updatedAt: updatedAt,
-    isSynced: isSynced,
-    attachmentUrl: attachmentUrl,
-    isDeleted: isDeleted,
-  );
-
-  factory Transaction.fromEntity(TransactionEntity e) => Transaction(
-    id: e.id,
-    amount: e.amount,
-    date: e.date,
-    type: e.type,
-    categoryId: e.categoryId,
-    walletId: e.walletId,
-    targetWalletId: e.targetWalletId,
-    note: e.note,
-    tags: e.tags,
-    currency: e.currency,
-    createdAt: e.createdAt,
-    updatedAt: e.updatedAt,
-    isSynced: e.isSynced,
-    attachmentUrl: e.attachmentUrl,
-    isDeleted: e.isDeleted,
-  );
 }
-
-extension TransactionMapper on TransactionEntity {
-  Transaction toModel() => Transaction(
-    id: id,
-    amount: amount,
-    date: date,
-    type: type,
-    categoryId: categoryId,
-    walletId: walletId,
-    targetWalletId: targetWalletId,
-    note: note,
-    tags: tags,
-    currency: currency,
-    createdAt: createdAt,
-    updatedAt: updatedAt,
-    isSynced: isSynced,
-    attachmentUrl: attachmentUrl,
-    isDeleted: isDeleted,
-  );
-}
-
- 

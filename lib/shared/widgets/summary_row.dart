@@ -42,7 +42,7 @@ class SummaryRow extends StatelessWidget {
                 Icon(
                   icon,
                   size: isCompact ? 18 : 20,
-                  color: accent.withOpacity(0.9),
+                  color: accent.withValues(alpha: 0.9),
                 ),
                 const SizedBox(width: 8),
               ],
@@ -54,7 +54,7 @@ class SummaryRow extends StatelessWidget {
                     label,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.onSurface.withOpacity(0.8),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                       fontSize: isCompact ? 12 : 13.5,
                     ),
                   ),
@@ -100,7 +100,7 @@ class SummaryRow extends StatelessWidget {
               height: isCompact ? 36 : 40,
               width: isCompact ? 36 : 40,
               decoration: BoxDecoration(
-                color: accent.withOpacity(0.12),
+                color: accent.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: accent),
@@ -115,7 +115,7 @@ class SummaryRow extends StatelessWidget {
                     'Net Balance',
                     style: theme.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.onSurface.withOpacity(0.8),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -133,7 +133,7 @@ class SummaryRow extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: accent.withOpacity(0.12),
+                color: accent.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(999),
               ),
               child: Text(

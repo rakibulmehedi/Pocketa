@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
 import 'package:pocketa/features/wallets/presentations/viewmodels/wallet_providers.dart';
-import 'add_wallet_sheet.dart';
+import 'package:pocketa/features/wallets/presentations/widgets/add_wallet_sheet.dart';
 
 class WalletPickerButton extends ConsumerWidget {
   final String? walletId;
@@ -23,23 +23,32 @@ class WalletPickerButton extends ConsumerWidget {
     return walletsAsync.when(
       data: (list) {
         if (list.isEmpty) {
-          return ListTile(
-            contentPadding: EdgeInsets.zero,
-            leading: const Icon(Icons.account_balance_wallet_outlined),
-            title: Text(label),
-            subtitle: const Text('No wallets yet'),
-            trailing: IconButton(
-              tooltip: 'Add wallet',
-              icon: const Icon(Icons.add),
-              onPressed: () async {
-                final created = await showAddWalletSheet(context, ref);
-                if (created != null) onSelected(created);
-              },
+          return Container(
+            decoration: BoxDecoration(
+              border: BoxBorder.all(color: Theme.of(context).shadowColor.withAlpha(50)),
+              borderRadius: BorderRadius.circular(20)
             ),
-            onTap: () async {
-              final created = await showAddWalletSheet(context, ref);
-              if (created != null) onSelected(created);
-            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.account_balance_wallet_outlined),
+                title: Text(label),
+                subtitle: const Text('No wallets yet'),
+                trailing: IconButton(
+                  tooltip: 'Add wallet',
+                  icon: const Icon(Icons.add),
+                  onPressed: () async {
+                    final created = await showAddWalletSheet(context, ref);
+                    if (created != null) onSelected(created);
+                  },
+                ),
+                onTap: () async {
+                  final created = await showAddWalletSheet(context, ref);
+                  if (created != null) onSelected(created);
+                },
+              ),
+            ),
           );
         }
 

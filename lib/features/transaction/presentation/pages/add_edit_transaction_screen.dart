@@ -1,10 +1,13 @@
-// lib/features/transaction/presentation/pages/add_edit_transaction_screen.dart
-
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
+import 'package:pocketa/features/transaction/presentation/viewmodels/month_args.dart';
+import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_computed_providers.dart';
+import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_usecases_providers.dart';
+import 'package:pocketa/shared/widgets/more_menu.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:pocketa/core/constants/default_categories.dart';
@@ -33,42 +36,51 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
   late final TextEditingController _amountCtrl;
   late final TextEditingController _noteCtrl;
   late final TextEditingController _tagCtrl;
+  late final TextEditingController _recipientCtrl;
+  late final FocusNode _recipientFocus;
 
-  // listeners we remove on dispose
+  // subscriptions
   late ProviderSubscription<TransactionFormState> _typeSub;
+  late ProviderSubscription<TransactionFormState> _formSub;
   late ProviderSubscription<AsyncValue<List<WalletEntity>>> _walletsSub;
+
   VoidCallback? _amountCtrlListener;
+  String? _inlineError;
 
   @override
   void initState() {
     super.initState();
 
-    // Controllers
     _amountCtrl = TextEditingController(
       text: widget.initial?.amount.toString() ?? '',
     );
     _noteCtrl = TextEditingController(text: widget.initial?.note ?? '');
     _tagCtrl = TextEditingController();
+    _recipientCtrl = TextEditingController(
+      text: widget.initial?.transferTo ?? '',
+    );
+    _recipientFocus = FocusNode();
 
-    // 1) Hydrate edit-mode & set initial sensible defaults ONCE
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(transactionFormProvider.notifier).initializeForm(widget.initial);
       _ensureDefaultsOnce();
     });
 
-    // 2) Amount controller -> provider (outside build)
+    // Amount controller → provider (only if value changed)
     _amountCtrlListener = () {
       final raw = _amountCtrl.text.replaceAll(',', '');
-      final parsed = double.tryParse(raw) ?? 0;
-      // microtask so this never runs inside current build frame
-      scheduleMicrotask(() {
-        if (!mounted) return;
-        ref.read(transactionFormProvider.notifier).setAmount(parsed);
-      });
+      final parsed = double.tryParse(raw) ?? 0.0;
+      final current = ref.read(transactionFormProvider).amount;
+      if (parsed != current) {
+        scheduleMicrotask(() {
+          if (!mounted) return;
+          ref.read(transactionFormProvider.notifier).setAmount(parsed);
+        });
+      }
     };
     _amountCtrl.addListener(_amountCtrlListener!);
 
-    // 3) On type change -> reset category to the first of that kind
+    // Type change → reset category; clear transfer-only when leaving transfer
     _typeSub = ref.listenManual<TransactionFormState>(transactionFormProvider, (
       prev,
       next,
@@ -81,10 +93,26 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
               .read(transactionFormProvider.notifier)
               .setCategoryId(list.first.id);
         }
+        if (next.type != TransactionType.transfer) {
+          FocusScope.of(context).unfocus();
+          ref.read(transactionFormProvider.notifier).setTransferTo(null);
+          ref.read(transactionFormProvider.notifier).setTargetWalletId(null);
+          _recipientCtrl.clear();
+        }
       }
     });
 
-    // 4) When wallets stream becomes non-empty and wallet not chosen yet → set default
+    // Clear inline error on any form mutation
+    _formSub = ref.listenManual<TransactionFormState>(transactionFormProvider, (
+      _,
+      __,
+    ) {
+      if (_inlineError != null) {
+        setState(() => _inlineError = null);
+      }
+    });
+
+    // When wallets arrive & none chosen → set default once
     _walletsSub = ref.listenManual(walletsStreamProvider, (prev, next) {
       next.whenData((list) {
         final f = ref.read(transactionFormProvider);
@@ -102,7 +130,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
   void _ensureDefaultsOnce() {
     final f = ref.read(transactionFormProvider);
 
-    // WALLET default (snapshot)
+    // Wallet default (snapshot)
     if (f.walletId == null) {
       final wallets = ref
           .read(walletsStreamProvider)
@@ -116,7 +144,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
       }
     }
 
-    // CATEGORY default (by type)
+    // Category default by type
     if (f.categoryId == null) {
       final kind = kindFromTxType(f.type);
       final list = defaultCategoriesByKind(kind);
@@ -128,12 +156,17 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
 
   @override
   void dispose() {
-    _amountCtrlListener?.call; // noop, just to silence analyzer if needed
-    _amountCtrl.removeListener(_amountCtrlListener!);
+    if (_amountCtrlListener != null) {
+      _amountCtrl.removeListener(_amountCtrlListener!);
+      _amountCtrlListener = null;
+    }
     _amountCtrl.dispose();
     _noteCtrl.dispose();
     _tagCtrl.dispose();
+    _recipientCtrl.dispose();
+    _recipientFocus.dispose();
     _typeSub.close();
+    _formSub.close();
     _walletsSub.close();
     super.dispose();
   }
@@ -146,69 +179,137 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
     final w = MediaQuery.sizeOf(context).width;
     final isWide = w >= 900;
 
+    // Header KPI (safe: wallet can be null)
+    final now = DateTime.now();
+    final args = MonthArgs(y: now.year, m: now.month, walletId: form.walletId);
+    final netBalance = ref.watch(monthNetRxProvider(args));
+    final isPositive = ref.watch(isMonthNetPositiveProvider(args));
+
+    final signedPreview = form.type == TransactionType.expense
+        ? -form.amount
+        : form.amount;
+    final previewText = formatAmount(
+      signedPreview,
+      currency: AppCurrencies.symbol(form.currency),
+    );
+
     return Scaffold(
       appBar: CustomAppBar(
-        title: isEdit ? 'Edit Transaction' : 'Add Transaction',
+        title: isEdit ? 'Edit Transactions' : 'Add Transaction',
+        subtitle: formatDate(now),
         showBack: true,
-        onBackTap: () => context.pop(),
         actions: [
-          if (isEdit)
-            IconButton(
-              tooltip: 'Delete',
-              icon: const Icon(Icons.delete_outline),
-              onPressed: () async {
-                final sure =
-                    await showDialog<bool>(
-                      context: context,
-                      builder: (ctx) => AlertDialog(
-                        title: const Text('Delete transaction?'),
-                        content: const Text('This action cannot be undone.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => context.pop(false),
-                            child: const Text('Cancel'),
-                          ),
-                          FilledButton(
-                            style: FilledButton.styleFrom(
-                              backgroundColor: Colors.red,
-                            ),
-                            onPressed: () => context.pop(true),
-                            child: const Text('Delete'),
-                          ),
-                        ],
+          MoreMenu(
+            onDelete: isEdit ? () => _confirmDelete(widget.initial!.id) : null,
+          ),
+        ],
+        trailingPillText: formatAmount(netBalance),
+        trailingPillIcon: isPositive
+            ? Icons.trending_up_rounded
+            : Icons.trending_down_rounded,
+        trailingPillColor: isPositive ? Colors.green : Colors.red,
+        accentColor: Theme.of(context).colorScheme.primary,
+      ),
+      body: Column(
+        children: [
+          // inline error banner
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 220),
+            child: _inlineError == null
+                ? const SizedBox(height: 0)
+                : Container(
+                    key: const ValueKey('error'),
+                    margin: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Colors.red.withValues(alpha: 0.18),
                       ),
-                    ) ??
-                    false;
-                if (!sure) return;
-
-                try {
-                  await ref
-                      .read(deleteTxProvider)
-                      .call(widget.initial!.id, hard: false);
-                  if (!mounted) return;
-                  _snack('Transaction deleted');
-                  context.canPop()
-                      ? context.pop()
-                      : context.goNamed('transactions');
-                } catch (e) {
-                  if (!mounted) return;
-                  _snack('Delete failed: $e');
-                }
-              },
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.error_outline,
+                          size: 18,
+                          color: Colors.red,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            _inlineError!,
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: Colors.red.shade700,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: 'Dismiss',
+                          icon: const Icon(Icons.close, size: 18),
+                          onPressed: () => setState(() => _inlineError = null),
+                        ),
+                      ],
+                    ),
+                  ),
+          ),
+          Expanded(
+            child: Form(
+              key: _formKey,
+              child: isWide ? _buildWide(form) : _buildNarrow(form),
             ),
+          ),
         ],
       ),
-      body: Form(
-        key: _formKey,
-        child: isWide ? _buildWide(form) : _buildNarrow(form),
-      ),
       bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: FilledButton.icon(
-            onPressed: _submit,
-            icon: const Icon(Icons.check),
-            label: Text(isEdit ? 'Save Changes' : 'Add Transaction'),
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary.withValues(alpha: 0.05),
+                blurRadius: 16,
+                offset: const Offset(0, -4),
+              ),
+            ],
+            border: Border.all(
+              color: Theme.of(
+                context,
+              ).colorScheme.outlineVariant.withValues(alpha: 0.20),
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.receipt_long_rounded, color: _accentByType(form.type)),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  previewText,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: _accentByType(form.type),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              FilledButton.icon(
+                onPressed: _submit,
+                icon: const Icon(Icons.check),
+                label: Text(isEdit ? 'Save' : 'Add'),
+              ),
+            ],
           ),
         ),
       ),
@@ -216,19 +317,23 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
   }
 
   // ----------------- Layouts -----------------
-
   Widget _buildNarrow(TransactionFormState form) => ListView(
-    padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
+    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+    padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
     children: [
       _typeCard(form),
       _amountCard(form),
+      _quickAmountChips(form),
       _categoryCard(form),
       _detailsCard(form),
+      if (form.type == TransactionType.transfer) _transferTargetCard(form),
       _notesCard(form),
+      const SizedBox(height: 80),
     ],
   );
 
   Widget _buildWide(TransactionFormState form) => CustomScrollView(
+    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
     slivers: [
       SliverPadding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -248,18 +353,23 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
         ),
       ),
       SliverPadding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        sliver: SliverToBoxAdapter(child: _transferTargetCard(form)),
+      ),
+      SliverPadding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
         sliver: SliverToBoxAdapter(child: _notesCard(form)),
       ),
+      const SliverToBoxAdapter(child: SizedBox(height: 100)),
     ],
   );
 
   // ----------------- Cards -----------------
-
   Widget _typeCard(TransactionFormState form) {
     final notifier = ref.read(transactionFormProvider.notifier);
     return SectionCard(
       title: 'Transaction Type',
+      subtitle: 'Choose one',
       trailing: IconButton(
         icon: const Icon(Icons.flip),
         tooltip: 'Toggle',
@@ -271,17 +381,17 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
             ButtonSegment(
               value: TransactionType.income,
               label: Text('Income'),
-              icon: Icon(Icons.arrow_downward),
+              icon: Icon(Icons.arrow_downward_rounded),
             ),
             ButtonSegment(
               value: TransactionType.expense,
               label: Text('Expense'),
-              icon: Icon(Icons.arrow_upward),
+              icon: Icon(Icons.arrow_upward_rounded),
             ),
             ButtonSegment(
               value: TransactionType.transfer,
               label: Text('Transfer'),
-              icon: Icon(Icons.swap_horiz),
+              icon: Icon(Icons.swap_horiz_rounded),
             ),
           ],
           selected: {form.type},
@@ -307,20 +417,14 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
         } else {
           targetDropW = 150;
         }
-        final double dropW = targetDropW
-            .clamp(70.0, c.maxWidth * 0.30)
-            .toDouble();
-
-        final bool canRow = c.maxWidth >= (dropW + gap + 200.0);
+        final dropW = targetDropW.clamp(70.0, c.maxWidth * 0.30).toDouble();
+        final canRow = c.maxWidth >= (dropW + gap + 200.0);
 
         final amountField = Expanded(
           child: AmountField(
             controller: _amountCtrl,
+            label: 'Amount',
             currencySymbol: AppCurrencies.symbol(form.currency),
-            // If your AmountField supports onChanged, keep this; otherwise remove it.
-            onChanged: (txt) {
-              // already handled by controller listener; keep as NOP or light-parsing if you want
-            },
           ),
         );
 
@@ -346,14 +450,18 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
           ),
         );
 
+        final color = _accentByType(form.type);
+
         return SectionCard(
           title: 'Amount',
+          subtitle: 'Enter value',
           trailing: IconButton(
             tooltip: 'Clear amount',
             icon: const Icon(Icons.clear),
             onPressed: () {
               _amountCtrl.clear();
               nf.setAmount(0);
+              HapticFeedback.selectionClick();
             },
           ),
           children: [
@@ -376,8 +484,6 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
                 ],
               ),
             const SizedBox(height: 8),
-
-            // Read-only preview (no provider writes here)
             ValueListenableBuilder<TextEditingValue>(
               valueListenable: _amountCtrl,
               builder: (context, value, _) {
@@ -386,28 +492,26 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
                 final signed = form.type == TransactionType.expense
                     ? -parsed
                     : parsed;
-                final color = form.type == TransactionType.expense
-                    ? Colors.red
-                    : (form.type == TransactionType.income
-                          ? Colors.green
-                          : Colors.blueGrey);
 
-                return Row(
-                  children: [
-                    Icon(Icons.equalizer_rounded, color: color),
-                    const SizedBox(width: 6),
-                    Text(
-                      // symbol pass করুন (আপনার formatter এ symbol/code—যেটা নেয়)
-                      formatAmount(
-                        signed,
-                        currency: AppCurrencies.symbol(form.currency),
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 180),
+                  child: Row(
+                    key: ValueKey('${form.type}-$parsed-${form.currency}'),
+                    children: [
+                      Icon(Icons.equalizer_rounded, color: color),
+                      const SizedBox(width: 6),
+                      Text(
+                        formatAmount(
+                          signed,
+                          currency: AppCurrencies.symbol(form.currency),
+                        ),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          color: color,
+                        ),
                       ),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: color,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 );
               },
             ),
@@ -417,25 +521,63 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
     );
   }
 
+  Widget _quickAmountChips(TransactionFormState form) {
+    final nf = ref.read(transactionFormProvider.notifier);
+    const amounts = <int>[100, 200, 500, 1000, 2000, 5000];
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 4, bottom: 8),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: -6,
+        children: [
+          for (final a in amounts)
+            ActionChip(
+              label: Text(
+                formatAmount(
+                  form.type == TransactionType.expense
+                      ? -a.toDouble()
+                      : a.toDouble(),
+                  currency: AppCurrencies.symbol(form.currency),
+                ),
+              ),
+              onPressed: () {
+                _amountCtrl.text = a.toString();
+                nf.setAmount(a.toDouble());
+                HapticFeedback.lightImpact();
+              },
+            ),
+        ],
+      ),
+    );
+  }
+
   Widget _categoryCard(TransactionFormState form) {
     final nf = ref.read(transactionFormProvider.notifier);
     final kind = kindFromTxType(form.type);
 
     return SectionCard(
       title: 'Category',
+      subtitle: 'Tap to select',
       trailing: IconButton(
         tooltip: 'Reset',
         icon: const Icon(Icons.restart_alt),
         onPressed: () {
           final list = defaultCategoriesByKind(kind);
-          if (list.isNotEmpty) nf.setCategoryId(list.first.id);
+          if (list.isNotEmpty) {
+            nf.setCategoryId(list.first.id);
+            HapticFeedback.selectionClick();
+          }
         },
       ),
       children: [
         CategoryChipsPicker(
           kind: kind,
           selectedId: form.categoryId,
-          onSelected: (c) => nf.setCategoryId(c.id),
+          onSelected: (c) {
+            nf.setCategoryId(c.id);
+            HapticFeedback.selectionClick();
+          },
         ),
       ],
     );
@@ -446,9 +588,13 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
 
     return SectionCard(
       title: 'Details',
+      subtitle: 'Date, wallet, etc.',
       trailing: IconButton(
         tooltip: 'Set Now',
-        onPressed: () => notifier.setDateUtc(DateTime.now().toUtc()),
+        onPressed: () {
+          notifier.setDateUtc(DateTime.now().toUtc());
+          HapticFeedback.selectionClick();
+        },
         icon: const Icon(Icons.schedule),
       ),
       children: [
@@ -459,22 +605,86 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
           onChanged: notifier.setDateUtc,
         ),
         const SizedBox(height: 12),
-
         WalletPickerButton(
           walletId: form.walletId,
           label: 'Wallet',
           onSelected: (w) => notifier.setWalletId(w.id),
         ),
+      ],
+    );
+  }
 
-        if (form.type == TransactionType.transfer)
-          Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: WalletPickerButton(
-              walletId: form.targetWalletId,
-              label: 'Target Wallet',
-              onSelected: (w) => notifier.setTargetWalletId(w.id),
+  Widget _transferTargetCard(TransactionFormState form) {
+    if (form.type != TransactionType.transfer) return const SizedBox.shrink();
+    final nf = ref.read(transactionFormProvider.notifier);
+
+    final isExternal = form.externalTransfer;
+    final isInternal = !isExternal;
+
+    return SectionCard(
+      title: 'Transfer To',
+      subtitle:
+          'Choose one: another wallet (internal) or a recipient (external).',
+      children: [
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          children: [
+            ChoiceChip(
+              label: const Text('Another wallet'),
+              selected: isInternal,
+              onSelected: (sel) {
+                if (!sel) return;
+                FocusScope.of(context).unfocus();
+                nf.enableInternalTransfer();
+                HapticFeedback.selectionClick();
+              },
             ),
+            ChoiceChip(
+              label: const Text('Someone / Account'),
+              selected: isExternal,
+              onSelected: (sel) {
+                if (!sel) return;
+                nf.enableExternalTransfer(_recipientCtrl.text);
+                // Focus after the field is mounted
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) _recipientFocus.requestFocus();
+                });
+                HapticFeedback.selectionClick();
+              },
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 220),
+          switchInCurve: Curves.easeOut,
+          switchOutCurve: Curves.easeIn,
+          transitionBuilder: (child, anim) => FadeTransition(
+            opacity: anim,
+            child: SizeTransition(sizeFactor: anim, child: child),
           ),
+          child: isInternal
+              ? WalletPickerButton(
+                  key: const ValueKey('internal'),
+                  walletId: form.targetWalletId,
+                  label: 'Target Wallet',
+                  onSelected: (w) => nf.setTargetWalletId(w.id),
+                )
+              : TextFormField(
+                  key: const ValueKey('external'),
+                  controller: _recipientCtrl,
+                  focusNode: _recipientFocus,
+                  decoration: const InputDecoration(
+                    labelText: 'Recipient (name / phone / account)',
+                    prefixIcon: Icon(Icons.person_outline),
+                    hintText: 'e.g. Mehedi, 01XXXXXXXXX, A/C 12345',
+                  ),
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (_) => _submit(),
+                  onChanged: (v) => nf.setTransferTo(v),
+                ),
+        ),
       ],
     );
   }
@@ -483,10 +693,14 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
     final notifier = ref.read(transactionFormProvider.notifier);
     return SectionCard(
       title: 'Notes & Tags',
+      subtitle: 'Optional',
       trailing: IconButton(
         tooltip: 'Clear all tags',
         icon: const Icon(Icons.clear_all),
-        onPressed: notifier.clearTags,
+        onPressed: () {
+          notifier.clearTags();
+          HapticFeedback.selectionClick();
+        },
       ),
       children: [
         NoteField(controller: _noteCtrl),
@@ -500,6 +714,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
                   hintText: 'Add tag and press Enter',
                   prefixIcon: Icon(Icons.tag_outlined),
                 ),
+                textInputAction: TextInputAction.done,
                 onFieldSubmitted: (v) {
                   notifier.addTag(v.trim());
                   _tagCtrl.clear();
@@ -535,40 +750,31 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
     );
   }
 
-  // ----------------- Submit -----------------
+  // ----------------- Submit / Delete -----------------
   Future<void> _submit() async {
+    HapticFeedback.selectionClick();
     FocusScope.of(context).unfocus();
 
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     final form = ref.read(transactionFormProvider);
 
-    // quick business rules
     final msg = ref.read(transactionFormProvider.notifier).quickValidate();
     if (msg != null) {
-      _snack(msg);
+      setState(() => _inlineError = msg);
       return;
     }
 
-    // resolve amount (state is source of truth; fallback to controller)
     var resolvedAmount = form.amount;
     if (resolvedAmount <= 0 && _amountCtrl.text.isNotEmpty) {
       resolvedAmount =
           double.tryParse(_amountCtrl.text.replaceAll(',', '')) ?? 0;
     }
     if (resolvedAmount <= 0) {
-      _snack('Enter a valid amount');
+      setState(() => _inlineError = 'Enter a valid amount');
       return;
     }
 
-    // transfer guard (double check)
-    if (form.type == TransactionType.transfer &&
-        (form.targetWalletId == null || form.targetWalletId!.isEmpty)) {
-      _snack('Target wallet is required for transfer');
-      return;
-    }
-
-    // build entity
     final isEdit = widget.initial != null;
     final id = isEdit ? widget.initial!.id : const Uuid().v4();
 
@@ -577,7 +783,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
       amount: resolvedAmount,
       date: form.dateUtc,
       type: form.type,
-      categoryId: form.categoryId!, // ensured non-null by validation/defaults
+      categoryId: form.categoryId!,
       walletId: form.walletId!,
       targetWalletId: form.type == TransactionType.transfer
           ? form.targetWalletId
@@ -590,16 +796,66 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
       isSynced: false,
       attachmentUrl: widget.initial?.attachmentUrl,
       isDeleted: false,
+      transferTo: form.type == TransactionType.transfer
+          ? form.transferTo?.trim()
+          : null,
     );
 
-    await ref.read(addTxProvider).call(entity);
+    await ref.read(upsertTxUCProvider).call(entity);
     if (!mounted) return;
 
-    _snack(isEdit ? 'Transaction updated' : 'Transaction added');
+    HapticFeedback.lightImpact();
+    _toast(isEdit ? 'Transaction updated' : 'Transaction added');
     context.canPop() ? context.pop() : context.goNamed('transactions');
   }
 
-  void _snack(String message) => ScaffoldMessenger.of(
+  Future<void> _confirmDelete(String id) async {
+    final sure =
+        await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Delete transaction?'),
+            content: const Text('This action cannot be undone.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                style: FilledButton.styleFrom(backgroundColor: Colors.red),
+                onPressed: () => Navigator.pop(ctx, true),
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+
+    if (!sure) return;
+
+    try {
+      await ref.read(deleteTxSoftUCProvider).call(id);
+      if (!mounted) return;
+      _toast('Transaction deleted');
+      context.canPop() ? context.pop() : context.goNamed('transactions');
+    } catch (e) {
+      if (!mounted) return;
+      _toast('Delete failed: $e');
+    }
+  }
+
+  void _toast(String message) => ScaffoldMessenger.of(
     context,
   ).showSnackBar(SnackBar(content: Text(message)));
+
+  static Color _accentByType(TransactionType t) {
+    switch (t) {
+      case TransactionType.income:
+        return Colors.green;
+      case TransactionType.expense:
+        return Colors.red;
+      case TransactionType.transfer:
+        return Colors.blueGrey;
+    }
+  }
 }

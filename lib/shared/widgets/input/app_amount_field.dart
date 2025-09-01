@@ -52,15 +52,13 @@ class _IndianGroupingFormatter extends TextInputFormatter {
     final raw = newValue.text.replaceAll(',', '');
     if (raw.isEmpty) return newValue;
 
-    // caret অবস্থান ধরে রাখা
     final selectionIndexFromRight =
         newValue.text.length - newValue.selection.end;
 
     final parts = raw.split('.');
-    String intPart = parts[0];
+    final String intPart = parts[0];
     final fracPart = parts.length > 1 ? parts[1] : null;
 
-    // প্রথম 3, তারপর প্রতি 2 ডিজিট করে গ্রুপ
     final buf = StringBuffer();
     if (intPart.length > 3) {
       final head = intPart.substring(0, intPart.length - 3);

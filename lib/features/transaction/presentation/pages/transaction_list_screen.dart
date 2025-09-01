@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pocketa/features/transaction/presentation/viewmodels/month_args.dart';
+import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_computed_providers.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/viewmodels.dart';
 import 'package:pocketa/features/transaction/presentation/widgets/transaction_tile.dart';
 import 'package:pocketa/shared/widgets/widgets.dart';
@@ -15,16 +17,11 @@ class TransactionListScreen extends ConsumerWidget {
     // reactive list
     final txsAsync = ref.watch(allTransactionsProvider);
 
+    final args = MonthArgs(y: now.year, m: now.month);
     // month summaries
-    final income = ref.watch(
-      monthIncomeProvider((y: now.year, m: now.month, walletId: null)),
-    );
-    final expense = ref.watch(
-      monthExpenseProvider((y: now.year, m: now.month, walletId: null)),
-    );
-    final net = ref.watch(
-      monthNetProvider((y: now.year, m: now.month, walletId: null)),
-    );
+    final income = ref.watch(monthIncomeRxProvider(args));
+    final expense = ref.watch(monthExpenseRxProvider(args));
+    final net = ref.watch(monthNetRxProvider(args));
 
     return Scaffold(
       body: CustomScrollView(

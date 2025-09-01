@@ -6,7 +6,7 @@ part 'category_model.freezed.dart';
 part 'category_model.g.dart';
 
 @freezed
-@HiveType(typeId: 31)
+@HiveType(typeId: 1)
 class CategoryModel with _$CategoryModel {
   const factory CategoryModel({
     @HiveField(0) required String id,

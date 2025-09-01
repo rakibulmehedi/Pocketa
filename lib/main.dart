@@ -10,20 +10,24 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
 
-  Hive.registerAdapter(TransactionTypeAdapter());
+  if (!Hive.isAdapterRegistered(10)) Hive.registerAdapter(TransactionAdapter());
+  if (!Hive.isAdapterRegistered(11))
+    {Hive.registerAdapter(TransactionTypeAdapter());}
+  if (!Hive.isAdapterRegistered(20)) Hive.registerAdapter(WalletModelAdapter());
+  if (!Hive.isAdapterRegistered(21))
+   { Hive.registerAdapter(WalletTypeDtoAdapter());}
+  if (!Hive.isAdapterRegistered(1))
+{    Hive.registerAdapter(CategoryModelAdapter());}
 
-  Hive.registerAdapter(WalletTypeDtoAdapter());
-  Hive.registerAdapter(WalletModelAdapter());
 
-  Hive.registerAdapter(CategoryModelAdapter());
-
-  Hive.registerAdapter(TransactionAdapter());
 
   await Hive.openBox<CategoryModel>('categories');
   await Hive.openBox<WalletModel>('wallets');
   await Hive.openBox<Transaction>('transactions');
 
-  
+  // await Hive.deleteBoxFromDisk('transactions');
+  // await Hive.deleteBoxFromDisk('wallets');
+  // await Hive.deleteBoxFromDisk('categories');
 
   runApp(const ProviderScope(child: PocketaApp()));
 }

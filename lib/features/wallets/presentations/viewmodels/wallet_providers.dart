@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pocketa/features/wallets/data/models/wallet_model.dart';
-import 'package:pocketa/features/wallets/data/models/wallet_repo_impl.dart';
+import 'package:pocketa/features/wallets/data/wallet_repo_impl.dart';
 import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
 import 'package:pocketa/features/wallets/domain/repositories/wallet_repository.dart';
 import 'package:pocketa/features/wallets/domain/usecases/delete_wallet.dart';

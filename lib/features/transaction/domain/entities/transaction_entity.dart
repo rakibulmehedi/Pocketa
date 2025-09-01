@@ -1,15 +1,14 @@
-
+import 'package:equatable/equatable.dart';
 import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
 
-class TransactionEntity {
+
+class TransactionEntity extends Equatable {
   final String id;
   final double amount;
   final DateTime date;
   final TransactionType type;
 
-  /// New: user-defined category id (nullable for now)
   final String? categoryId;
-
   final String walletId;
   final String? targetWalletId;
   final String? note;
@@ -20,6 +19,8 @@ class TransactionEntity {
   final bool isSynced;
   final String? attachmentUrl;
   final bool isDeleted;
+  final String? transferTo;
+  final bool externalTransfer;
 
   const TransactionEntity({
     required this.id,
@@ -37,7 +38,17 @@ class TransactionEntity {
     this.isSynced = false,
     this.attachmentUrl,
     this.isDeleted = false,
+    this.transferTo,
+    this.externalTransfer = false,
   });
+
+  // Convenience
+  bool get isIncome => type == TransactionType.income;
+  bool get isExpense => type == TransactionType.expense;
+  bool get isTransfer => type == TransactionType.transfer;
+  double get signedAmount => isExpense ? -amount : amount;
+  bool get hasCategory => categoryId != null && categoryId!.isNotEmpty;
+  List<String> get safeTags => List.unmodifiable(tags ?? const []);
 
   TransactionEntity copyWith({
     String? id,
@@ -55,6 +66,8 @@ class TransactionEntity {
     bool? isSynced,
     String? attachmentUrl,
     bool? isDeleted,
+    String? transferTo,
+    bool? externalTransfer,
   }) {
     return TransactionEntity(
       id: id ?? this.id,
@@ -72,6 +85,29 @@ class TransactionEntity {
       isSynced: isSynced ?? this.isSynced,
       attachmentUrl: attachmentUrl ?? this.attachmentUrl,
       isDeleted: isDeleted ?? this.isDeleted,
+      transferTo: transferTo ?? this.transferTo,
+      externalTransfer: externalTransfer ?? this.externalTransfer,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    amount,
+    date,
+    type,
+    categoryId,
+    walletId,
+    targetWalletId,
+    note,
+    tags?.join('\u0001'),
+    currency,
+    createdAt,
+    updatedAt,
+    isSynced,
+    attachmentUrl,
+    isDeleted,
+    transferTo,
+    externalTransfer,
+  ];
 }

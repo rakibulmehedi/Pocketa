@@ -4,7 +4,7 @@ version: "0.1.0+1"
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: ^3.8.1
+  sdk: ">=3.6.0 <4.0.0" 
 
 dependencies:
   flutter:
@@ -22,10 +22,11 @@ dependencies:
 
   # Freezed + JSON (stable combo with hive_generator)
   freezed_annotation: ^2.4.1
-  json_annotation: ^4.8.1
+  json_annotation: ^4.9.0
 
   flutter_localizations:
     sdk: flutter
+  equatable: ^2.0.7
 
 dev_dependencies:
   flutter_test:

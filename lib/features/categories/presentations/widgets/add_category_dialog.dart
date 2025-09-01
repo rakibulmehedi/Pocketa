@@ -6,7 +6,11 @@ import 'package:pocketa/features/categories/presentations/viewmodels/category_pr
 class AddCategoryDialog extends ConsumerStatefulWidget {
   /// Which kind of category we’re creating
   final CategoryKind kind;
-  const AddCategoryDialog({super.key, required this.kind, required bool isIncome});
+  const AddCategoryDialog({
+    super.key,
+    required this.kind,
+    required bool isIncome,
+  });
 
   @override
   ConsumerState<AddCategoryDialog> createState() => _AddCategoryDialogState();
@@ -92,7 +96,7 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundColor: Color(_colorHex).withOpacity(0.15),
+                  backgroundColor: Color(_colorHex).withValues(alpha: 0.15),
                   child: Icon(
                     IconData(_iconCodePoint, fontFamily: _iconFontFamily),
                     color: Color(_colorHex),
