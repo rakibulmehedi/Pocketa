@@ -1,5 +1,3 @@
-// Standardized exception definitions (placeholder for future use)
-
 class CacheException implements Exception {
   final String message;
   CacheException([this.message = 'Cache error']);
@@ -20,4 +18,3 @@ class NetworkException implements Exception {
   @override
   String toString() => 'NetworkException: $message';
 }
-

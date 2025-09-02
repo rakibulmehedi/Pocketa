@@ -14,6 +14,9 @@ import 'package:pocketa/core/constants/default_categories.dart';
 import 'package:pocketa/core/utils/currency_utils.dart';
 import 'package:pocketa/core/utils/transaction_utils.dart';
 import 'package:pocketa/shared/widgets/widgets.dart';
+import 'package:pocketa/l10n/app_localizations.dart';
+import 'package:pocketa/core/analytics/analytics_service.dart';
+import 'package:pocketa/core/sync/sync_queue.dart';
 
 import 'package:pocketa/features/categories/presentations/widgets/category_chips_picker.dart';
 import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
@@ -195,7 +198,9 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: isEdit ? 'Edit Transactions' : 'Add Transaction',
+        title: isEdit
+            ? AppLocalizations.of(context).editTransaction
+            : AppLocalizations.of(context).addTransaction,
         subtitle: formatDate(now),
         showBack: true,
         actions: [
@@ -250,7 +255,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
                           ),
                         ),
                         IconButton(
-                          tooltip: 'Dismiss',
+                          tooltip: AppLocalizations.of(context).close,
                           icon: const Icon(Icons.close, size: 18),
                           onPressed: () => setState(() => _inlineError = null),
                         ),
@@ -307,7 +312,9 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
               FilledButton.icon(
                 onPressed: _submit,
                 icon: const Icon(Icons.check),
-                label: Text(isEdit ? 'Save' : 'Add'),
+                label: Text(isEdit
+                    ? AppLocalizations.of(context).save
+                    : AppLocalizations.of(context).addTransaction),
               ),
             ],
           ),
@@ -368,29 +375,27 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
   Widget _typeCard(TransactionFormState form) {
     final notifier = ref.read(transactionFormProvider.notifier);
     return SectionCard(
-      title: 'Transaction Type',
-      subtitle: 'Choose one',
+      title: AppLocalizations.of(context).type,
       trailing: IconButton(
         icon: const Icon(Icons.flip),
-        tooltip: 'Toggle',
         onPressed: notifier.toggleIncomeExpense,
       ),
       children: [
         SegmentedButton<TransactionType>(
-          segments: const [
+          segments: [
             ButtonSegment(
               value: TransactionType.income,
-              label: Text('Income'),
+              label: Text(AppLocalizations.of(context).incomeType),
               icon: Icon(Icons.arrow_downward_rounded),
             ),
             ButtonSegment(
               value: TransactionType.expense,
-              label: Text('Expense'),
+              label: Text(AppLocalizations.of(context).expenseType),
               icon: Icon(Icons.arrow_upward_rounded),
             ),
             ButtonSegment(
               value: TransactionType.transfer,
-              label: Text('Transfer'),
+              label: Text(AppLocalizations.of(context).transfer),
               icon: Icon(Icons.swap_horiz_rounded),
             ),
           ],
@@ -423,7 +428,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
         final amountField = Expanded(
           child: AmountField(
             controller: _amountCtrl,
-            label: 'Amount',
+            label: AppLocalizations.of(context).amount,
             currencySymbol: AppCurrencies.symbol(form.currency),
           ),
         );
@@ -431,7 +436,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
         final currencyField = SizedBox(
           width: dropW,
           child: AppDropdownField<String>(
-            label: 'Currency',
+            label: AppLocalizations.of(context).currency,
             value: form.currency,
             items: AppCurrencies.list
                 .map(
@@ -445,7 +450,10 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
                 )
                 .toList(),
             onChanged: (v) => nf.setCurrency(v!),
-            validator: (v) => v == null ? 'Required' : null,
+            validator: (v) => v == null
+                ? AppLocalizations.of(context)
+                    .errorRequired(AppLocalizations.of(context).currency)
+                : null,
             isDense: true,
           ),
         );
@@ -453,10 +461,9 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
         final color = _accentByType(form.type);
 
         return SectionCard(
-          title: 'Amount',
-          subtitle: 'Enter value',
+          title: AppLocalizations.of(context).amount,
           trailing: IconButton(
-            tooltip: 'Clear amount',
+            tooltip: AppLocalizations.of(context).clear,
             icon: const Icon(Icons.clear),
             onPressed: () {
               _amountCtrl.clear();
@@ -557,10 +564,10 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
     final kind = kindFromTxType(form.type);
 
     return SectionCard(
-      title: 'Category',
-      subtitle: 'Tap to select',
+      title: AppLocalizations.of(context).category,
+      subtitle: AppLocalizations.of(context).tapToSelect,
       trailing: IconButton(
-        tooltip: 'Reset',
+        tooltip: AppLocalizations.of(context).reset,
         icon: const Icon(Icons.restart_alt),
         onPressed: () {
           final list = defaultCategoriesByKind(kind);
@@ -587,10 +594,10 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
     final notifier = ref.read(transactionFormProvider.notifier);
 
     return SectionCard(
-      title: 'Details',
-      subtitle: 'Date, wallet, etc.',
+      title: AppLocalizations.of(context).details,
+      subtitle: AppLocalizations.of(context).detailsSubtitle,
       trailing: IconButton(
-        tooltip: 'Set Now',
+        tooltip: AppLocalizations.of(context).setNow,
         onPressed: () {
           notifier.setDateUtc(DateTime.now().toUtc());
           HapticFeedback.selectionClick();
@@ -600,14 +607,14 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
       children: [
         const SizedBox(height: 8),
         AppDateTimeField(
-          label: 'Date & Time',
+          label: AppLocalizations.of(context).dateTime,
           valueUtc: form.dateUtc,
           onChanged: notifier.setDateUtc,
         ),
         const SizedBox(height: 12),
         WalletPickerButton(
           walletId: form.walletId,
-          label: 'Wallet',
+          label: AppLocalizations.of(context).wallet,
           onSelected: (w) => notifier.setWalletId(w.id),
         ),
       ],
@@ -622,16 +629,15 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
     final isInternal = !isExternal;
 
     return SectionCard(
-      title: 'Transfer To',
-      subtitle:
-          'Choose one: another wallet (internal) or a recipient (external).',
+      title: AppLocalizations.of(context).transferTo,
+      subtitle: AppLocalizations.of(context).transferChoiceHelp,
       children: [
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
           children: [
             ChoiceChip(
-              label: const Text('Another wallet'),
+              label: Text(AppLocalizations.of(context).anotherWallet),
               selected: isInternal,
               onSelected: (sel) {
                 if (!sel) return;
@@ -641,7 +647,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
               },
             ),
             ChoiceChip(
-              label: const Text('Someone / Account'),
+              label: Text(AppLocalizations.of(context).someoneAccount),
               selected: isExternal,
               onSelected: (sel) {
                 if (!sel) return;
@@ -668,17 +674,17 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
               ? WalletPickerButton(
                   key: const ValueKey('internal'),
                   walletId: form.targetWalletId,
-                  label: 'Target Wallet',
+                  label: AppLocalizations.of(context).targetWallet,
                   onSelected: (w) => nf.setTargetWalletId(w.id),
                 )
               : TextFormField(
                   key: const ValueKey('external'),
                   controller: _recipientCtrl,
                   focusNode: _recipientFocus,
-                  decoration: const InputDecoration(
-                    labelText: 'Recipient (name / phone / account)',
-                    prefixIcon: Icon(Icons.person_outline),
-                    hintText: 'e.g. Mehedi, 01XXXXXXXXX, A/C 12345',
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context).recipientLabel,
+                    prefixIcon: const Icon(Icons.person_outline),
+                    hintText: AppLocalizations.of(context).recipientHint,
                   ),
                   textInputAction: TextInputAction.done,
                   onFieldSubmitted: (_) => _submit(),
@@ -692,10 +698,10 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
   Widget _notesCard(TransactionFormState form) {
     final notifier = ref.read(transactionFormProvider.notifier);
     return SectionCard(
-      title: 'Notes & Tags',
-      subtitle: 'Optional',
+      title: AppLocalizations.of(context).notesAndTags,
+      subtitle: AppLocalizations.of(context).optional,
       trailing: IconButton(
-        tooltip: 'Clear all tags',
+        tooltip: AppLocalizations.of(context).clearAllTags,
         icon: const Icon(Icons.clear_all),
         onPressed: () {
           notifier.clearTags();
@@ -710,9 +716,9 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
             Expanded(
               child: TextFormField(
                 controller: _tagCtrl,
-                decoration: const InputDecoration(
-                  hintText: 'Add tag and press Enter',
-                  prefixIcon: Icon(Icons.tag_outlined),
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context).addTag,
+                  prefixIcon: const Icon(Icons.tag_outlined),
                 ),
                 textInputAction: TextInputAction.done,
                 onFieldSubmitted: (v) {
@@ -724,7 +730,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
             const SizedBox(width: 8),
             IconButton(
               icon: const Icon(Icons.add),
-              tooltip: 'Add tag',
+              tooltip: AppLocalizations.of(context).addTag,
               onPressed: () {
                 notifier.addTag(_tagCtrl.text.trim());
                 _tagCtrl.clear();
@@ -771,7 +777,8 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
           double.tryParse(_amountCtrl.text.replaceAll(',', '')) ?? 0;
     }
     if (resolvedAmount <= 0) {
-      setState(() => _inlineError = 'Enter a valid amount');
+      setState(() =>
+          _inlineError = AppLocalizations.of(context).errorAmountPositive);
       return;
     }
 
@@ -802,10 +809,20 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
     );
 
     await ref.read(upsertTxUCProvider).call(entity);
+    // enqueue for background sync
+    ref.read(syncQueueProvider).enqueueTransactionUpsert(entity);
     if (!mounted) return;
 
     HapticFeedback.lightImpact();
-    _toast(isEdit ? 'Transaction updated' : 'Transaction added');
+    final l10n = AppLocalizations.of(context);
+    _toast(isEdit ? l10n.transactionUpdated : l10n.transactionAdded);
+    await ref.read(analyticsProvider).logEvent(
+          isEdit ? 'txn_edited' : 'txn_added',
+          params: {
+            'type': form.type.name,
+            'amount': resolvedAmount,
+          },
+        );
     context.canPop() ? context.pop() : context.goNamed('transactions');
   }
 
@@ -814,17 +831,16 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
         await showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: const Text('Delete transaction?'),
-            content: const Text('This action cannot be undone.'),
+            title: Text(AppLocalizations.of(ctx).deleteTransaction),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('Cancel'),
+                child: Text(AppLocalizations.of(ctx).cancel),
               ),
               FilledButton(
                 style: FilledButton.styleFrom(backgroundColor: Colors.red),
                 onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Delete'),
+                child: Text(AppLocalizations.of(ctx).delete),
               ),
             ],
           ),
@@ -835,12 +851,16 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
 
     try {
       await ref.read(deleteTxSoftUCProvider).call(id);
+      ref.read(syncQueueProvider).enqueueTransactionDelete(id);
       if (!mounted) return;
-      _toast('Transaction deleted');
+      _toast(AppLocalizations.of(context).transactionDeleted);
+      await ref.read(analyticsProvider).logEvent('txn_deleted', params: {
+        'id': id,
+      });
       context.canPop() ? context.pop() : context.goNamed('transactions');
     } catch (e) {
       if (!mounted) return;
-      _toast('Delete failed: $e');
+      _toast(AppLocalizations.of(context).errorGeneric);
     }
   }
 

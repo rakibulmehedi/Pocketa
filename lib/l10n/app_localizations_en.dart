@@ -161,6 +161,100 @@ class AppLocalizationsEn extends AppLocalizations {
   String get viewAll => 'View all';
 
   @override
+  String get newLabel => 'New';
+
+  @override
+  String get icon => 'Icon';
+
+  @override
+  String get color => 'Color';
+
+  @override
+  String get addCategory => 'Add category';
+
+  @override
+  String get makeDefault => 'Make default';
+
+  @override
+  String get menu => 'Menu';
+
+  @override
+  String get more => 'More';
+
+  @override
+  String get uncategorized => 'Uncategorized';
+
+  @override
+  String get optional => 'Optional';
+
+  @override
+  String get notesAndTags => 'Notes & Tags';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get setNow => 'Set now';
+
+  @override
+  String get anotherWallet => 'Another wallet';
+
+  @override
+  String get someoneAccount => 'Someone / Account';
+
+  @override
+  String get recipientLabel => 'Recipient (name / phone / account)';
+
+  @override
+  String get recipientHint => 'e.g. Mehedi, 01XXXXXXXXX, A/C 12345';
+
+  @override
+  String get targetWallet => 'Target wallet';
+
+  @override
+  String get tapToSelect => 'Tap to select';
+
+  @override
+  String get details => 'Details';
+
+  @override
+  String get detailsSubtitle => 'Date, wallet, etc.';
+
+  @override
+  String get dateTime => 'Date & Time';
+
+  @override
+  String get wallet => 'Wallet';
+
+  @override
+  String get transferTo => 'Transfer To';
+
+  @override
+  String get transferChoiceHelp =>
+      'Choose one: another wallet (internal) or a recipient (external).';
+
+  @override
+  String get clearAllTags => 'Clear all tags';
+
+  @override
+  String get addTag => 'Add tag';
+
+  @override
+  String get walletNameHint => 'e.g. Cash, bKash, Nagad';
+
+  @override
+  String get amountHint => '0.00';
+
+  @override
+  String get netBalance => 'Net balance';
+
+  @override
+  String get surplus => 'Surplus';
+
+  @override
+  String get deficit => 'Deficit';
+
+  @override
   String get transactions => 'Transactions';
 
   @override
@@ -678,4 +772,168 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nudgeTrySavingsPlan => 'Try a savings plan today';
+
+  @override
+  String get onb_cta_continue => 'Continue →';
+
+  @override
+  String get onb_cta_email => 'Use email instead';
+
+  @override
+  String get onb_cta_finish => 'Finish';
+
+  @override
+  String get onb_cta_google => 'Continue with Google';
+
+  @override
+  String get onb_cta_go_premium => 'Go Premium';
+
+  @override
+  String get onb_cta_later => 'Maybe later';
+
+  @override
+  String get onb_cta_start => 'Start →';
+
+  @override
+  String get onb_cta_try_free => 'Try free';
+
+  @override
+  String onb_progress(Object current, Object total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get onb_opening_headline =>
+      'Let’s set up a money plan that matches your life';
+
+  @override
+  String get onb_opening_subtext =>
+      '8 quick steps. A clearer month. Takes under 2 minutes.';
+
+  @override
+  String get onb_monthly_title => 'Choose your monthly needs';
+
+  @override
+  String get onb_monthly_options_bills => '💡 Bills';
+
+  @override
+  String get onb_monthly_options_groceries => '🛒 Groceries';
+
+  @override
+  String get onb_monthly_options_rent => '🏠 Rent';
+
+  @override
+  String get onb_monthly_options_transport => '🚍 Transport';
+
+  @override
+  String get onb_monthly_options_tuition => '🎓 Tuition';
+
+  @override
+  String get onb_irregular_title => 'Irregular but important expenses?';
+
+  @override
+  String get onb_irregular_options_eid => '🌙 Eid & festivals';
+
+  @override
+  String get onb_irregular_options_gifts => '🎁 Gifts';
+
+  @override
+  String get onb_irregular_options_medical => '🏥 Medical';
+
+  @override
+  String get onb_irregular_options_school_fees => '📚 School fees';
+
+  @override
+  String get onb_irregular_options_wedding => '💍 Wedding events';
+
+  @override
+  String get onb_goals_title => 'What are your life goals?';
+
+  @override
+  String get onb_goals_options_home => '🏡 Own home';
+
+  @override
+  String get onb_goals_options_land => '🌱 Land';
+
+  @override
+  String get onb_goals_options_marriage => '💍 Marriage';
+
+  @override
+  String get onb_goals_options_study => '🌏 Study abroad';
+
+  @override
+  String get onb_goals_options_vehicle => '🚗 Vehicle';
+
+  @override
+  String get onb_lifestyle_title => 'Your lifestyle priorities?';
+
+  @override
+  String get onb_lifestyle_options_charity => '🤲 Charity';
+
+  @override
+  String get onb_lifestyle_options_family => '👨‍👩‍👧‍👦 Family';
+
+  @override
+  String get onb_lifestyle_options_fashion => '👗 Fashion';
+
+  @override
+  String get onb_lifestyle_options_food => '🍔 Food';
+
+  @override
+  String get onb_lifestyle_options_fun => '🎬 Fun';
+
+  @override
+  String get onb_plan_title => 'Your personalized starting plan';
+
+  @override
+  String get onb_plan_subtext =>
+      'Based on your choices, we’ll suggest a basic budget structure you can edit anytime.';
+
+  @override
+  String get onb_plan_cta => 'Create my simple plan';
+
+  @override
+  String onb_plan_summary(Object needs, Object wants, Object goals) {
+    return 'Starter split: $needs% Needs · $wants% Wants · $goals% Goals';
+  }
+
+  @override
+  String get onb_save_title => 'Create an account to save progress';
+
+  @override
+  String get onb_save_subtext =>
+      'Save your progress, sync across devices, and keep your plan backed up.';
+
+  @override
+  String get onb_save_privacy => 'Your data stays yours.';
+
+  @override
+  String get onb_premium_title => 'Free vs Premium—grow your money skills';
+
+  @override
+  String get onb_premium_subtext =>
+      'Get advanced insights, unlimited categories, and exports. Build habits with streaks & badges.';
+
+  @override
+  String get onb_premium_benefits_export => 'CSV/PDF exports';
+
+  @override
+  String get onb_premium_benefits_insights => 'Deeper insights & alerts';
+
+  @override
+  String get onb_premium_benefits_streaks => 'Streaks & badges';
+
+  @override
+  String get onb_premium_benefits_unlimited_categories =>
+      'Unlimited categories';
+
+  @override
+  String onb_premium_metric_users(Object count) {
+    return '$count+ people building money habits';
+  }
+
+  @override
+  String onb_premium_testimonial1(Object amount) {
+    return '“Saved $amount in 3 months.”';
+  }
 }

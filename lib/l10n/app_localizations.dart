@@ -182,7 +182,7 @@ abstract class AppLocalizations {
   /// **'Finish'**
   String get finish;
 
-  /// No description provided for @continuee.
+  /// Deprecated; use onb.cta.continue for onboarding flows
   ///
   /// In en, this message translates to:
   /// **'Continue'**
@@ -397,6 +397,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View all'**
   String get viewAll;
+
+  /// No description provided for @newLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get newLabel;
+
+  /// No description provided for @icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get icon;
+
+  /// No description provided for @color.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get color;
+
+  /// No description provided for @addCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Add category'**
+  String get addCategory;
+
+  /// No description provided for @makeDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Make default'**
+  String get makeDefault;
+
+  /// No description provided for @menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu'**
+  String get menu;
+
+  /// No description provided for @more.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get more;
+
+  /// No description provided for @uncategorized.
+  ///
+  /// In en, this message translates to:
+  /// **'Uncategorized'**
+  String get uncategorized;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
+
+  /// No description provided for @notesAndTags.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes & Tags'**
+  String get notesAndTags;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @setNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Set now'**
+  String get setNow;
+
+  /// No description provided for @anotherWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Another wallet'**
+  String get anotherWallet;
+
+  /// No description provided for @someoneAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone / Account'**
+  String get someoneAccount;
+
+  /// No description provided for @recipientLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipient (name / phone / account)'**
+  String get recipientLabel;
+
+  /// No description provided for @recipientHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Mehedi, 01XXXXXXXXX, A/C 12345'**
+  String get recipientHint;
+
+  /// No description provided for @targetWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Target wallet'**
+  String get targetWallet;
+
+  /// No description provided for @tapToSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to select'**
+  String get tapToSelect;
+
+  /// No description provided for @details.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get details;
+
+  /// No description provided for @detailsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Date, wallet, etc.'**
+  String get detailsSubtitle;
+
+  /// No description provided for @dateTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Date & Time'**
+  String get dateTime;
+
+  /// No description provided for @wallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get wallet;
+
+  /// No description provided for @transferTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer To'**
+  String get transferTo;
+
+  /// No description provided for @transferChoiceHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose one: another wallet (internal) or a recipient (external).'**
+  String get transferChoiceHelp;
+
+  /// No description provided for @clearAllTags.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all tags'**
+  String get clearAllTags;
+
+  /// No description provided for @addTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Add tag'**
+  String get addTag;
+
+  /// No description provided for @walletNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Cash, bKash, Nagad'**
+  String get walletNameHint;
+
+  /// No description provided for @amountHint.
+  ///
+  /// In en, this message translates to:
+  /// **'0.00'**
+  String get amountHint;
+
+  /// No description provided for @netBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Net balance'**
+  String get netBalance;
+
+  /// No description provided for @surplus.
+  ///
+  /// In en, this message translates to:
+  /// **'Surplus'**
+  String get surplus;
+
+  /// No description provided for @deficit.
+  ///
+  /// In en, this message translates to:
+  /// **'Deficit'**
+  String get deficit;
 
   /// No description provided for @transactions.
   ///
@@ -1315,6 +1501,306 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try a savings plan today'**
   String get nudgeTrySavingsPlan;
+
+  /// No description provided for @onb_cta_continue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue →'**
+  String get onb_cta_continue;
+
+  /// No description provided for @onb_cta_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Use email instead'**
+  String get onb_cta_email;
+
+  /// No description provided for @onb_cta_finish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get onb_cta_finish;
+
+  /// No description provided for @onb_cta_google.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get onb_cta_google;
+
+  /// No description provided for @onb_cta_go_premium.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Premium'**
+  String get onb_cta_go_premium;
+
+  /// No description provided for @onb_cta_later.
+  ///
+  /// In en, this message translates to:
+  /// **'Maybe later'**
+  String get onb_cta_later;
+
+  /// No description provided for @onb_cta_start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start →'**
+  String get onb_cta_start;
+
+  /// No description provided for @onb_cta_try_free.
+  ///
+  /// In en, this message translates to:
+  /// **'Try free'**
+  String get onb_cta_try_free;
+
+  /// Progress label for onboarding steps
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String onb_progress(Object current, Object total);
+
+  /// No description provided for @onb_opening_headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Let’s set up a money plan that matches your life'**
+  String get onb_opening_headline;
+
+  /// No description provided for @onb_opening_subtext.
+  ///
+  /// In en, this message translates to:
+  /// **'8 quick steps. A clearer month. Takes under 2 minutes.'**
+  String get onb_opening_subtext;
+
+  /// No description provided for @onb_monthly_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your monthly needs'**
+  String get onb_monthly_title;
+
+  /// No description provided for @onb_monthly_options_bills.
+  ///
+  /// In en, this message translates to:
+  /// **'💡 Bills'**
+  String get onb_monthly_options_bills;
+
+  /// No description provided for @onb_monthly_options_groceries.
+  ///
+  /// In en, this message translates to:
+  /// **'🛒 Groceries'**
+  String get onb_monthly_options_groceries;
+
+  /// No description provided for @onb_monthly_options_rent.
+  ///
+  /// In en, this message translates to:
+  /// **'🏠 Rent'**
+  String get onb_monthly_options_rent;
+
+  /// No description provided for @onb_monthly_options_transport.
+  ///
+  /// In en, this message translates to:
+  /// **'🚍 Transport'**
+  String get onb_monthly_options_transport;
+
+  /// No description provided for @onb_monthly_options_tuition.
+  ///
+  /// In en, this message translates to:
+  /// **'🎓 Tuition'**
+  String get onb_monthly_options_tuition;
+
+  /// No description provided for @onb_irregular_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Irregular but important expenses?'**
+  String get onb_irregular_title;
+
+  /// No description provided for @onb_irregular_options_eid.
+  ///
+  /// In en, this message translates to:
+  /// **'🌙 Eid & festivals'**
+  String get onb_irregular_options_eid;
+
+  /// No description provided for @onb_irregular_options_gifts.
+  ///
+  /// In en, this message translates to:
+  /// **'🎁 Gifts'**
+  String get onb_irregular_options_gifts;
+
+  /// No description provided for @onb_irregular_options_medical.
+  ///
+  /// In en, this message translates to:
+  /// **'🏥 Medical'**
+  String get onb_irregular_options_medical;
+
+  /// No description provided for @onb_irregular_options_school_fees.
+  ///
+  /// In en, this message translates to:
+  /// **'📚 School fees'**
+  String get onb_irregular_options_school_fees;
+
+  /// No description provided for @onb_irregular_options_wedding.
+  ///
+  /// In en, this message translates to:
+  /// **'💍 Wedding events'**
+  String get onb_irregular_options_wedding;
+
+  /// No description provided for @onb_goals_title.
+  ///
+  /// In en, this message translates to:
+  /// **'What are your life goals?'**
+  String get onb_goals_title;
+
+  /// No description provided for @onb_goals_options_home.
+  ///
+  /// In en, this message translates to:
+  /// **'🏡 Own home'**
+  String get onb_goals_options_home;
+
+  /// No description provided for @onb_goals_options_land.
+  ///
+  /// In en, this message translates to:
+  /// **'🌱 Land'**
+  String get onb_goals_options_land;
+
+  /// No description provided for @onb_goals_options_marriage.
+  ///
+  /// In en, this message translates to:
+  /// **'💍 Marriage'**
+  String get onb_goals_options_marriage;
+
+  /// No description provided for @onb_goals_options_study.
+  ///
+  /// In en, this message translates to:
+  /// **'🌏 Study abroad'**
+  String get onb_goals_options_study;
+
+  /// No description provided for @onb_goals_options_vehicle.
+  ///
+  /// In en, this message translates to:
+  /// **'🚗 Vehicle'**
+  String get onb_goals_options_vehicle;
+
+  /// No description provided for @onb_lifestyle_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your lifestyle priorities?'**
+  String get onb_lifestyle_title;
+
+  /// No description provided for @onb_lifestyle_options_charity.
+  ///
+  /// In en, this message translates to:
+  /// **'🤲 Charity'**
+  String get onb_lifestyle_options_charity;
+
+  /// No description provided for @onb_lifestyle_options_family.
+  ///
+  /// In en, this message translates to:
+  /// **'👨‍👩‍👧‍👦 Family'**
+  String get onb_lifestyle_options_family;
+
+  /// No description provided for @onb_lifestyle_options_fashion.
+  ///
+  /// In en, this message translates to:
+  /// **'👗 Fashion'**
+  String get onb_lifestyle_options_fashion;
+
+  /// No description provided for @onb_lifestyle_options_food.
+  ///
+  /// In en, this message translates to:
+  /// **'🍔 Food'**
+  String get onb_lifestyle_options_food;
+
+  /// No description provided for @onb_lifestyle_options_fun.
+  ///
+  /// In en, this message translates to:
+  /// **'🎬 Fun'**
+  String get onb_lifestyle_options_fun;
+
+  /// No description provided for @onb_plan_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your personalized starting plan'**
+  String get onb_plan_title;
+
+  /// No description provided for @onb_plan_subtext.
+  ///
+  /// In en, this message translates to:
+  /// **'Based on your choices, we’ll suggest a basic budget structure you can edit anytime.'**
+  String get onb_plan_subtext;
+
+  /// No description provided for @onb_plan_cta.
+  ///
+  /// In en, this message translates to:
+  /// **'Create my simple plan'**
+  String get onb_plan_cta;
+
+  /// Summary line showing recommended needs/wants/goals split
+  ///
+  /// In en, this message translates to:
+  /// **'Starter split: {needs}% Needs · {wants}% Wants · {goals}% Goals'**
+  String onb_plan_summary(Object needs, Object wants, Object goals);
+
+  /// No description provided for @onb_save_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an account to save progress'**
+  String get onb_save_title;
+
+  /// No description provided for @onb_save_subtext.
+  ///
+  /// In en, this message translates to:
+  /// **'Save your progress, sync across devices, and keep your plan backed up.'**
+  String get onb_save_subtext;
+
+  /// No description provided for @onb_save_privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data stays yours.'**
+  String get onb_save_privacy;
+
+  /// No description provided for @onb_premium_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Free vs Premium—grow your money skills'**
+  String get onb_premium_title;
+
+  /// No description provided for @onb_premium_subtext.
+  ///
+  /// In en, this message translates to:
+  /// **'Get advanced insights, unlimited categories, and exports. Build habits with streaks & badges.'**
+  String get onb_premium_subtext;
+
+  /// No description provided for @onb_premium_benefits_export.
+  ///
+  /// In en, this message translates to:
+  /// **'CSV/PDF exports'**
+  String get onb_premium_benefits_export;
+
+  /// No description provided for @onb_premium_benefits_insights.
+  ///
+  /// In en, this message translates to:
+  /// **'Deeper insights & alerts'**
+  String get onb_premium_benefits_insights;
+
+  /// No description provided for @onb_premium_benefits_streaks.
+  ///
+  /// In en, this message translates to:
+  /// **'Streaks & badges'**
+  String get onb_premium_benefits_streaks;
+
+  /// No description provided for @onb_premium_benefits_unlimited_categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited categories'**
+  String get onb_premium_benefits_unlimited_categories;
+
+  /// Metric showing social proof count
+  ///
+  /// In en, this message translates to:
+  /// **'{count}+ people building money habits'**
+  String onb_premium_metric_users(Object count);
+
+  /// Short premium testimonial with saved amount
+  ///
+  /// In en, this message translates to:
+  /// **'“Saved {amount} in 3 months.”'**
+  String onb_premium_testimonial1(Object amount);
 }
 
 class _AppLocalizationsDelegate

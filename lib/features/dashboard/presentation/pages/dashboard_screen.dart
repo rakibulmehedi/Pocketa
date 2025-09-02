@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pocketa/core/analytics/analytics_service.dart';
 import 'package:pocketa/features/transaction/presentation/pages/pages.dart';
+import 'package:pocketa/l10n/app_localizations.dart';
 
 /// Global nav index state (survives across widgets)
 final navIndexProvider = StateProvider<int>((ref) => 0);
@@ -13,31 +15,36 @@ class DashboardScreen extends ConsumerWidget {
     final index = ref.watch(navIndexProvider);
 
     // Destinations & Pages
-    const destinations = [
+    final l10n = AppLocalizations.of(context);
+    final destinations = [
       NavigationDestination(
-        icon: Icon(Icons.home_outlined),
-        label: 'Dashboard',
+        icon: const Icon(Icons.home_outlined),
+        label: l10n.dashboard,
       ),
       NavigationDestination(
-        icon: Icon(Icons.receipt_long_outlined),
-        label: 'Transactions',
+        icon: const Icon(Icons.receipt_long_outlined),
+        label: l10n.transactions,
       ),
       NavigationDestination(
-        icon: Icon(Icons.pie_chart_outline),
-        label: 'Budget',
+        icon: const Icon(Icons.pie_chart_outline),
+        label: l10n.budgets,
       ),
       NavigationDestination(
-        icon: Icon(Icons.account_balance_wallet_outlined),
-        label: 'Wallets',
+        icon: const Icon(Icons.account_balance_wallet_outlined),
+        label: l10n.wallets,
       ),
     ];
 
-    final pages = const <Widget>[
-      _DashboardBody(),
-      TransactionListScreen(),
-      Center(child: Text('Budget')),
-      Center(child: Text('Wallets')),
+    final pages = <Widget>[
+      const _DashboardBody(),
+      const TransactionListScreen(),
+      Center(child: Text(l10n.budgets)),
+      Center(child: Text(l10n.wallets)),
     ];
+
+    if (index == 0) {
+      ref.read(analyticsProvider).logEvent('dashboard_viewed');
+    }
 
     return Scaffold(
       bottomNavigationBar: NavigationBar(
@@ -53,14 +60,15 @@ class DashboardScreen extends ConsumerWidget {
 }
 
 /// Split the dashboard content
-class _DashboardBody extends StatelessWidget {
+class _DashboardBody extends ConsumerWidget {
   const _DashboardBody();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [Text('Coming soon: overview cards & insights')],
+      children: [Text(l10n.insights)],
     );
   }
 }

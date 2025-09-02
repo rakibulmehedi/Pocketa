@@ -6,6 +6,7 @@ import 'package:pocketa/features/transaction/presentation/viewmodels/transaction
 import 'package:pocketa/features/transaction/presentation/viewmodels/viewmodels.dart';
 import 'package:pocketa/features/transaction/presentation/widgets/transaction_tile.dart';
 import 'package:pocketa/shared/widgets/widgets.dart';
+import 'package:pocketa/l10n/app_localizations.dart';
 
 class TransactionListScreen extends ConsumerWidget {
   const TransactionListScreen({super.key});
@@ -23,17 +24,18 @@ class TransactionListScreen extends ConsumerWidget {
     final expense = ref.watch(monthExpenseRxProvider(args));
     final net = ref.watch(monthNetRxProvider(args));
 
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       body: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           CustomSliverAppBar(
             pinned: true,
-            title: 'Transactions',
+            title: l10n.transactions,
             showBack: false,
             actions: [
               IconButton(
-                tooltip: 'Add',
+                tooltip: l10n.accessibilityAddTransaction,
                 icon: const Icon(Icons.add),
                 onPressed: () => context.push('/add_edit_transaction'),
               ),
@@ -66,7 +68,7 @@ class TransactionListScreen extends ConsumerWidget {
                   ),
             error: (e, _) => SliverFillRemaining(
               hasScrollBody: false,
-              child: Center(child: Text('Error: $e')),
+              child: Center(child: Text(l10n.errorGeneric)),
             ),
             loading: () => const SliverFillRemaining(
               hasScrollBody: false,
@@ -79,7 +81,7 @@ class TransactionListScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.pushNamed('add_edit_tx'),
         icon: const Icon(Icons.add),
-        label: const Text('Add'),
+        label: Text(l10n.addTransaction),
       ),
     );
   }
@@ -90,6 +92,7 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -98,12 +101,10 @@ class _EmptyState extends StatelessWidget {
           children: [
             const Icon(Icons.receipt_long_outlined, size: 56),
             const SizedBox(height: 12),
-            const Text('No transactions yet'),
+            Text(l10n.noTransactions),
             const SizedBox(height: 8),
-            Text(
-              'Tap the + button to add your first transaction.',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
+            Text(l10n.emptyTransactions,
+                style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
       ),

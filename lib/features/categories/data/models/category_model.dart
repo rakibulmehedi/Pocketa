@@ -1,12 +1,13 @@
 import 'package:hive/hive.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pocketa/core/db/hive_type.dart';
 import 'package:pocketa/features/categories/domain/entities/category_entity.dart';
 
 part 'category_model.freezed.dart';
 part 'category_model.g.dart';
 
 @freezed
-@HiveType(typeId: 1)
+@HiveType(typeId: kCategoryModelTypeId)
 class CategoryModel with _$CategoryModel {
   const factory CategoryModel({
     @HiveField(0) required String id,

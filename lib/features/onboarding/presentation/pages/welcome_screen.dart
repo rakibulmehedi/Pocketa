@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pocketa/core/analytics/analytics_service.dart';
+import 'package:pocketa/core/db/hive_box.dart';
 import 'package:pocketa/core/theme/gradient.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:pocketa/shared/widgets/widgets.dart';
@@ -12,6 +15,9 @@ class WelcomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+
+    // fire analytics when the screen is built
+    ref.read(analyticsProvider).logEvent('onb_step_viewed');
 
     return Scaffold(
       body: Stack(
@@ -47,8 +53,13 @@ class WelcomeScreen extends ConsumerWidget {
                   const SizedBox(height: 20),
                   // Get Started Button
                   // const _GetStartedButton(),
-                  PositiveButton(label: l10n.getStarted, onPressed: () {
-                    context.go('/');
+                  PositiveButton(label: l10n.getStarted, onPressed: () async {
+                    final prefs = Hive.box<dynamic>(HiveBoxes.prefs);
+                    await prefs.put('onboarding_done', true);
+                    await ref
+                        .read(analyticsProvider)
+                        .logEvent('onb_continue_clicked');
+                    if (context.mounted) context.go('/');
                   }),
                 ],
               ),

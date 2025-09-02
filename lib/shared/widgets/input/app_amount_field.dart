@@ -1,5 +1,6 @@
 // app_amount_field.dart
 import 'package:flutter/material.dart';
+import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
 import 'package:pocketa/shared/widgets/input/app_text_form_field.dart';
 
@@ -22,7 +23,7 @@ class AmountField extends StatelessWidget {
     return AppTextFormField(
       controller: controller,
       label: label,
-      hintText: '0.00',
+      hintText: AppLocalizations.of(context).amountHint,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'[\d,\.]')),
@@ -36,7 +37,9 @@ class AmountField extends StatelessWidget {
         final clean = v.replaceAll(',', '');
 
         final d = double.tryParse(clean);
-        if (d == null || d <= 0) return 'Enter a valid amount';
+        if (d == null || d <= 0) {
+          return AppLocalizations.of(context).errorAmountPositive;
+        }
         return null;
       },
     );

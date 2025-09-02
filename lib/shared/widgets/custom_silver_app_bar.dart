@@ -1,5 +1,6 @@
 // Moved to shared/widgets
 import 'package:flutter/material.dart';
+import 'package:pocketa/l10n/app_localizations.dart';
 
 class CustomSliverAppBar extends StatelessWidget {
   final String title;
@@ -46,7 +47,9 @@ class CustomSliverAppBar extends StatelessWidget {
           showBack ? Icons.arrow_back_ios_new_rounded : Icons.menu_rounded,
           size: 22,
         ),
-        tooltip: showBack ? 'Back' : 'Menu',
+        tooltip: showBack
+            ? AppLocalizations.of(context).back
+            : AppLocalizations.of(context).menu,
       ),
       title: Text(
         title,

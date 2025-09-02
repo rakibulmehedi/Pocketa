@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:pocketa/l10n/app_localizations.dart';
 
 /// A modern, fintech-y app bar with:
 /// - Smart back/menu handling
@@ -170,7 +171,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               leading: IconButton(
                 onPressed: leadingTap,
                 icon: Icon(leadingIcon, size: 22),
-                tooltip: showBack ? 'Back' : 'Menu',
+                tooltip: showBack
+                    ? AppLocalizations.of(context).back
+                    : AppLocalizations.of(context).menu,
               ),
               title: titleColumn,
               actions: [

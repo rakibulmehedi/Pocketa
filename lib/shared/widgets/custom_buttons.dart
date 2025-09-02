@@ -16,7 +16,7 @@ class PositiveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ThemeData();
+    final theme = Theme.of(context);
     return ElevatedButton.icon(
       onPressed: onPressed,
       icon: Icon(icon ?? Icons.arrow_forward), // Default icon if none provided

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pocketa/l10n/app_localizations.dart';
 
 class MoreMenu extends StatelessWidget {
   /// If null, the Delete row is hidden.
@@ -11,8 +12,9 @@ class MoreMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     return PopupMenuButton<String>(
-      tooltip: 'More',
+      tooltip: t.more,
       position: PopupMenuPosition.under,
       icon: const Icon(Icons.more_vert_rounded),
       itemBuilder: (ctx) {
@@ -27,15 +29,13 @@ class MoreMenu extends StatelessWidget {
         // Delete (only if provided)
         if (onDelete != null) {
           items.add(
-            const PopupMenuItem<String>(
+            PopupMenuItem<String>(
               value: 'delete',
-              child: Row(
-                children: [
-                  Icon(Icons.delete_outline, size: 18),
-                  SizedBox(width: 8),
-                  Text('Delete'),
-                ],
-              ),
+              child: Row(children: [
+                const Icon(Icons.delete_outline, size: 18),
+                const SizedBox(width: 8),
+                Text(t.delete),
+              ]),
             ),
           );
         }

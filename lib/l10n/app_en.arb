@@ -1,9 +1,11 @@
 {
   "@@locale": "en",
+
   "english": "English",
   "bengali": "বাংলা",
   "appTitle": "Pocketa",
   "tagline": "Own your money. Own your future.",
+
   "ok": "OK",
   "cancel": "Cancel",
   "close": "Close",
@@ -14,7 +16,12 @@
   "next": "Next",
   "skip": "Skip",
   "finish": "Finish",
+
   "continuee": "Continue",
+  "@continuee": {
+    "description": "Deprecated; use onb.cta.continue for onboarding flows"
+  },
+
   "retry": "Retry",
   "confirm": "Confirm",
   "search": "Search",
@@ -57,6 +64,38 @@
   "monthlySummary": "This month",
   "recentTransactions": "Recent activity",
   "viewAll": "View all",
+
+  "newLabel": "New",
+  "icon": "Icon",
+  "color": "Color",
+  "addCategory": "Add category",
+  "makeDefault": "Make default",
+  "menu": "Menu",
+  "more": "More",
+  "uncategorized": "Uncategorized",
+  "optional": "Optional",
+  "notesAndTags": "Notes & Tags",
+  "reset": "Reset",
+  "setNow": "Set now",
+  "anotherWallet": "Another wallet",
+  "someoneAccount": "Someone / Account",
+  "recipientLabel": "Recipient (name / phone / account)",
+  "recipientHint": "e.g. Mehedi, 01XXXXXXXXX, A/C 12345",
+  "targetWallet": "Target wallet",
+  "tapToSelect": "Tap to select",
+  "details": "Details",
+  "detailsSubtitle": "Date, wallet, etc.",
+  "dateTime": "Date & Time",
+  "wallet": "Wallet",
+  "transferTo": "Transfer To",
+  "transferChoiceHelp": "Choose one: another wallet (internal) or a recipient (external).",
+  "clearAllTags": "Clear all tags",
+  "addTag": "Add tag",
+  "walletNameHint": "e.g. Cash, bKash, Nagad",
+  "amountHint": "0.00",
+  "netBalance": "Net balance",
+  "surplus": "Surplus",
+  "deficit": "Deficit",
 
   "transactions": "Transactions",
   "addTransaction": "Add transaction",
@@ -291,5 +330,83 @@
     "placeholders": { "category": {} }
   },
   "nudgeLowerLimitNextMonth": "Set a lower limit next month?",
-  "nudgeTrySavingsPlan": "Try a savings plan today"
+  "nudgeTrySavingsPlan": "Try a savings plan today",
+
+
+  "onb_cta_continue": "Continue →",
+  "onb_cta_email": "Use email instead",
+  "onb_cta_finish": "Finish",
+  "onb_cta_google": "Continue with Google",
+  "onb_cta_go_premium": "Go Premium",
+  "onb_cta_later": "Maybe later",
+  "onb_cta_start": "Start →",
+  "onb_cta_try_free": "Try free",
+
+  "onb_progress": "Step {current} of {total}",
+  "@onb_progress": {
+    "description": "Progress label for onboarding steps",
+    "placeholders": { "current": {}, "total": {} }
+  },
+
+  "onb_opening_headline": "Let’s set up a money plan that matches your life",
+  "onb_opening_subtext": "8 quick steps. A clearer month. Takes under 2 minutes.",
+
+  "onb_monthly_title": "Choose your monthly needs",
+  "onb_monthly_options_bills": "💡 Bills",
+  "onb_monthly_options_groceries": "🛒 Groceries",
+  "onb_monthly_options_rent": "🏠 Rent",
+  "onb_monthly_options_transport": "🚍 Transport",
+  "onb_monthly_options_tuition": "🎓 Tuition",
+
+  "onb_irregular_title": "Irregular but important expenses?",
+  "onb_irregular_options_eid": "🌙 Eid & festivals",
+  "onb_irregular_options_gifts": "🎁 Gifts",
+  "onb_irregular_options_medical": "🏥 Medical",
+  "onb_irregular_options_school_fees": "📚 School fees",
+  "onb_irregular_options_wedding": "💍 Wedding events",
+
+  "onb_goals_title": "What are your life goals?",
+  "onb_goals_options_home": "🏡 Own home",
+  "onb_goals_options_land": "🌱 Land",
+  "onb_goals_options_marriage": "💍 Marriage",
+  "onb_goals_options_study": "🌏 Study abroad",
+  "onb_goals_options_vehicle": "🚗 Vehicle",
+
+  "onb_lifestyle_title": "Your lifestyle priorities?",
+  "onb_lifestyle_options_charity": "🤲 Charity",
+  "onb_lifestyle_options_family": "👨‍👩‍👧‍👦 Family",
+  "onb_lifestyle_options_fashion": "👗 Fashion",
+  "onb_lifestyle_options_food": "🍔 Food",
+  "onb_lifestyle_options_fun": "🎬 Fun",
+
+  "onb_plan_title": "Your personalized starting plan",
+  "onb_plan_subtext": "Based on your choices, we’ll suggest a basic budget structure you can edit anytime.",
+  "onb_plan_cta": "Create my simple plan",
+  "onb_plan_summary": "Starter split: {needs}% Needs · {wants}% Wants · {goals}% Goals",
+  "@onb_plan_summary": {
+    "description": "Summary line showing recommended needs/wants/goals split",
+    "placeholders": { "needs": {}, "wants": {}, "goals": {} }
+  },
+
+  "onb_save_title": "Create an account to save progress",
+  "onb_save_subtext": "Save your progress, sync across devices, and keep your plan backed up.",
+  "onb_save_privacy": "Your data stays yours.",
+
+  "onb_premium_title": "Free vs Premium—grow your money skills",
+  "onb_premium_subtext": "Get advanced insights, unlimited categories, and exports. Build habits with streaks & badges.",
+  "onb_premium_benefits_export": "CSV/PDF exports",
+  "onb_premium_benefits_insights": "Deeper insights & alerts",
+  "onb_premium_benefits_streaks": "Streaks & badges",
+  "onb_premium_benefits_unlimited_categories": "Unlimited categories",
+  "onb_premium_metric_users": "{count}+ people building money habits",
+  "@onb_premium_metric_users": {
+    "description": "Metric showing social proof count",
+    "placeholders": { "count": {} }
+  },
+  "onb_premium_testimonial1": "“Saved {amount} in 3 months.”",
+  "@onb_premium_testimonial1": {
+    "description": "Short premium testimonial with saved amount",
+    "placeholders": { "amount": {} }
+  }
+
 }

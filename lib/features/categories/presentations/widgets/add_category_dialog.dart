@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/features/categories/domain/entities/category_entity.dart';
 import 'package:pocketa/features/categories/presentations/viewmodels/category_providers.dart';
+import 'package:pocketa/l10n/app_localizations.dart';
 
 class AddCategoryDialog extends ConsumerStatefulWidget {
   /// Which kind of category we’re creating
@@ -67,8 +68,9 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
   Widget build(BuildContext context) {
     final saveCategory = ref.read(saveCategoryProvider);
 
+    final l10n = AppLocalizations.of(context);
     return AlertDialog(
-      title: Text(_dialogTitleFor(widget.kind)),
+      title: Text(l10n.addCategory),
       content: Form(
         key: _formKey,
         child: Column(
@@ -78,14 +80,14 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
               controller: _nameCtrl,
               autofocus: true,
               textInputAction: TextInputAction.done,
-              decoration: const InputDecoration(
-                labelText: 'Name',
-                prefixIcon: Icon(Icons.edit_outlined),
+              decoration: InputDecoration(
+                labelText: l10n.name,
+                prefixIcon: const Icon(Icons.edit_outlined),
               ),
               validator: (v) {
                 final t = v?.trim() ?? '';
-                if (t.isEmpty) return 'Required';
-                if (t.length > 24) return 'Keep it short (≤ 24 chars)';
+                if (t.isEmpty) return l10n.errorRequired(l10n.name);
+                if (t.length > 24) return l10n.errorMaxLength(l10n.name, 24);
                 return null;
               },
               onFieldSubmitted: (_) => _submit(saveCategory),
@@ -106,13 +108,13 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
                 TextButton.icon(
                   onPressed: _pickIcon,
                   icon: const Icon(Icons.apps_outlined),
-                  label: const Text('Icon'),
+                  label: Text(l10n.icon),
                 ),
                 const SizedBox(width: 6),
                 TextButton.icon(
                   onPressed: _pickColor,
                   icon: const Icon(Icons.palette_outlined),
-                  label: const Text('Color'),
+                  label: Text(l10n.color),
                 ),
               ],
             ),
@@ -122,11 +124,11 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(l10n.cancel),
         ),
         FilledButton(
           onPressed: () => _submit(saveCategory),
-          child: const Text('Create'),
+          child: Text(l10n.addCategory),
         ),
       ],
     );
@@ -178,16 +180,7 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
     setState(() => _colorHex = picked);
   }
 
-  String _dialogTitleFor(CategoryKind kind) {
-    switch (kind) {
-      case CategoryKind.income:
-        return 'New Income Category';
-      case CategoryKind.expense:
-        return 'New Expense Category';
-      case CategoryKind.transfer:
-        return 'New Transfer Category';
-    }
-  }
+  String _dialogTitleFor(CategoryKind kind) => '';
 }
 
 // ---- Bottom sheets (MVP simple pickers) ----

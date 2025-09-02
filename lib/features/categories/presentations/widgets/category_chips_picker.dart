@@ -4,6 +4,7 @@ import 'package:pocketa/core/constants/default_categories.dart';
 import 'package:pocketa/features/categories/domain/entities/category_entity.dart';
 import 'package:pocketa/features/categories/presentations/viewmodels/category_providers.dart';
 import 'package:pocketa/features/categories/presentations/widgets/add_category_dialog.dart';
+import 'package:pocketa/l10n/app_localizations.dart';
 
 class CategoryChipsPicker extends ConsumerWidget {
   final CategoryKind kind;
@@ -54,7 +55,7 @@ class CategoryChipsPicker extends ConsumerWidget {
             // ➕ New chip
             ActionChip(
               avatar: const Icon(Icons.add, size: 16),
-              label: const Text('New'),
+              label: Text(AppLocalizations.of(context).newLabel),
               onPressed: () async {
                 final created = await showDialog<CategoryEntity>(
                   context: context,
@@ -72,7 +73,7 @@ class CategoryChipsPicker extends ConsumerWidget {
           ],
         );
       },
-      error: (e, _) => Text('Categories error: $e'),
+      error: (e, _) => Text(AppLocalizations.of(context).errorGeneric),
       loading: () => const Padding(
         padding: EdgeInsets.symmetric(vertical: 6),
         child: LinearProgressIndicator(minHeight: 2),

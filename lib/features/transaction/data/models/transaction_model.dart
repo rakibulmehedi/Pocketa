@@ -1,8 +1,9 @@
 import 'package:hive/hive.dart';
+import 'package:pocketa/core/db/hive_type.dart';
 
 part 'transaction_model.g.dart';
 
-@HiveType(typeId: 11)
+@HiveType(typeId: kTransactionEnumTypeId)
 enum TransactionType {
   @HiveField(0)
   income,
@@ -12,7 +13,7 @@ enum TransactionType {
   transfer,
 }
 
-@HiveType(typeId: 10)
+@HiveType(typeId: kTransactionModelTypeId)
 class Transaction extends HiveObject {
   @HiveField(0)
   String id;

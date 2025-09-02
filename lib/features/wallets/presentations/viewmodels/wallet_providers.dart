@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pocketa/core/db/hive_box.dart';
 import 'package:pocketa/features/wallets/data/models/wallet_model.dart';
 import 'package:pocketa/features/wallets/data/wallet_repo_impl.dart';
 import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
@@ -10,7 +11,7 @@ import 'package:pocketa/features/wallets/domain/usecases/save_wallet.dart';
 
 /// Hive box provider
 final walletBoxProvider = Provider<Box<WalletModel>>(
-  (ref) => Hive.box<WalletModel>('wallets'),
+  (ref) => Hive.box<WalletModel>(HiveBoxes.wallets),
 );
 
 /// Repo
@@ -34,9 +35,8 @@ final walletsStreamProvider = StreamProvider.autoDispose<List<WalletEntity>>((
   ref,
 ) async* {
   final box = ref.watch(walletBoxProvider);
-  List<WalletEntity> snapshot() =>
-      box.values.map((m) => m.toEntity()).toList()
-        ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+  List<WalletEntity> snapshot() => box.values.map((m) => m.toEntity()).toList()
+    ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
 
   yield snapshot();
   await for (final _ in box.watch()) {

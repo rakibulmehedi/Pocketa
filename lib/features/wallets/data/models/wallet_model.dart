@@ -1,12 +1,15 @@
 import 'package:hive/hive.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pocketa/core/db/hive_type.dart';
 import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
 
 part 'wallet_model.freezed.dart';
 part 'wallet_model.g.dart';
 
-
-@HiveType(typeId: 20)
+/// ---------- Wallet Type Enum ----------
+/// Assign its own unique typeId (must NOT clash with WalletModel).
+/// Keep this stable once used on device!
+@HiveType(typeId: kWalletEnumTypeId)
 enum WalletTypeDto {
   @HiveField(0)
   cash,
@@ -27,8 +30,9 @@ enum WalletTypeDto {
 WalletTypeDto _toDto(WalletType type) => WalletTypeDto.values[type.index];
 WalletType _fromDto(WalletTypeDto t) => WalletType.values[t.index];
 
+/// ---------- Wallet Model ----------
 @freezed
-@HiveType(typeId: 21) 
+@HiveType(typeId: kWalletModelTypeId)
 class WalletModel with _$WalletModel {
   const factory WalletModel({
     @HiveField(0) required String id,
@@ -43,25 +47,25 @@ class WalletModel with _$WalletModel {
       _$WalletModelFromJson(json);
 }
 
+/// ---------- Mapping ----------
 extension WalletMapper on WalletModel {
   WalletEntity toEntity() => WalletEntity(
-    id: id,
-    name: name,
-    type: _fromDto(type),
-    isDefault: isDefault,
-    createdAt: createdAt,
-    updatedAt: updatedAt,
-  );
+        id: id,
+        name: name,
+        type: _fromDto(type),
+        isDefault: isDefault,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+      );
 }
-
 
 extension WalletEntityMapper on WalletEntity {
   WalletModel toModel() => WalletModel(
-    id: id,
-    name: name,
-    type: _toDto(type),
-    isDefault: isDefault,
-    createdAt: createdAt,
-    updatedAt: updatedAt,
-  );
+        id: id,
+        name: name,
+        type: _toDto(type),
+        isDefault: isDefault,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+      );
 }

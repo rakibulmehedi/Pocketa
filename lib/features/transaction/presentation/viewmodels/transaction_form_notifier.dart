@@ -249,7 +249,7 @@ class TransactionFormNotifier extends StateNotifier<TransactionFormState> {
   // ------------------------------ Validation ------------------------------
 
   String? quickValidate() {
-    if (state.amount <= 0) return 'Enter a valid amount';
+    if (state.amount <= 0) return null; // amount handled in UI with i18n
 
     if (state.walletId == null || state.walletId!.isEmpty) {
       return 'Wallet is required';

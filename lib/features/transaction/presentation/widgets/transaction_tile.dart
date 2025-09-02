@@ -7,6 +7,7 @@ import 'package:pocketa/core/constants/default_categories.dart';
 import 'package:pocketa/core/utils/transaction_utils.dart';
 import 'package:pocketa/features/categories/presentations/viewmodels/category_providers.dart';
 import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
+import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
 
 class TransactionTile extends ConsumerWidget {
@@ -61,7 +62,7 @@ class TransactionTile extends ConsumerWidget {
         ? IconData(category.iconCodePoint, fontFamily: category.iconFontFamily)
         : defaultIcon;
     final color = category != null ? Color(category.colorHex) : defaultColor;
-    final title = category?.name ?? 'Uncategorized';
+    final title = category?.name ?? AppLocalizations.of(context).uncategorized;
 
     return ListTile(
       leading: CircleAvatar(

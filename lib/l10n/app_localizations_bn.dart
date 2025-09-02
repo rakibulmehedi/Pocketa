@@ -161,6 +161,100 @@ class AppLocalizationsBn extends AppLocalizations {
   String get viewAll => 'সব দেখুন';
 
   @override
+  String get newLabel => 'নতুন';
+
+  @override
+  String get icon => 'আইকন';
+
+  @override
+  String get color => 'রং';
+
+  @override
+  String get addCategory => 'ক্যাটাগরি যোগ করুন';
+
+  @override
+  String get makeDefault => 'ডিফল্ট করুন';
+
+  @override
+  String get menu => 'মেনু';
+
+  @override
+  String get more => 'আরও';
+
+  @override
+  String get uncategorized => 'ক্যাটাগরিবিহীন';
+
+  @override
+  String get optional => 'ঐচ্ছিক';
+
+  @override
+  String get notesAndTags => 'নোট ও ট্যাগ';
+
+  @override
+  String get reset => 'রিসেট';
+
+  @override
+  String get setNow => 'এখন সেট করুন';
+
+  @override
+  String get anotherWallet => 'আরেকটি ওয়ালেট';
+
+  @override
+  String get someoneAccount => 'কেউ / অ্যাকাউন্ট';
+
+  @override
+  String get recipientLabel => 'প্রাপক (নাম / ফোন / অ্যাকাউন্ট)';
+
+  @override
+  String get recipientHint => 'যেমন: মেহেদি, ০১XXXXXXXXX, A/C 12345';
+
+  @override
+  String get targetWallet => 'টার্গেট ওয়ালেট';
+
+  @override
+  String get tapToSelect => 'ট্যাপ করে বাছাই করুন';
+
+  @override
+  String get details => 'বিস্তারিত';
+
+  @override
+  String get detailsSubtitle => 'তারিখ, ওয়ালেট, ইত্যাদি';
+
+  @override
+  String get dateTime => 'তারিখ ও সময়';
+
+  @override
+  String get wallet => 'ওয়ালেট';
+
+  @override
+  String get transferTo => 'ট্রান্সফার টু';
+
+  @override
+  String get transferChoiceHelp =>
+      'একটি বেছে নিন: আরেকটি ওয়ালেট (ইন্টারনাল) অথবা একজন প্রাপক (এক্সটারনাল)।';
+
+  @override
+  String get clearAllTags => 'সব ট্যাগ মুছুন';
+
+  @override
+  String get addTag => 'ট্যাগ যোগ করুন';
+
+  @override
+  String get walletNameHint => 'যেমন: ক্যাশ, বিকাশ, নগদ';
+
+  @override
+  String get amountHint => '০.০০';
+
+  @override
+  String get netBalance => 'নেট ব্যালেন্স';
+
+  @override
+  String get surplus => 'অতিরিক্ত';
+
+  @override
+  String get deficit => 'ঘাটতি';
+
+  @override
   String get transactions => 'লেনদেন';
 
   @override
@@ -678,4 +772,168 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get nudgeTrySavingsPlan => 'আজই একটি সেভিংস প্ল্যান চেষ্টা করুন';
+
+  @override
+  String get onb_cta_continue => 'চালিয়ে যান →';
+
+  @override
+  String get onb_cta_email => 'ইমেইল ব্যবহার করুন';
+
+  @override
+  String get onb_cta_finish => 'শেষ করুন';
+
+  @override
+  String get onb_cta_google => 'গুগল দিয়ে চালিয়ে যান';
+
+  @override
+  String get onb_cta_go_premium => 'প্রিমিয়াম নিন';
+
+  @override
+  String get onb_cta_later => 'পরে করব';
+
+  @override
+  String get onb_cta_start => 'শুরু করি →';
+
+  @override
+  String get onb_cta_try_free => 'ফ্রি ট্রাই করুন';
+
+  @override
+  String onb_progress(Object current, Object total) {
+    return 'ধাপ $current / $total';
+  }
+
+  @override
+  String get onb_opening_headline =>
+      'আপনার জীবনের সাথে মিলিয়ে একটি মানি প্ল্যান বানাই';
+
+  @override
+  String get onb_opening_subtext =>
+      '৮টি ছোট ধাপে স্পষ্ট মাস। সময় লাগবে প্রায় ২ মিনিট।';
+
+  @override
+  String get onb_monthly_title => 'আপনার মাসিক প্রয়োজনীয় খরচগুলো বেছে নিন';
+
+  @override
+  String get onb_monthly_options_bills => '💡 বিল';
+
+  @override
+  String get onb_monthly_options_groceries => '🛒 বাজার/কেনাকাটা';
+
+  @override
+  String get onb_monthly_options_rent => '🏠 ভাড়া';
+
+  @override
+  String get onb_monthly_options_transport => '🚍 যাতায়াত';
+
+  @override
+  String get onb_monthly_options_tuition => '🎓 টিউশন/ফিস';
+
+  @override
+  String get onb_irregular_title => 'নিয়মিত নয়, তবু জরুরি খরচ?';
+
+  @override
+  String get onb_irregular_options_eid => '🌙 ঈদ ও উৎসব';
+
+  @override
+  String get onb_irregular_options_gifts => '🎁 উপহার';
+
+  @override
+  String get onb_irregular_options_medical => '🏥 চিকিৎসা';
+
+  @override
+  String get onb_irregular_options_school_fees => '📚 স্কুল ফি';
+
+  @override
+  String get onb_irregular_options_wedding => '💍 বিয়ের অনুষ্ঠান';
+
+  @override
+  String get onb_goals_title => 'আপনার জীবনের লক্ষ্য কী?';
+
+  @override
+  String get onb_goals_options_home => '🏡 নিজস্ব বাড়ি';
+
+  @override
+  String get onb_goals_options_land => '🌱 জমি';
+
+  @override
+  String get onb_goals_options_marriage => '💍 বিয়ে';
+
+  @override
+  String get onb_goals_options_study => '🌏 পড়াশোনা বিদেশে';
+
+  @override
+  String get onb_goals_options_vehicle => '🚗 গাড়ি';
+
+  @override
+  String get onb_lifestyle_title => 'আপনার লাইফস্টাইল অগ্রাধিকার?';
+
+  @override
+  String get onb_lifestyle_options_charity => '🤲 দান-সদকা';
+
+  @override
+  String get onb_lifestyle_options_family => '👨‍👩‍👧‍👦 পরিবার';
+
+  @override
+  String get onb_lifestyle_options_fashion => '👗 ফ্যাশন';
+
+  @override
+  String get onb_lifestyle_options_food => '🍔 খাবার';
+
+  @override
+  String get onb_lifestyle_options_fun => '🎬 বিনোদন';
+
+  @override
+  String get onb_plan_title => 'আপনার পার্সোনালাইজড স্টার্টিং প্ল্যান';
+
+  @override
+  String get onb_plan_subtext =>
+      'আপনার বাছাই অনুযায়ী বেসিক বাজেট কাঠামো সাজিয়ে দেব—যেকোনো সময় বদলাতে পারবেন।';
+
+  @override
+  String get onb_plan_cta => 'আমার সহজ প্ল্যান বানাও';
+
+  @override
+  String onb_plan_summary(Object needs, Object wants, Object goals) {
+    return 'শুরুর ভাগ: $needs% প্রয়োজনীয়তা · $wants% ইচ্ছা · $goals% লক্ষ্য';
+  }
+
+  @override
+  String get onb_save_title => 'প্রগ্রেস সেভ করতে অ্যাকাউন্ট তৈরি করুন';
+
+  @override
+  String get onb_save_subtext =>
+      'প্রগ্রেস সেভ থাকুক, সব ডিভাইসে সিঙ্ক হোক, প্ল্যান নিরাপদ থাকুক।';
+
+  @override
+  String get onb_save_privacy => 'আপনার ডেটা আপনারই নিয়ন্ত্রণে।';
+
+  @override
+  String get onb_premium_title =>
+      'ফ্রি বনাম প্রিমিয়াম—টাকা ব্যবস্থাপনায় উন্নতি';
+
+  @override
+  String get onb_premium_subtext =>
+      'অ্যাডভান্সড ইনসাইট, আনলিমিটেড ক্যাটাগরি ও এক্সপোর্ট। স্ট্রিক্স ও ব্যাজে গড়ে তুলুন অভ্যাস।';
+
+  @override
+  String get onb_premium_benefits_export => 'CSV/PDF এক্সপোর্ট';
+
+  @override
+  String get onb_premium_benefits_insights => 'ডিপার ইনসাইট ও অ্যালার্ট';
+
+  @override
+  String get onb_premium_benefits_streaks => 'স্ট্রিক্স ও ব্যাজ';
+
+  @override
+  String get onb_premium_benefits_unlimited_categories => 'আনলিমিটেড ক্যাটাগরি';
+
+  @override
+  String onb_premium_metric_users(Object count) {
+    return '$count+ জন টাকা ম্যানেজমেন্টে অভ্যাস গড়ছেন';
+  }
+
+  @override
+  String onb_premium_testimonial1(Object amount) {
+    return '“৩ মাসে $amount সেভ করেছি।”';
+  }
 }

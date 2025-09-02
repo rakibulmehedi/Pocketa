@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+import 'package:pocketa/l10n/app_localizations.dart';
 
 import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
 import 'package:pocketa/features/wallets/presentations/viewmodels/wallet_providers.dart';
@@ -88,7 +89,7 @@ class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
       (w) => w.name.trim().toLowerCase() == _name.text.trim().toLowerCase(),
     );
     if (exists) {
-      setState(() => _dupError = 'A wallet with this name already exists');
+      setState(() => _dupError = AppLocalizations.of(context).errorValidation);
       return;
     }
 
@@ -110,12 +111,15 @@ class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
       setState(() => _saving = false);
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Failed to save: $e')));
+      ).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).errorGeneric)),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final insets = MediaQuery.of(context).viewInsets;
     return Padding(
       padding: EdgeInsets.only(bottom: insets.bottom),
@@ -128,7 +132,7 @@ class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
             Row(
               children: [
                 Text(
-                  'Add Wallet',
+                  l10n.addWallet,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const Spacer(),
@@ -175,8 +179,8 @@ class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
               textInputAction: TextInputAction.done,
               onFieldSubmitted: (_) => _submit(),
               decoration: InputDecoration(
-                labelText: 'Wallet name',
-                hintText: 'e.g. Cash, bKash, Nagad',
+                labelText: l10n.walletName,
+                hintText: l10n.walletNameHint,
                 prefixIcon: const Icon(Icons.account_balance_wallet_outlined),
                 suffixIcon: _name.text.isEmpty
                     ? null
@@ -186,17 +190,18 @@ class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
                       ),
                 errorText: _dupError,
               ),
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Required' : null,
+              validator: (v) => (v == null || v.trim().isEmpty)
+                  ? l10n.errorRequired(l10n.walletName)
+                  : null,
             ),
 
             const SizedBox(height: 12),
             DropdownButtonFormField<WalletType>(
               value: _type,
               isExpanded: true,
-              decoration: const InputDecoration(
-                labelText: 'Type',
-                prefixIcon: Icon(Icons.category_outlined),
+              decoration: InputDecoration(
+                labelText: l10n.walletType,
+                prefixIcon: const Icon(Icons.category_outlined),
               ),
               items: WalletType.values
                   .map(
@@ -211,7 +216,7 @@ class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
             SwitchListTile.adaptive(
               value: _isDefault,
               onChanged: (v) => setState(() => _isDefault = v),
-              title: const Text('Make default'),
+              title: Text(l10n.systemDefault),
               contentPadding: EdgeInsets.zero,
             ),
 
@@ -225,7 +230,7 @@ class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Icon(Icons.save_outlined),
-              label: const Text('Save'),
+              label: Text(l10n.save),
             ),
           ],
         ),

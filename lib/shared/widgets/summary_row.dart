@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/core/utils/transaction_utils.dart';
 import 'package:pocketa/shared/widgets/glass_container.dart';
+import 'package:pocketa/l10n/app_localizations.dart';
 
 class SummaryRow extends StatelessWidget {
   final double income, expense, net;
@@ -76,6 +77,7 @@ class SummaryRow extends StatelessWidget {
     }
 
     Widget netCard() {
+      final t = AppLocalizations.of(context);
       final isPositive = net >= 0;
       final accent = isPositive
           ? Colors.greenAccent.shade400
@@ -112,7 +114,7 @@ class SummaryRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Net Balance',
+                    t.netBalance,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
@@ -137,7 +139,7 @@ class SummaryRow extends StatelessWidget {
                 borderRadius: BorderRadius.circular(999),
               ),
               child: Text(
-                isPositive ? 'Surplus' : 'Deficit',
+                isPositive ? t.surplus : t.deficit,
                 style: theme.textTheme.labelMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                   color: accent,
@@ -157,14 +159,14 @@ class SummaryRow extends StatelessWidget {
           Row(
             children: [
               pill(
-                label: 'Income',
+                label: AppLocalizations.of(context).income,
                 value: income,
                 accent: Colors.greenAccent.shade400,
                 icon: Icons.south_west_rounded,
               ),
               const SizedBox(width: 8),
               pill(
-                label: 'Expense',
+                label: AppLocalizations.of(context).expense,
                 value: expense,
                 accent: Colors.redAccent.shade400,
                 icon: Icons.north_east_rounded,

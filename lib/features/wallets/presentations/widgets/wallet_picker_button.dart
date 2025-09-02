@@ -1,6 +1,7 @@
 // lib/features/wallets/presentations/widgets/wallet_picker_button.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
 import 'package:pocketa/features/wallets/presentations/viewmodels/wallet_providers.dart';
 import 'package:pocketa/features/wallets/presentations/widgets/add_wallet_sheet.dart';
@@ -20,6 +21,7 @@ class WalletPickerButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final walletsAsync = ref.watch(walletsStreamProvider);
 
+    final t = AppLocalizations.of(context);
     return walletsAsync.when(
       data: (list) {
         if (list.isEmpty) {
@@ -34,9 +36,9 @@ class WalletPickerButton extends ConsumerWidget {
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.account_balance_wallet_outlined),
                 title: Text(label),
-                subtitle: const Text('No wallets yet'),
+                subtitle: Text(t.noWallets),
                 trailing: IconButton(
-                  tooltip: 'Add wallet',
+                  tooltip: t.addWallet,
                   icon: const Icon(Icons.add),
                   onPressed: () async {
                     final created = await showAddWalletSheet(context, ref);
@@ -77,7 +79,7 @@ class WalletPickerButton extends ConsumerWidget {
           title: Text(label),
           subtitle: Text(current.name),
           trailing: IconButton(
-            tooltip: 'Add wallet',
+            tooltip: t.addWallet,
             icon: const Icon(Icons.add),
             onPressed: () async {
               final created = await showAddWalletSheet(context, ref);
@@ -98,7 +100,7 @@ class WalletPickerButton extends ConsumerWidget {
           },
         );
       },
-      error: (e, _) => Text('Wallets error: $e'),
+      error: (e, _) => Text(t.errorGeneric),
       loading: () => const LinearProgressIndicator(minHeight: 2),
     );
   }

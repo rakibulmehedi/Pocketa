@@ -1,32 +1,27 @@
 {
   "@@locale": "bn",
+
   "bengali": "বাংলা",
   "english": "ইংরেজি",
-  "@bengali": {},
   "appTitle": "Pocketa",
-  "@appTitle": {},
   "tagline": "টাকা আপনার নিয়ন্ত্রণে, ভবিষ্যৎ আপনার হাতে।",
-  "@tagline": {},
+
   "ok": "ঠিক আছে",
-  "@ok": {},
   "cancel": "বাতিল",
-  "@cancel": {},
   "close": "বন্ধ",
-  "@close": {},
   "save": "সংরক্ষণ",
-  "@save": {},
   "delete": "মুছুন",
-  "@delete": {},
   "edit": "সম্পাদনা",
-  "@edit": {},
   "back": "পেছনে",
-  "@back": {},
   "next": "পরবর্তী",
-  "@next": {},
   "skip": "স্কিপ",
-  "@skip": {},
   "finish": "শেষ",
+
   "continuee": "চালিয়ে যান",
+  "@continuee": {
+    "description": "Deprecated; অনবোর্ডিং-এ onb.cta.continue ব্যবহার করুন"
+  },
+
   "retry": "আবার চেষ্টা করুন",
   "confirm": "নিশ্চিত করুন",
   "search": "খুঁজুন",
@@ -69,6 +64,38 @@
   "monthlySummary": "এই মাস",
   "recentTransactions": "সাম্প্রতিক লেনদেন",
   "viewAll": "সব দেখুন",
+
+  "newLabel": "নতুন",
+  "icon": "আইকন",
+  "color": "রং",
+  "addCategory": "ক্যাটাগরি যোগ করুন",
+  "makeDefault": "ডিফল্ট করুন",
+  "menu": "মেনু",
+  "more": "আরও",
+  "uncategorized": "ক্যাটাগরিবিহীন",
+  "optional": "ঐচ্ছিক",
+  "notesAndTags": "নোট ও ট্যাগ",
+  "reset": "রিসেট",
+  "setNow": "এখন সেট করুন",
+  "anotherWallet": "আরেকটি ওয়ালেট",
+  "someoneAccount": "কেউ / অ্যাকাউন্ট",
+  "recipientLabel": "প্রাপক (নাম / ফোন / অ্যাকাউন্ট)",
+  "recipientHint": "যেমন: মেহেদি, ০১XXXXXXXXX, A/C 12345",
+  "targetWallet": "টার্গেট ওয়ালেট",
+  "tapToSelect": "ট্যাপ করে বাছাই করুন",
+  "details": "বিস্তারিত",
+  "detailsSubtitle": "তারিখ, ওয়ালেট, ইত্যাদি",
+  "dateTime": "তারিখ ও সময়",
+  "wallet": "ওয়ালেট",
+  "transferTo": "ট্রান্সফার টু",
+  "transferChoiceHelp": "একটি বেছে নিন: আরেকটি ওয়ালেট (ইন্টারনাল) অথবা একজন প্রাপক (এক্সটারনাল)।",
+  "clearAllTags": "সব ট্যাগ মুছুন",
+  "addTag": "ট্যাগ যোগ করুন",
+  "walletNameHint": "যেমন: ক্যাশ, বিকাশ, নগদ",
+  "amountHint": "০.০০",
+  "netBalance": "নেট ব্যালেন্স",
+  "surplus": "অতিরিক্ত",
+  "deficit": "ঘাটতি",
 
   "transactions": "লেনদেন",
   "addTransaction": "লেনদেন যোগ করুন",
@@ -303,5 +330,81 @@
     "placeholders": { "category": {} }
   },
   "nudgeLowerLimitNextMonth": "পরের মাসে লিমিট একটু কমাবেন?",
-  "nudgeTrySavingsPlan": "আজই একটি সেভিংস প্ল্যান চেষ্টা করুন"
+  "nudgeTrySavingsPlan": "আজই একটি সেভিংস প্ল্যান চেষ্টা করুন",
+
+  "onb_cta_continue": "চালিয়ে যান →",
+  "onb_cta_email": "ইমেইল ব্যবহার করুন",
+  "onb_cta_finish": "শেষ করুন",
+  "onb_cta_google": "গুগল দিয়ে চালিয়ে যান",
+  "onb_cta_go_premium": "প্রিমিয়াম নিন",
+  "onb_cta_later": "পরে করব",
+  "onb_cta_start": "শুরু করি →",
+  "onb_cta_try_free": "ফ্রি ট্রাই করুন",
+
+  "onb_progress": "ধাপ {current} / {total}",
+  "@onb_progress": {
+    "description": "অনবোর্ডিং প্রগ্রেস টেক্সট",
+    "placeholders": { "current": {}, "total": {} }
+  },
+
+  "onb_opening_headline": "আপনার জীবনের সাথে মিলিয়ে একটি মানি প্ল্যান বানাই",
+  "onb_opening_subtext": "৮টি ছোট ধাপে স্পষ্ট মাস। সময় লাগবে প্রায় ২ মিনিট।",
+
+  "onb_monthly_title": "আপনার মাসিক প্রয়োজনীয় খরচগুলো বেছে নিন",
+  "onb_monthly_options_bills": "💡 বিল",
+  "onb_monthly_options_groceries": "🛒 বাজার/কেনাকাটা",
+  "onb_monthly_options_rent": "🏠 ভাড়া",
+  "onb_monthly_options_transport": "🚍 যাতায়াত",
+  "onb_monthly_options_tuition": "🎓 টিউশন/ফিস",
+
+  "onb_irregular_title": "নিয়মিত নয়, তবু জরুরি খরচ?",
+  "onb_irregular_options_eid": "🌙 ঈদ ও উৎসব",
+  "onb_irregular_options_gifts": "🎁 উপহার",
+  "onb_irregular_options_medical": "🏥 চিকিৎসা",
+  "onb_irregular_options_school_fees": "📚 স্কুল ফি",
+  "onb_irregular_options_wedding": "💍 বিয়ের অনুষ্ঠান",
+
+  "onb_goals_title": "আপনার জীবনের লক্ষ্য কী?",
+  "onb_goals_options_home": "🏡 নিজস্ব বাড়ি",
+  "onb_goals_options_land": "🌱 জমি",
+  "onb_goals_options_marriage": "💍 বিয়ে",
+  "onb_goals_options_study": "🌏 পড়াশোনা বিদেশে",
+  "onb_goals_options_vehicle": "🚗 গাড়ি",
+
+  "onb_lifestyle_title": "আপনার লাইফস্টাইল অগ্রাধিকার?",
+  "onb_lifestyle_options_charity": "🤲 দান-সদকা",
+  "onb_lifestyle_options_family": "👨‍👩‍👧‍👦 পরিবার",
+  "onb_lifestyle_options_fashion": "👗 ফ্যাশন",
+  "onb_lifestyle_options_food": "🍔 খাবার",
+  "onb_lifestyle_options_fun": "🎬 বিনোদন",
+
+  "onb_plan_title": "আপনার পার্সোনালাইজড স্টার্টিং প্ল্যান",
+  "onb_plan_subtext": "আপনার বাছাই অনুযায়ী বেসিক বাজেট কাঠামো সাজিয়ে দেব—যেকোনো সময় বদলাতে পারবেন।",
+  "onb_plan_cta": "আমার সহজ প্ল্যান বানাও",
+  "onb_plan_summary": "শুরুর ভাগ: {needs}% প্রয়োজনীয়তা · {wants}% ইচ্ছা · {goals}% লক্ষ্য",
+  "@onb_plan_summary": {
+    "description": "নিডস/ওয়ান্টস/গোলস ভাগের সারাংশ",
+    "placeholders": { "needs": {}, "wants": {}, "goals": {} }
+  },
+
+  "onb_save_title": "প্রগ্রেস সেভ করতে অ্যাকাউন্ট তৈরি করুন",
+  "onb_save_subtext": "প্রগ্রেস সেভ থাকুক, সব ডিভাইসে সিঙ্ক হোক, প্ল্যান নিরাপদ থাকুক।",
+  "onb_save_privacy": "আপনার ডেটা আপনারই নিয়ন্ত্রণে।",
+
+  "onb_premium_title": "ফ্রি বনাম প্রিমিয়াম—টাকা ব্যবস্থাপনায় উন্নতি",
+  "onb_premium_subtext": "অ্যাডভান্সড ইনসাইট, আনলিমিটেড ক্যাটাগরি ও এক্সপোর্ট। স্ট্রিক্স ও ব্যাজে গড়ে তুলুন অভ্যাস।",
+  "onb_premium_benefits_export": "CSV/PDF এক্সপোর্ট",
+  "onb_premium_benefits_insights": "ডিপার ইনসাইট ও অ্যালার্ট",
+  "onb_premium_benefits_streaks": "স্ট্রিক্স ও ব্যাজ",
+  "onb_premium_benefits_unlimited_categories": "আনলিমিটেড ক্যাটাগরি",
+  "onb_premium_metric_users": "{count}+ জন টাকা ম্যানেজমেন্টে অভ্যাস গড়ছেন",
+  "@onb_premium_metric_users": {
+    "description": "সোশ্যাল প্রুফ কাউন্ট",
+    "placeholders": { "count": {} }
+  },
+  "onb_premium_testimonial1": "“৩ মাসে {amount} সেভ করেছি।”",
+  "@onb_premium_testimonial1": {
+    "description": "প্রিমিয়াম টেস্টিমোনিয়াল—সেভড অ্যামাউন্ট",
+    "placeholders": { "amount": {} }
+  }
 }
