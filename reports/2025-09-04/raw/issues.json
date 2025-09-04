@@ -1,0 +1,55 @@
+[
+  {
+    "title": "Implement Supabase Auth and RLS-aware remote",
+    "labels": ["area/auth","priority/P1","feature"],
+    "files": ["lib/core/auth/","lib/features/auth/","lib/core/sync/"],
+    "estimate": "M",
+    "acceptance": [
+      "User can sign in/out",
+      "Errors mapped to Failure",
+      "No secrets committed"
+    ]
+  },
+  {
+    "title": "Replace SyncRemote stub with Supabase transport + retries",
+    "labels": ["area/sync","priority/P1","tech-debt"],
+    "files": ["lib/core/sync/"],
+    "estimate": "M",
+    "acceptance": [
+      "Queue flushes on demand",
+      "Retry/backoff on 5xx",
+      "Unit test with fake remote"
+    ]
+  },
+  {
+    "title": "Split Add/Edit Transaction screen into sub-widgets",
+    "labels": ["area/ui","priority/P2","refactor"],
+    "files": ["lib/features/transaction/presentation/pages/add_edit_transaction_screen.dart"],
+    "estimate": "M",
+    "acceptance": [
+      "Sub-widgets created",
+      "No regression in behavior",
+      "Widget tests updated"
+    ]
+  },
+  {
+    "title": "Add route guard and onboarding tests",
+    "labels": ["area/routing","priority/P2","testing"],
+    "files": ["lib/core/routing/router.dart","test/"] ,
+    "estimate": "S",
+    "acceptance": [
+      "Redirect verified when onboarding_done=false",
+      "No loop when onboarding_done=true"
+    ]
+  },
+  {
+    "title": "Indic number formatting utilities",
+    "labels": ["area/i18n","priority/P3","enhancement"],
+    "files": ["lib/core/utils/"] ,
+    "estimate": "S",
+    "acceptance": [
+      "BDT amounts show Indian grouping",
+      "Bangla digits supported"
+    ]
+  }
+]

@@ -78,6 +78,10 @@
   "reset": "রিসেট",
   "setNow": "এখন সেট করুন",
   "anotherWallet": "আরেকটি ওয়ালেট",
+  "accessibility_welcome_illustration": "স্বাগতম ইলাস্ট্রেশন",
+  "@accessibility_welcome_illustration": {
+    "description": "স্ক্রিন রিডারের জন্য স্বাগতম স্ক্রিনের চিত্রের বর্ণনা।"
+  },
   "someoneAccount": "কেউ / অ্যাকাউন্ট",
   "recipientLabel": "প্রাপক (নাম / ফোন / অ্যাকাউন্ট)",
   "recipientHint": "যেমন: মেহেদি, ০১XXXXXXXXX, A/C 12345",

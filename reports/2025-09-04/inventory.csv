@@ -1,0 +1,2 @@
+file,line,pattern,suggestion
+lib/features/onboarding/presentation/pages/welcome_screen.dart,90,Image without caching,Add cacheWidth/height or gaplessPlayback

@@ -200,6 +200,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get anotherWallet => 'Another wallet';
 
   @override
+  String get accessibility_welcome_illustration => 'Welcome illustration';
+
+  @override
   String get someoneAccount => 'Someone / Account';
 
   @override

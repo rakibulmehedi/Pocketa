@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pocketa/core/analytics/analytics_service.dart';
 import 'package:pocketa/core/db/hive_box.dart';
 import 'package:pocketa/core/theme/gradient.dart';
+import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:pocketa/shared/widgets/widgets.dart';
 
@@ -36,33 +37,32 @@ class WelcomeScreen extends ConsumerWidget {
             ),
           ),
 
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+          Padding(
+            padding: context.layout.pageGutter,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Top Bar with Language Toggle
+                const _TopBar(),
 
-                children: [
-                  // Top Bar with Language Toggle
-                  const _TopBar(),
-
-                  // Main Content
-                  const SizedBox(height: 20),
-                  // Welcome Illustration and Text
-                  _Content(theme: theme),
-                  const SizedBox(height: 20),
-                  // Get Started Button
-                  // const _GetStartedButton(),
-                  PositiveButton(label: l10n.getStarted, onPressed: () async {
-                    final prefs = Hive.box<dynamic>(HiveBoxes.prefs);
-                    await prefs.put('onboarding_done', true);
-                    await ref
-                        .read(analyticsProvider)
-                        .logEvent('onb_continue_clicked');
-                    if (context.mounted) context.go('/');
-                  }),
-                ],
-              ),
+                // Main Content
+                SizedBox(height: 2.5.rem(context)),
+                // Welcome Illustration and Text
+                _Content(theme: theme),
+                SizedBox(height: 2.5.rem(context)),
+                // Get Started Button
+                // const _GetStartedButton(),
+                PositiveButton(
+                    label: l10n.getStarted,
+                    onPressed: () async {
+                      final prefs = Hive.box<dynamic>(HiveBoxes.prefs);
+                      await prefs.put('onboarding_done', true);
+                      await ref
+                          .read(analyticsProvider)
+                          .logEvent('onb_continue_clicked');
+                      if (context.mounted) context.go('/');
+                    }),
+              ],
             ),
           ),
         ],
@@ -81,7 +81,7 @@ class _Content extends StatelessWidget {
     return Expanded(
       child: Center(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          padding: EdgeInsets.symmetric(horizontal: context.layout.spaceS),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -90,11 +90,13 @@ class _Content extends StatelessWidget {
                 child: Image.asset(
                   'assets/welcome_vector.png',
                   fit: BoxFit.contain,
-                  semanticLabel: 'Welcome illustration',
+                  cacheHeight: (220 * context.layout.devicePixelRatio).round(),
+                  semanticLabel: AppLocalizations.of(context)
+                      .accessibility_welcome_illustration,
                   // This image should be in your assets folder
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 2.5.rem(context)),
               Text(
                 AppLocalizations.of(context).welcomeTitle,
                 style: theme.textTheme.headlineLarge?.copyWith(
@@ -103,7 +105,7 @@ class _Content extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 1.0.rem(context)),
               Text(
                 AppLocalizations.of(context).tagline,
                 textAlign: TextAlign.center,

@@ -5,6 +5,7 @@
 .packages
 .pub/
 build/
+reports/latest/
 .flutter-plugins
 .flutter-plugins-dependencies
 .flutter-versions

@@ -78,6 +78,10 @@
   "reset": "Reset",
   "setNow": "Set now",
   "anotherWallet": "Another wallet",
+  "accessibility_welcome_illustration": "Welcome illustration",
+  "@accessibility_welcome_illustration": {
+    "description": "Semantic label for the welcome screen illustration used by screen readers."
+  },
   "someoneAccount": "Someone / Account",
   "recipientLabel": "Recipient (name / phone / account)",
   "recipientHint": "e.g. Mehedi, 01XXXXXXXXX, A/C 12345",
@@ -408,5 +412,7 @@
     "description": "Short premium testimonial with saved amount",
     "placeholders": { "amount": {} }
   }
+
+  
 
 }

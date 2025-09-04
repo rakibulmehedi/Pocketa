@@ -1,0 +1,36 @@
+{
+  "old_util_path": "lib/core/ui/responsive.dart",
+  "new_import": "lib/core/responsive/responsive.dart",
+  "replaced_patterns": [
+    {
+      "file": "lib/app.dart",
+      "from": "core/ui/responsive.dart",
+      "to": "core/responsive/responsive.dart"
+    },
+    {
+      "file": "lib/shared/widgets/summary_header.dart",
+      "from": "core/ui/responsive.dart",
+      "to": "core/responsive/responsive.dart"
+    },
+    {
+      "file": "lib/features/transaction/presentation/pages/transaction_list_screen.dart",
+      "from": "core/ui/responsive.dart",
+      "to": "core/responsive/responsive.dart"
+    },
+    {
+      "file": "lib/features/transaction/presentation/pages/transaction_list_screen.dart",
+      "from": "MediaQuery.of(context).size.width",
+      "to": "context.s.width (if needed)"
+    },
+    {
+      "file": "lib/features/transaction/presentation/pages/transaction_list_screen.dart",
+      "from": "expandedHeight: 240",
+      "to": "expandedHeight: (0.22.h(context)).clamp(180,260)"
+    },
+    {
+      "file": "lib/shared/widgets/summary_header.dart",
+      "from": "EdgeInsets.fromLTRB(16,56,16,16)",
+      "to": "EdgeInsets.fromLTRB(2.rem(ctx), topRem, 2.rem(ctx), 2.rem(ctx))"
+    }
+  ]
+}

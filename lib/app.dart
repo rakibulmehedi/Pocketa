@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/core/locale/local_notifier.dart';
 import 'package:pocketa/core/routing/router.dart';
 import 'package:pocketa/core/theme/app_theme.dart';
-import 'package:pocketa/core/ui/responsive.dart';
+import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 
 // 1) Hoist router so it isn't rebuilt every frame
@@ -56,7 +56,8 @@ class PocketaApp extends ConsumerWidget {
       scrollBehavior: const _PocketaScrollBehavior(),
 
       // 6) Your responsive wrapper stays last in the builder chain
-      builder: (context, child) => Responsive(child: child ?? const SizedBox()),
+      builder: (context, child) =>
+          Responsive.builder(child: child ?? const SizedBox()),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 
 /// A modern, fintech-y app bar with:
@@ -91,7 +92,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         if (subtitle != null && subtitle!.trim().isNotEmpty)
           Padding(
-            padding: const EdgeInsets.only(top: 2),
+            padding: EdgeInsets.only(top: 0.25.rem(context)),
             child: Text(
               subtitle!,
               maxLines: 1,
@@ -108,7 +109,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     // Optional compact metric “pill” at the far right (before actions)
     final pill = (trailingPillText != null && trailingPillText!.isNotEmpty)
         ? Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            padding: EdgeInsets.symmetric(
+              horizontal: 1.25.rem(context),
+              vertical: 0.75.rem(context),
+            ),
             decoration: BoxDecoration(
               color: (trailingPillColor ?? accent).withValues(alpha: 0.10),
               borderRadius: BorderRadius.circular(999),
@@ -122,10 +126,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 if (trailingPillIcon != null) ...[
                   Icon(
                     trailingPillIcon,
-                    size: 16,
+                    size: 16.ic(context),
                     color: trailingPillColor ?? accent,
                   ),
-                  const SizedBox(width: 6),
+                  SizedBox(width: 0.75.rem(context)),
                 ],
                 Text(
                   trailingPillText!,
@@ -141,9 +145,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         : null;
 
     // Leading behavior
-    final leadingIcon = showBack
-        ? Icons.arrow_back_ios_new_rounded
-        : Icons.menu_rounded;
+    final leadingIcon =
+        showBack ? Icons.arrow_back_ios_new_rounded : Icons.menu_rounded;
     final leadingTap = showBack
         ? (onBackTap ?? () => Navigator.of(context).maybePop())
         : (onMenuTap ?? () {});
@@ -170,7 +173,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               leadingWidth: 56,
               leading: IconButton(
                 onPressed: leadingTap,
-                icon: Icon(leadingIcon, size: 22),
+                icon: Icon(leadingIcon, size: context.layout.iconM),
                 tooltip: showBack
                     ? AppLocalizations.of(context).back
                     : AppLocalizations.of(context).menu,
@@ -179,7 +182,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               actions: [
                 if (pill != null) ...[
                   Padding(
-                    padding: const EdgeInsets.only(right: 6),
+                    padding: EdgeInsets.only(right: 0.75.rem(context)),
                     child: pill,
                   ),
                 ],
@@ -193,7 +196,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         // Accent gradient strip (thin)
         if (showAccentStrip)
           Container(
-            height: 6,
+            height: 0.75.rem(context),
             width: double.infinity,
             decoration: BoxDecoration(
               gradient: LinearGradient(

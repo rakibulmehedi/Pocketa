@@ -476,6 +476,12 @@ abstract class AppLocalizations {
   /// **'Another wallet'**
   String get anotherWallet;
 
+  /// Semantic label for the welcome screen illustration used by screen readers.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome illustration'**
+  String get accessibility_welcome_illustration;
+
   /// No description provided for @someoneAccount.
   ///
   /// In en, this message translates to:

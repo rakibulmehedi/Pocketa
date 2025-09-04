@@ -200,6 +200,9 @@ class AppLocalizationsBn extends AppLocalizations {
   String get anotherWallet => 'আরেকটি ওয়ালেট';
 
   @override
+  String get accessibility_welcome_illustration => 'স্বাগতম ইলাস্ট্রেশন';
+
+  @override
   String get someoneAccount => 'কেউ / অ্যাকাউন্ট';
 
   @override

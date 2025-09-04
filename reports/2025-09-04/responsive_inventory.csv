@@ -1,0 +1,21 @@
+file,line,pattern,suggested_fix
+lib/features/wallets/presentations/widgets/add_wallet_sheet.dart,123,MediaQuery.viewInsets,Use context.layout.gutterBottom or viewInsetsBottom
+lib/core/responsive/responsive.dart,103,Width-only LayoutBuilder,Use context.layout flags (isTablet/isDesktop)
+lib/shared/widgets/section_card.dart,20,Magic padding,Use context.layout.pageGutter or rem()
+lib/core/theme/app_theme.dart,63,Magic padding,Use context.layout.pageGutter or rem()
+lib/core/theme/app_theme.dart,170,Magic padding,Use context.layout.pageGutter or rem()
+lib/features/wallets/presentations/widgets/add_wallet_sheet.dart,130,Magic padding,Use context.layout.pageGutter or rem()
+lib/features/transaction/presentation/pages/add_edit_transaction_screen.dart,230,Magic padding,Use context.layout.pageGutter or rem()
+lib/features/transaction/presentation/pages/add_edit_transaction_screen.dart,279,Magic padding,Use context.layout.pageGutter or rem()
+lib/features/transaction/presentation/pages/add_edit_transaction_screen.dart,332,Magic padding,Use context.layout.pageGutter or rem()
+lib/features/transaction/presentation/pages/add_edit_transaction_screen.dart,349,Magic padding,Use context.layout.pageGutter or rem()
+lib/features/transaction/presentation/pages/add_edit_transaction_screen.dart,366,Magic padding,Use context.layout.pageGutter or rem()
+lib/features/transaction/presentation/pages/add_edit_transaction_screen.dart,370,Magic padding,Use context.layout.pageGutter or rem()
+lib/shared/widgets/custom_app_bar.dart,129,Legacy helper,Prefer context.layout.* or keep for compat if clearer
+lib/core/responsive/responsive.dart,19,Legacy helper,Prefer context.layout.* or keep for compat if clearer
+lib/core/responsive/responsive.dart,23,Legacy helper,Prefer context.layout.* or keep for compat if clearer
+lib/core/responsive/responsive.dart,24,Legacy helper,Prefer context.layout.* or keep for compat if clearer
+lib/features/transaction/presentation/pages/transaction_list_screen.dart,104,Legacy helper,Prefer context.layout.* or keep for compat if clearer
+lib/features/transaction/presentation/pages/transaction_list_screen.dart,108,Legacy helper,Prefer context.layout.* or keep for compat if clearer
+lib/features/transaction/presentation/pages/transaction_list_screen.dart,109,Legacy helper,Prefer context.layout.* or keep for compat if clearer
+lib/features/transaction/presentation/pages/transaction_list_screen.dart,111,Legacy helper,Prefer context.layout.* or keep for compat if clearer

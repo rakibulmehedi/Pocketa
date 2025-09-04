@@ -15,60 +15,68 @@ class SummaryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final isCompact = context.isCompact;
+    final L = context.layout;
 
-    Widget pill({
+    Widget statTile({
       required String label,
       required double value,
       required Color accent,
-      IconData? icon,
+      required IconData icon,
+      required double tileWidth,
+      required bool compact,
     }) {
-      return Flexible(
-        fit: FlexFit.tight,
+      return ConstrainedBox(
+        constraints: BoxConstraints(
+          minWidth: tileWidth.clamp(140, double.infinity),
+          maxWidth: tileWidth,
+          minHeight: compact ? 56 : 64,
+        ),
         child: GlassContainer(
-          margin: const EdgeInsets.symmetric(horizontal: 4),
-          constraints: BoxConstraints(minHeight: isCompact ? 56 : 64),
           padding: EdgeInsets.symmetric(
-            vertical: isCompact ? 10 : 12,
-            horizontal: isCompact ? 12 : 14,
+            vertical: compact ? 10 : 12,
+            horizontal: compact ? 12 : 14,
           ),
-          blur: isCompact ? 12 : 16,
-          opacity: isCompact ? 0.18 : 0.12,
-          borderRadius: BorderRadius.circular(isCompact ? 12 : 16),
+          blur: compact ? 12 : 16,
+          opacity: compact ? 0.18 : 0.12,
+          borderRadius: BorderRadius.circular(compact ? 12 : 16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (icon != null) ...[
-                Icon(
-                  icon,
-                  size: isCompact ? 18 : 20,
-                  color: accent.withValues(alpha: 0.9),
+              Icon(icon,
+                  size: compact ? 18 : 20,
+                  color: accent.withValues(alpha: 0.9)),
+              SizedBox(width: L.spaceS),
+              Flexible(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                        fontSize: compact ? 12 : 14.5,
+                      ),
+                    ),
+                    SizedBox(height: L.spaceXs),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        formatAmount(value, currency: '৳'),
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          fontSize: compact ? 16 : 18,
+                          color: accent,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-              ],
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    label,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
-                      fontSize: isCompact ? 12 : 13.5,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    formatAmount(value, currency: '৳'),
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      fontSize: isCompact ? 16 : 18,
-                      color: accent,
-                    ),
-                  ),
-                ],
               ),
             ],
           ),
@@ -76,107 +84,129 @@ class SummaryRow extends StatelessWidget {
       );
     }
 
-    Widget netCard() {
-      final t = AppLocalizations.of(context);
+    Widget netTile({
+      required double tileWidth,
+      required bool compact,
+    }) {
       final isPositive = net >= 0;
-      final accent = isPositive
-          ? Colors.greenAccent.shade400
-          : Colors.redAccent.shade400;
-      final icon = isPositive
-          ? Icons.trending_up_rounded
-          : Icons.trending_down_rounded;
+      final accent =
+          isPositive ? Colors.greenAccent.shade400 : Colors.redAccent.shade400;
+      final icon =
+          isPositive ? Icons.trending_up_rounded : Icons.trending_down_rounded;
 
-      return GlassContainer(
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        constraints: BoxConstraints(minHeight: isCompact ? 64 : 72),
-        padding: EdgeInsets.symmetric(
-          vertical: isCompact ? 12 : 14,
-          horizontal: isCompact ? 14 : 16,
+      return ConstrainedBox(
+        constraints: BoxConstraints(
+          minWidth: tileWidth.clamp(160, double.infinity),
+          maxWidth: tileWidth,
+          minHeight: compact ? 64 : 72,
         ),
-        blur: isCompact ? 12 : 16,
-        opacity: isCompact ? 0.18 : 0.12,
-        borderRadius: BorderRadius.circular(isCompact ? 12 : 16),
-        child: Row(
-          children: [
-            Container(
-              height: isCompact ? 36 : 40,
-              width: isCompact ? 36 : 40,
-              decoration: BoxDecoration(
-                color: accent.withValues(alpha: 0.12),
-                shape: BoxShape.circle,
+        child: GlassContainer(
+          padding: EdgeInsets.symmetric(
+            vertical: compact ? 12 : 14,
+            horizontal: compact ? 14 : 16,
+          ),
+          blur: compact ? 12 : 16,
+          opacity: compact ? 0.18 : 0.12,
+          borderRadius: BorderRadius.circular(compact ? 12 : 16),
+          child: Row(
+            children: [
+              Container(
+                height: compact ? 36 : 48,
+                width: compact ? 36 : 48,
+                decoration: BoxDecoration(
+                  color: accent.withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: accent),
               ),
-              child: Icon(icon, color: accent),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    t.netBalance,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+              SizedBox(width: L.spaceS),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      t.netBalance,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    formatAmount(net, currency: '৳'),
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      color: accent,
+                    SizedBox(height: L.spaceXs),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        formatAmount(net, currency: '৳ '),
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w900,
+                          color: accent,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            // optional subtle badge
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: accent.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(999),
-              ),
-              child: Text(
-                isPositive ? t.surplus : t.deficit,
-                style: theme.textTheme.labelMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: accent,
+                  ],
                 ),
               ),
-            ),
-          ],
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: accent.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  isPositive ? t.surplus : t.deficit,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: accent,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
+    return LayoutBuilder(
+      builder: (ctx, c) {
+        final compact = L.isMobile || L.isCompact;
+        final spacing = L.spaceS;
+        // phone: 1 col, tablet/desktop: 3 col
+        final cols = L.isDesktop ? 3 : (L.isTablet ? 3 : 1);
+        final totalGap = spacing * (cols - 1);
+        final tileW = (c.maxWidth - totalGap) / cols;
+
+        return Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: L.rem(1.5), vertical: L.rem(1)),
+          child: Wrap(
+            spacing: spacing,
+            runSpacing: spacing,
             children: [
-              pill(
-                label: AppLocalizations.of(context).income,
+              statTile(
+                label: t.income,
                 value: income,
                 accent: Colors.greenAccent.shade400,
                 icon: Icons.south_west_rounded,
+                tileWidth: tileW,
+                compact: compact,
               ),
-              const SizedBox(width: 8),
-              pill(
-                label: AppLocalizations.of(context).expense,
+              statTile(
+                label: t.expense,
                 value: expense,
                 accent: Colors.redAccent.shade400,
                 icon: Icons.north_east_rounded,
+                tileWidth: tileW,
+                compact: compact,
               ),
+              netTile(tileWidth: tileW, compact: compact),
             ],
           ),
-          const SizedBox(height: 12),
-          netCard(),
-        ],
-      ),
+        );
+      },
     );
   }
 }

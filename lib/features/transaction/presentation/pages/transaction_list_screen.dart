@@ -1,6 +1,9 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/month_args.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_computed_providers.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/viewmodels.dart';
@@ -40,8 +43,11 @@ class TransactionListScreen extends ConsumerWidget {
                 onPressed: () => context.push('/add_edit_transaction'),
               ),
             ],
-            expandedHeight: 240, // give breathing room
-            flexibleBackground: SummaryHeader(
+            // Adaptive expandedHeight for summary header
+            // Use viewport-relative height with sane clamp to avoid
+            // oversizing on desktop and tiny phones.
+            expandedHeight: (0.32.h(context)).clamp(220.0, 280.0),
+            flexibleBackground: SummaryRow(
               income: income,
               expense: expense,
               net: net,
@@ -70,12 +76,12 @@ class TransactionListScreen extends ConsumerWidget {
               hasScrollBody: false,
               child: Center(child: Text(l10n.errorGeneric)),
             ),
-            loading: () => const SliverFillRemaining(
+            loading: () => SliverFillRemaining(
               hasScrollBody: false,
-              child: Center(child: CircularProgressIndicator()),
+              child: const Center(child: CircularProgressIndicator()),
             ),
           ),
-          const SliverToBoxAdapter(child: SizedBox(height: 24)),
+          SliverToBoxAdapter(child: SizedBox(height: 5.rem(context))),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -95,14 +101,14 @@ class _EmptyState extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(context.layout.space2xl),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.receipt_long_outlined, size: 56),
-            const SizedBox(height: 12),
+            Icon(Icons.receipt_long_outlined, size: 56.ic(context)),
+            SizedBox(height: context.layout.spaceM),
             Text(l10n.noTransactions),
-            const SizedBox(height: 8),
+            SizedBox(height: context.layout.spaceS),
             Text(l10n.emptyTransactions,
                 style: Theme.of(context).textTheme.bodySmall),
           ],

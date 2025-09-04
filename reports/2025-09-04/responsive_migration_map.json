@@ -1,0 +1,35 @@
+{
+  "patterns_replaced": [
+    "MediaQuery.sizeOf(context).width → context.vw",
+    "context.gap40 → 5.rem(context)",
+    "context.isCompact → context.layout.isCompact"
+  ],
+  "imports_updated": {
+    "added": [
+      "package:pocketa/core/responsive/responsive.dart"
+    ],
+    "files": [
+      "lib/shared/widgets/summary_row.dart",
+      "lib/features/transaction/presentation/pages/transaction_list_screen.dart",
+      "lib/shared/widgets/custom_silver_app_bar.dart",
+      "lib/shared/widgets/custom_app_bar.dart",
+      "lib/features/onboarding/presentation/pages/welcome_screen.dart",
+      "lib/features/transaction/presentation/pages/add_edit_transaction_screen.dart"
+    ]
+  },
+  "i18n": {
+    "added_keys": [
+      "accessibility_welcome_illustration"
+    ],
+    "files": [
+      "lib/l10n/app_en.arb",
+      "lib/l10n/app_bn.arb",
+      "lib/l10n/app_localizations.dart",
+      "lib/l10n/app_localizations_en.dart",
+      "lib/l10n/app_localizations_bn.dart"
+    ]
+  },
+  "removed_files": [
+    "lib/core/ui/responsive.dart"
+  ]
+}

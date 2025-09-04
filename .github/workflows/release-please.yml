@@ -2,7 +2,8 @@ name: release-please
 
 on:
   push:
-    branches: [ main ]   # or your default branch
+    branches: [ main ] 
+  workflow_dispatch: {}
 
 permissions:
   contents: write
@@ -14,9 +15,10 @@ jobs:
     steps:
       - uses: google-github-actions/release-please-action@v4
         with:
-          release-type: dart    
+          release-type: dart
           package-name: pocketa
-          changelog-types: >
+
+          changelog-types: |
             [
               {"type":"feat","section":"Features","hidden":false},
               {"type":"fix","section":"Fixes","hidden":false},

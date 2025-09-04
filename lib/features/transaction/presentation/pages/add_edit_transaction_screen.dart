@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/month_args.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_computed_providers.dart';
@@ -41,6 +42,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
   late final TextEditingController _tagCtrl;
   late final TextEditingController _recipientCtrl;
   late final FocusNode _recipientFocus;
+  late final FocusNode _amountFocus;
 
   // subscriptions
   late ProviderSubscription<TransactionFormState> _typeSub;
@@ -63,6 +65,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
       text: widget.initial?.transferTo ?? '',
     );
     _recipientFocus = FocusNode();
+    _amountFocus = FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(transactionFormProvider.notifier).initializeForm(widget.initial);
@@ -164,6 +167,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
       _amountCtrlListener = null;
     }
     _amountCtrl.dispose();
+    _amountFocus.dispose();
     _noteCtrl.dispose();
     _tagCtrl.dispose();
     _recipientCtrl.dispose();
@@ -179,7 +183,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
     final form = ref.watch(transactionFormProvider);
     final isEdit = widget.initial != null;
 
-    final w = MediaQuery.sizeOf(context).width;
+    final w = context.vw;
     final isWide = w >= 900;
 
     // Header KPI (safe: wallet can be null)
@@ -188,9 +192,8 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
     final netBalance = ref.watch(monthNetRxProvider(args));
     final isPositive = ref.watch(isMonthNetPositiveProvider(args));
 
-    final signedPreview = form.type == TransactionType.expense
-        ? -form.amount
-        : form.amount;
+    final signedPreview =
+        form.type == TransactionType.expense ? -form.amount : form.amount;
     final previewText = formatAmount(
       signedPreview,
       currency: AppCurrencies.symbol(form.currency),
@@ -247,11 +250,11 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
                         Expanded(
                           child: Text(
                             _inlineError!,
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color: Colors.red.shade700,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Colors.red.shade700,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                           ),
                         ),
                         IconButton(
@@ -303,9 +306,9 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: _accentByType(form.type),
-                  ),
+                        fontWeight: FontWeight.w800,
+                        color: _accentByType(form.type),
+                      ),
                 ),
               ),
               const SizedBox(width: 10),
@@ -325,51 +328,51 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
 
   // ----------------- Layouts -----------------
   Widget _buildNarrow(TransactionFormState form) => ListView(
-    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-    padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-    children: [
-      _typeCard(form),
-      _amountCard(form),
-      _quickAmountChips(form),
-      _categoryCard(form),
-      _detailsCard(form),
-      if (form.type == TransactionType.transfer) _transferTargetCard(form),
-      _notesCard(form),
-      const SizedBox(height: 80),
-    ],
-  );
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+        children: [
+          _typeCard(form),
+          _amountCard(form),
+          _quickAmountChips(form),
+          _categoryCard(form),
+          _detailsCard(form),
+          if (form.type == TransactionType.transfer) _transferTargetCard(form),
+          _notesCard(form),
+          const SizedBox(height: 80),
+        ],
+      );
 
   Widget _buildWide(TransactionFormState form) => CustomScrollView(
-    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-    slivers: [
-      SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        sliver: SliverGrid(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 1.08,
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            sliver: SliverGrid(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 1.08,
+              ),
+              delegate: SliverChildListDelegate.fixed([
+                _typeCard(form),
+                _amountCard(form),
+                _categoryCard(form),
+                _detailsCard(form),
+              ]),
+            ),
           ),
-          delegate: SliverChildListDelegate.fixed([
-            _typeCard(form),
-            _amountCard(form),
-            _categoryCard(form),
-            _detailsCard(form),
-          ]),
-        ),
-      ),
-      SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        sliver: SliverToBoxAdapter(child: _transferTargetCard(form)),
-      ),
-      SliverPadding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-        sliver: SliverToBoxAdapter(child: _notesCard(form)),
-      ),
-      const SliverToBoxAdapter(child: SizedBox(height: 100)),
-    ],
-  );
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            sliver: SliverToBoxAdapter(child: _transferTargetCard(form)),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+            sliver: SliverToBoxAdapter(child: _notesCard(form)),
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+        ],
+      );
 
   // ----------------- Cards -----------------
   Widget _typeCard(TransactionFormState form) {
@@ -496,9 +499,8 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
               builder: (context, value, _) {
                 final parsed =
                     double.tryParse(value.text.replaceAll(',', '')) ?? 0;
-                final signed = form.type == TransactionType.expense
-                    ? -parsed
-                    : parsed;
+                final signed =
+                    form.type == TransactionType.expense ? -parsed : parsed;
 
                 return AnimatedSwitcher(
                   duration: const Duration(milliseconds: 180),
@@ -792,9 +794,8 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
       type: form.type,
       categoryId: form.categoryId!,
       walletId: form.walletId!,
-      targetWalletId: form.type == TransactionType.transfer
-          ? form.targetWalletId
-          : null,
+      targetWalletId:
+          form.type == TransactionType.transfer ? form.targetWalletId : null,
       note: _noteCtrl.text.trim().isEmpty ? null : _noteCtrl.text.trim(),
       tags: form.tags,
       currency: form.currency,
@@ -817,18 +818,17 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
     final l10n = AppLocalizations.of(context);
     _toast(isEdit ? l10n.transactionUpdated : l10n.transactionAdded);
     await ref.read(analyticsProvider).logEvent(
-          isEdit ? 'txn_edited' : 'txn_added',
-          params: {
-            'type': form.type.name,
-            'amount': resolvedAmount,
-          },
-        );
+      isEdit ? 'txn_edited' : 'txn_added',
+      params: {
+        'type': form.type.name,
+        'amount': resolvedAmount,
+      },
+    );
     context.canPop() ? context.pop() : context.goNamed('transactions');
   }
 
   Future<void> _confirmDelete(String id) async {
-    final sure =
-        await showDialog<bool>(
+    final sure = await showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text(AppLocalizations.of(ctx).deleteTransaction),
@@ -865,8 +865,8 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
   }
 
   void _toast(String message) => ScaffoldMessenger.of(
-    context,
-  ).showSnackBar(SnackBar(content: Text(message)));
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
 
   static Color _accentByType(TransactionType t) {
     switch (t) {
