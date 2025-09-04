@@ -8,8 +8,8 @@ import 'package:pocketa/features/transaction/presentation/viewmodels/month_args.
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_computed_providers.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/viewmodels.dart';
 import 'package:pocketa/features/transaction/presentation/widgets/transaction_tile.dart';
-import 'package:pocketa/shared/widgets/widgets.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
+import 'package:pocketa/shared/widgets/widgets.dart';
 
 class TransactionListScreen extends ConsumerWidget {
   const TransactionListScreen({super.key});
@@ -46,7 +46,7 @@ class TransactionListScreen extends ConsumerWidget {
             // Adaptive expandedHeight for summary header
             // Use viewport-relative height with sane clamp to avoid
             // oversizing on desktop and tiny phones.
-            expandedHeight: (0.32.h(context)).clamp(220.0, 280.0),
+            expandedHeight: (0.22.h(context)).clamp(240.0, 280.0),
             flexibleBackground: SummaryRow(
               income: income,
               expense: expense,
@@ -109,8 +109,10 @@ class _EmptyState extends StatelessWidget {
             SizedBox(height: context.layout.spaceM),
             Text(l10n.noTransactions),
             SizedBox(height: context.layout.spaceS),
-            Text(l10n.emptyTransactions,
-                style: Theme.of(context).textTheme.bodySmall),
+            Text(
+              l10n.emptyTransactions,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
           ],
         ),
       ),

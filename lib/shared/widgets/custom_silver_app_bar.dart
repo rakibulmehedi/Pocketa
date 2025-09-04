@@ -46,8 +46,9 @@ class CustomSliverAppBar extends StatelessWidget {
     final leadingDiameter = L.isDesktop
         ? L.rem(6)
         : (L.isTablet ? L.rem(5.5) : L.rem(5)); // ~48/44/40
-    final horizontalPad =
-        L.isDesktop ? L.rem(2.5) : (L.isTablet ? L.rem(2) : L.rem(1.5));
+    final horizontalPad = L.isDesktop
+        ? L.rem(2.5)
+        : (L.isTablet ? L.rem(2) : L.rem(1.5));
 
     // If flexible header provided, clamp to sane bounds for any screen size
     final double effectiveExpandedHeight = flexibleBackground == null
@@ -61,7 +62,7 @@ class CustomSliverAppBar extends StatelessWidget {
       expandedHeight: effectiveExpandedHeight,
       backgroundColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
-      scrolledUnderElevation: 0,
+      scrolledUnderElevation: 3,
       elevation: 0,
       toolbarHeight: toolbarHeight,
       leadingWidth: leadingDiameter + horizontalPad * 2,
@@ -72,10 +73,9 @@ class CustomSliverAppBar extends StatelessWidget {
           height: leadingDiameter,
           child: DecoratedBox(
             decoration: BoxDecoration(
-              color: Theme.of(context)
-                  .colorScheme
-                  .surface
-                  .withValues(alpha: 0.10),
+              color: Theme.of(
+                context,
+              ).colorScheme.surface.withValues(alpha: 0.10),
               shape: BoxShape.circle,
             ),
             child: IconButton(
@@ -100,24 +100,29 @@ class CustomSliverAppBar extends StatelessWidget {
           title,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: Theme.of(context)
-              .textTheme
-              .titleLarge
-              ?.copyWith(fontWeight: FontWeight.w700),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
         ),
       ),
-      actions: actions?.map((w) => Padding(
-                    padding: EdgeInsets.symmetric(horizontal: L.rem(0.5)),
-                    child: w,
-                  ))
-              .toList(growable: false),
+      actions: actions
+          ?.map(
+            (w) => Padding(
+              padding: EdgeInsets.symmetric(horizontal: L.rem(0.5)),
+              child: w,
+            ),
+          )
+          .toList(growable: false),
       flexibleSpace: flexibleBackground == null
           ? null
           : FlexibleSpaceBar(
               collapseMode: CollapseMode.parallax,
               background: SizedBox.expand(
                 // Ensure the background always fits the flexible region
-                child: flexibleBackground!,
+                child: Padding(
+                  padding: EdgeInsets.only(top: toolbarHeight),
+                  child: flexibleBackground,
+                ),
               ),
             ),
     );
