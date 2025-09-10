@@ -25,6 +25,7 @@ import 'package:pocketa/features/transaction/presentation/viewmodels/viewmodels.
 import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
 import 'package:pocketa/features/wallets/presentations/viewmodels/wallet_providers.dart';
 import 'package:pocketa/features/wallets/presentations/widgets/wallet_picker_button.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class AddEditTransactionScreen extends ConsumerStatefulWidget {
   final TransactionEntity? initial;
@@ -327,52 +328,61 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
   }
 
   // ----------------- Layouts -----------------
-  Widget _buildNarrow(TransactionFormState form) => ListView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-        children: [
-          _typeCard(form),
-          _amountCard(form),
-          _quickAmountChips(form),
-          _categoryCard(form),
-          _detailsCard(form),
-          if (form.type == TransactionType.transfer) _transferTargetCard(form),
-          _notesCard(form),
-          const SizedBox(height: 80),
-        ],
-      );
+  Widget _buildNarrow(TransactionFormState form) {
+    final L = context.layout;
+    return ListView(
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      padding: L.insetsOnly(l: 2, t: 1.5, r: 2, b: 2),
+      children: [
+        _typeCard(form),
+        _amountCard(form),
+        _quickAmountChips(form),
+        _categoryCard(form),
+        _detailsCard(form),
+        if (form.type == TransactionType.transfer) _transferTargetCard(form),
+        _notesCard(form),
+        SizedBox(height: L.space3xl),
+      ],
+    );
+  }
 
-  Widget _buildWide(TransactionFormState form) => CustomScrollView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 1.08,
-              ),
-              delegate: SliverChildListDelegate.fixed([
-                _typeCard(form),
-                _amountCard(form),
-                _categoryCard(form),
-                _detailsCard(form),
-              ]),
-            ),
+  Widget _buildWide(TransactionFormState form) {
+    final L = context.layout;
+    final cols = L.columnsFor(480);
+    final cross = cols < 2 ? 2 : (cols > 3 ? 3 : cols);
+
+    final cards = <Widget>[
+      _typeCard(form),
+      _amountCard(form),
+      _categoryCard(form),
+      _detailsCard(form),
+    ];
+
+    return CustomScrollView(
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      slivers: [
+        SliverPadding(
+          padding: L.insetsSymmetric(h: 2, v: 1.5),
+          sliver: SliverMasonryGrid.count(
+            crossAxisCount: cross,
+            mainAxisSpacing: L.spaceL,
+            crossAxisSpacing: L.spaceL,
+            childCount: cards.length,
+            itemBuilder: (context, index) => cards[index],
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            sliver: SliverToBoxAdapter(child: _transferTargetCard(form)),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-            sliver: SliverToBoxAdapter(child: _notesCard(form)),
-          ),
-          const SliverToBoxAdapter(child: SizedBox(height: 100)),
-        ],
-      );
+        ),
+        SliverPadding(
+          padding: L.insetsSymmetric(h: 2),
+          sliver: SliverToBoxAdapter(child: _transferTargetCard(form)),
+        ),
+        SliverPadding(
+          padding: L.insetsAll(2),
+          sliver: SliverToBoxAdapter(child: _notesCard(form)),
+        ),
+        SliverToBoxAdapter(child: SizedBox(height: L.space3xl)),
+      ],
+    );
+  }
 
   // ----------------- Cards -----------------
   Widget _typeCard(TransactionFormState form) {

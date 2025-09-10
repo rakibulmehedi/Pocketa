@@ -1,13 +1,12 @@
-// ignore_for_file: deprecated_member_use_from_same_package
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/features/transaction/presentation/viewmodels/month_args.dart';
-import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_computed_providers.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/viewmodels.dart';
+import 'package:pocketa/features/transaction/presentation/widgets/transaction_list_view.dart';
 import 'package:pocketa/features/transaction/presentation/widgets/transaction_tile.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:pocketa/shared/widgets/widgets.dart';
 
@@ -16,20 +15,14 @@ class TransactionListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final now = DateTime.now().toUtc();
-
     // reactive list
     final txsAsync = ref.watch(allTransactionsProvider);
-
-    final args = MonthArgs(y: now.year, m: now.month);
-    // month summaries
-    final income = ref.watch(monthIncomeRxProvider(args));
-    final expense = ref.watch(monthExpenseRxProvider(args));
-    final net = ref.watch(monthNetRxProvider(args));
 
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       body: CustomScrollView(
+        key: const PageStorageKey('tx_list_scroll'),
+        // Use default cacheExtent to avoid over-building offscreen widgets.
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           CustomSliverAppBar(
@@ -43,15 +36,6 @@ class TransactionListScreen extends ConsumerWidget {
                 onPressed: () => context.push('/add_edit_transaction'),
               ),
             ],
-            // Adaptive expandedHeight for summary header
-            // Use viewport-relative height with sane clamp to avoid
-            // oversizing on desktop and tiny phones.
-            expandedHeight: (0.22.h(context)).clamp(240.0, 280.0),
-            flexibleBackground: SummaryRow(
-              income: income,
-              expense: expense,
-              net: net,
-            ),
           ),
 
           // list body
@@ -61,16 +45,20 @@ class TransactionListScreen extends ConsumerWidget {
                     hasScrollBody: false,
                     child: _EmptyState(),
                   )
-                : SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      // interleave Divider between tiles
-                      final isDivider = index.isOdd;
-                      if (isDivider) return const Divider(height: 0);
-                      final itemIndex = index ~/ 2;
-                      return TransactionTile(
-                        transaction: transactions[itemIndex],
-                      );
-                    }, childCount: transactions.length * 2 - 1),
+                : TransactionSliverList(
+                    transactions: transactions,
+                    separated: true,
+                    prototypeItem: TransactionTile(
+                      transaction: TransactionEntity(
+                        id: '__prototype__',
+                        amount: 0,
+                        date: DateTime(2024),
+                        type: TransactionType.expense,
+                        walletId: '',
+                        note: 'n',
+                        categoryId: null,
+                      ),
+                    ),
                   ),
             error: (e, _) => SliverFillRemaining(
               hasScrollBody: false,

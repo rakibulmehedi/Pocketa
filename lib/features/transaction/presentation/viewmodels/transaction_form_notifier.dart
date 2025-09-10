@@ -233,8 +233,9 @@ class TransactionFormNotifier extends StateNotifier<TransactionFormState> {
     if (state.walletId == null &&
         state.targetWalletId == null &&
         state.transferTo == null &&
-        !state.externalTransfer)
+        !state.externalTransfer) {
       return;
+    }
 
     _setIfChanged(
       state.copyWith(

@@ -46,13 +46,21 @@ class AppTheme {
     WidgetStateProperty<T> state<T>(T normal,
         {T? selected, T? pressed, T? disabled, T? hovered, T? focused}) {
       return WidgetStateProperty.resolveWith((s) {
-        if (s.contains(WidgetState.disabled) && disabled != null)
+        if (s.contains(WidgetState.disabled) && disabled != null) {
           return disabled;
-        if (s.contains(WidgetState.pressed) && pressed != null) return pressed;
-        if (s.contains(WidgetState.selected) && selected != null)
+        }
+        if (s.contains(WidgetState.pressed) && pressed != null) {
+          return pressed;
+        }
+        if (s.contains(WidgetState.selected) && selected != null) {
           return selected;
-        if (s.contains(WidgetState.hovered) && hovered != null) return hovered;
-        if (s.contains(WidgetState.focused) && focused != null) return focused;
+        }
+        if (s.contains(WidgetState.hovered) && hovered != null) {
+          return hovered;
+        }
+        if (s.contains(WidgetState.focused) && focused != null) {
+          return focused;
+        }
         return normal;
       });
     }

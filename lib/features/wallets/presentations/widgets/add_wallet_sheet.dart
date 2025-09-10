@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
+import 'package:pocketa/core/responsive/responsive.dart';
 
 import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
 import 'package:pocketa/features/wallets/presentations/viewmodels/wallet_providers.dart';
@@ -120,14 +121,14 @@ class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final insets = MediaQuery.of(context).viewInsets;
+    final L = context.layout;
     return Padding(
-      padding: EdgeInsets.only(bottom: insets.bottom),
+      padding: EdgeInsets.only(bottom: L.viewInsetsBottom),
       child: Form(
         key: _form,
         child: ListView(
           shrinkWrap: true,
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 20),
+          padding: L.insetsOnly(l: 2, t: 2, r: 2, b: 2.5),
           children: [
             Row(
               children: [
@@ -142,37 +143,37 @@ class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: L.spaceM),
 
             // Presets
             Wrap(
-              spacing: 8,
+              spacing: L.spaceS,
               runSpacing: -6,
               children: [
                 _PresetChip(
-                  'Cash',
+                  l10n.cash,
                   Icons.payments_outlined,
-                  () => _applyPreset('Cash', WalletType.cash),
+                  () => _applyPreset(l10n.cash, WalletType.cash),
                 ),
                 _PresetChip(
-                  'bKash',
+                  l10n.wallet_bkash,
                   Icons.account_balance_wallet_outlined,
-                  () => _applyPreset('bKash', WalletType.bkash),
+                  () => _applyPreset(l10n.wallet_bkash, WalletType.bkash),
                 ),
                 _PresetChip(
-                  'Nagad',
+                  l10n.wallet_nagad,
                   Icons.account_balance_wallet_outlined,
-                  () => _applyPreset('Nagad', WalletType.nagad),
+                  () => _applyPreset(l10n.wallet_nagad, WalletType.nagad),
                 ),
                 _PresetChip(
-                  'Bank',
+                  l10n.wallet_preset_bank_ac,
                   Icons.account_balance_outlined,
-                  () => _applyPreset('Bank A/C', WalletType.bank),
+                  () => _applyPreset(l10n.wallet_preset_bank_ac, WalletType.bank),
                 ),
               ],
             ),
 
-            const SizedBox(height: 12),
+            SizedBox(height: L.spaceM),
             TextFormField(
               controller: _name,
               autofocus: true,
@@ -195,9 +196,9 @@ class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
                   : null,
             ),
 
-            const SizedBox(height: 12),
+            SizedBox(height: L.spaceM),
             DropdownButtonFormField<WalletType>(
-              value: _type,
+              initialValue: _type,
               isExpanded: true,
               decoration: InputDecoration(
                 labelText: l10n.walletType,
@@ -205,14 +206,14 @@ class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
               ),
               items: WalletType.values
                   .map(
-                    (t) =>
-                        DropdownMenuItem(value: t, child: Text(_prettyType(t))),
+                    (t) => DropdownMenuItem(
+                        value: t, child: Text(_prettyType(context, t))),
                   )
                   .toList(),
               onChanged: (t) => setState(() => _type = t!),
             ),
 
-            const SizedBox(height: 8),
+            SizedBox(height: L.spaceS),
             SwitchListTile.adaptive(
               value: _isDefault,
               onChanged: (v) => setState(() => _isDefault = v),
@@ -220,7 +221,7 @@ class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
               contentPadding: EdgeInsets.zero,
             ),
 
-            const SizedBox(height: 16),
+            SizedBox(height: L.spaceL),
             FilledButton.icon(
               onPressed: _saving ? null : _submit,
               icon: _saving
@@ -238,22 +239,23 @@ class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
     );
   }
 
-  String _prettyType(WalletType t) {
+  String _prettyType(BuildContext context, WalletType t) {
+    final l10n = AppLocalizations.of(context);
     switch (t) {
       case WalletType.cash:
-        return 'Cash';
+        return l10n.cash;
       case WalletType.bkash:
-        return 'bKash';
+        return l10n.wallet_bkash;
       case WalletType.nagad:
-        return 'Nagad';
+        return l10n.wallet_nagad;
       case WalletType.bank:
-        return 'Bank';
+        return l10n.bank;
       case WalletType.upay:
-        return 'Upay';
+        return l10n.wallet_upay;
       case WalletType.rocket:
-        return 'Rocket';
+        return l10n.wallet_rocket;
       case WalletType.others:
-        return 'Others';
+        return l10n.others;
     }
   }
 }

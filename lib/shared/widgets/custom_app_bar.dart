@@ -35,9 +35,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Accent color for the thin gradient strip below the app bar
   final Color? accentColor;
 
-  /// Show the thin gradient strip under the app bar
-  final bool showAccentStrip;
-
   /// Optional custom height
   final double height;
 
@@ -56,16 +53,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.trailingPillIcon,
     this.trailingPillColor,
     this.accentColor,
-    this.showAccentStrip = true,
     this.height = kToolbarHeight, // 56 by default
     this.bottom,
   });
 
   @override
   Size get preferredSize {
-    final extra =
-        (showAccentStrip ? 6.0 : 0.0) + (bottom?.preferredSize.height ?? 0.0);
-    return Size.fromHeight(height + extra);
+    return Size.fromHeight(height);
   }
 
   @override
@@ -187,30 +181,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ],
                 ...(actions ?? const []),
+
+                Column(
+                  
+                )
               ],
               bottom: bottom,
             ),
           ),
         ),
-
-        // Accent gradient strip (thin)
-        if (showAccentStrip)
-          Container(
-            height: 0.75.rem(context),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  accent.withValues(alpha: 0.25),
-                  accent.withValues(alpha: 0.10),
-                  Colors.transparent,
-                ],
-                stops: const [0.0, 0.35, 1.0],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
-            ),
-          ),
       ],
     );
   }

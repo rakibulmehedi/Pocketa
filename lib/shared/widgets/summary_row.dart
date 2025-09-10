@@ -117,7 +117,7 @@ class _StatTile extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: compact ? 18 : 20, color: accent.withOpacity(0.9)),
+          Icon(icon, size: compact ? 18 : 20, color: accent.withValues(alpha: 0.9)),
           SizedBox(width: L.spaceS),
           Flexible(
             child: Column(
@@ -129,7 +129,7 @@ class _StatTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: theme.colorScheme.onSurface.withOpacity(0.8),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                     fontSize: compact ? 12 : 14.5,
                   ),
                 ),
@@ -193,7 +193,7 @@ class _NetTile extends StatelessWidget {
             height: compact ? 36 : 48,
             width: compact ? 36 : 48,
             decoration: BoxDecoration(
-              color: accent.withOpacity(0.12),
+              color: accent.withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: accent),
@@ -210,7 +210,7 @@ class _NetTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: theme.colorScheme.onSurface.withOpacity(0.8),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                   ),
                 ),
                 SizedBox(height: L.spaceXs),
@@ -231,7 +231,7 @@ class _NetTile extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
-              color: accent.withOpacity(0.12),
+              color: accent.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(999),
             ),
             child: Text(

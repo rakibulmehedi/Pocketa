@@ -24,6 +24,12 @@ void main() {
       categoriesStreamProvider.overrideWith((ref) => controller.stream),
     ]);
     addTearDown(container.dispose);
+    // Ensure provider is listening before emitting to the stream.
+    final sub = container.listen<CategoryEntity?>(
+      categoryByIdProvider('2'),
+      (_, __) {},
+    );
+    addTearDown(sub.close);
 
     controller.add([c1, c2]);
     // allow stream to propagate
@@ -35,4 +41,3 @@ void main() {
     await controller.close();
   });
 }
-

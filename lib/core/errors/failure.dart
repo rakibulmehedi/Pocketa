@@ -8,16 +8,13 @@ sealed class Failure {
 }
 
 class CacheFailure extends Failure {
-  const CacheFailure(String message, {Object? cause})
-      : super(message, cause: cause);
+  const CacheFailure(super.message, {super.cause});
 }
 
 class DatabaseFailure extends Failure {
-  const DatabaseFailure(String message, {Object? cause})
-      : super(message, cause: cause);
+  const DatabaseFailure(super.message, {super.cause});
 }
 
 class NetworkFailure extends Failure {
-  const NetworkFailure(String message, {Object? cause})
-      : super(message, cause: cause);
+  const NetworkFailure(super.message, {super.cause});
 }

@@ -26,11 +26,13 @@ class AppDateTimeField extends StatelessWidget {
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );
+    if (!context.mounted) return;
     if (date == null) return;
     final time = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.fromDateTime(initialLocal),
     );
+    if (!context.mounted) return;
     if (time == null) return;
     final combined = DateTime(
       date.year,

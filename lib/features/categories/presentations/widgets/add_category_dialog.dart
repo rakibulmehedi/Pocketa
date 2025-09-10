@@ -180,7 +180,7 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
     setState(() => _colorHex = picked);
   }
 
-  String _dialogTitleFor(CategoryKind kind) => '';
+  // removed unused helper (kept minimal surface)
 }
 
 // ---- Bottom sheets (MVP simple pickers) ----

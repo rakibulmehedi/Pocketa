@@ -365,6 +365,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mobileMoney => 'Mobile money';
 
   @override
+  String get wallet_bkash => 'bKash';
+
+  @override
+  String get wallet_nagad => 'Nagad';
+
+  @override
+  String get wallet_upay => 'Upay';
+
+  @override
+  String get wallet_rocket => 'Rocket';
+
+  @override
+  String get wallet_preset_bank_ac => 'Bank A/C';
+
+  @override
   String get chooseWallet => 'Choose wallet';
 
   @override

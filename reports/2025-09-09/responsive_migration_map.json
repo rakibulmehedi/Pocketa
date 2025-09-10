@@ -1,0 +1,18 @@
+{
+  "patterns_replaced": [
+    "MediaQuery.viewInsets → context.layout.viewInsetsBottom",
+    "EdgeInsets(16/20) → layout.insets*",
+    "List child w/o keys → ValueKey(id)"
+  ],
+  "imports_updated": [
+    {
+      "file": "lib/features/wallets/presentations/widgets/add_wallet_sheet.dart",
+      "added": "package:pocketa/core/responsive/responsive.dart"
+    },
+    {
+      "file": "lib/features/transaction/presentation/widgets/transaction_tile.dart",
+      "added": "package:pocketa/core/responsive/responsive.dart"
+    }
+  ],
+  "removed_files": []
+}

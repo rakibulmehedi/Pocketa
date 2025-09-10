@@ -12,8 +12,14 @@ double _netForMonth(List<_Tx> all, int year, int month) {
   final to = month == 12 ? DateTime.utc(year + 1, 1, 1) : DateTime.utc(year, month + 1, 1);
   double inc = 0, exp = 0;
   for (final t in all) {
-    if (t.date.isBefore(from) || !t.date.isBefore(to)) continue;
-    if (t.type == 0) inc += t.amount; else exp += t.amount;
+    if (t.date.isBefore(from) || !t.date.isBefore(to)) {
+      continue;
+    }
+    if (t.type == 0) {
+      inc += t.amount;
+    } else {
+      exp += t.amount;
+    }
   }
   return inc - exp;
 }
@@ -33,4 +39,3 @@ void main() {
     expect(sw.elapsedMilliseconds < 200, true);
   });
 }
-

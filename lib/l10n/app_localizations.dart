@@ -800,6 +800,36 @@ abstract class AppLocalizations {
   /// **'Mobile money'**
   String get mobileMoney;
 
+  /// Wallet provider name: bKash
+  ///
+  /// In en, this message translates to:
+  /// **'bKash'**
+  String get wallet_bkash;
+
+  /// Wallet provider name: Nagad
+  ///
+  /// In en, this message translates to:
+  /// **'Nagad'**
+  String get wallet_nagad;
+
+  /// Wallet provider name: Upay
+  ///
+  /// In en, this message translates to:
+  /// **'Upay'**
+  String get wallet_upay;
+
+  /// Wallet provider name: Rocket
+  ///
+  /// In en, this message translates to:
+  /// **'Rocket'**
+  String get wallet_rocket;
+
+  /// Preset label for bank account wallet
+  ///
+  /// In en, this message translates to:
+  /// **'Bank A/C'**
+  String get wallet_preset_bank_ac;
+
   /// No description provided for @chooseWallet.
   ///
   /// In en, this message translates to:

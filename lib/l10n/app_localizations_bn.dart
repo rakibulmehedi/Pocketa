@@ -365,6 +365,21 @@ class AppLocalizationsBn extends AppLocalizations {
   String get mobileMoney => 'মোবাইল মানি';
 
   @override
+  String get wallet_bkash => 'বিকাশ';
+
+  @override
+  String get wallet_nagad => 'নগদ';
+
+  @override
+  String get wallet_upay => 'ইউপে';
+
+  @override
+  String get wallet_rocket => 'রকেট';
+
+  @override
+  String get wallet_preset_bank_ac => 'ব্যাংক অ্যাকাউন্ট';
+
+  @override
   String get chooseWallet => 'ওয়ালেট বেছে নিন';
 
   @override
