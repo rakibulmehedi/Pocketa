@@ -17,7 +17,7 @@ dependencies:
   intl: ^0.20.2
   uuid: ^4.5.1
   logger: ^2.6.1
-  file_picker: ^10.3.2
+  file_picker: ^10.3.3
   flutter_staggered_grid_view: ^0.7.0
 
   # Freezed + JSON (stable combo with hive_generator)
