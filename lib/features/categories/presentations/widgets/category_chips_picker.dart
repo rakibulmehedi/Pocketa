@@ -40,7 +40,9 @@ class CategoryChipsPicker extends ConsumerWidget {
                 avatar: selected
                     ? const Icon(Icons.check, size: 16)
                     : Icon(
-                        IconData(c.iconCodePoint, fontFamily: c.iconFontFamily),
+                        c.iconCodePoint != 0 
+                            ? IconData(c.iconCodePoint, fontFamily: c.iconFontFamily)
+                            : Icons.category,
                         size: 16,
                         color: Color(c.colorHex),
                       ),

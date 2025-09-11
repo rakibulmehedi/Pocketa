@@ -294,6 +294,64 @@ class AppSize {
   bool get isTablet => breakpoint == AppBreakpoint.tablet;
   bool get isDesktop => breakpoint == AppBreakpoint.desktop;
 
+  // ── Responsive Size Helpers ────────────────────────────────────────────────
+  /// Get responsive size based on device type
+  double responsiveSize({
+    required double phone,
+    required double tablet,
+    required double desktop,
+  }) {
+    return switch (breakpoint) {
+      AppBreakpoint.compact || AppBreakpoint.mobile => phone * uiScale,
+      AppBreakpoint.tablet => tablet * uiScale,
+      AppBreakpoint.desktop => desktop * uiScale,
+    };
+  }
+
+  /// Get responsive text size based on device type
+  double responsiveTextSize({
+    required double phone,
+    required double tablet,
+    required double desktop,
+  }) {
+    return switch (breakpoint) {
+      AppBreakpoint.compact || AppBreakpoint.mobile => phone * textScale,
+      AppBreakpoint.tablet => tablet * textScale,
+      AppBreakpoint.desktop => desktop * textScale,
+    };
+  }
+
+  /// Get responsive icon size based on device type
+  double responsiveIconSize({
+    required double phone,
+    required double tablet,
+    required double desktop,
+  }) {
+    return switch (breakpoint) {
+      AppBreakpoint.compact || AppBreakpoint.mobile => phone * uiScale,
+      AppBreakpoint.tablet => tablet * uiScale,
+      AppBreakpoint.desktop => desktop * uiScale,
+    };
+  }
+
+  /// Get responsive text style based on device type
+  TextStyle responsiveTextStyle({
+    required TextStyle phone,
+    required TextStyle tablet,
+    required TextStyle desktop,
+  }) {
+    final baseStyle = switch (breakpoint) {
+      AppBreakpoint.compact || AppBreakpoint.mobile => phone,
+      AppBreakpoint.tablet => tablet,
+      AppBreakpoint.desktop => desktop,
+    };
+    return baseStyle.copyWith(
+      fontSize: baseStyle.fontSize != null 
+        ? baseStyle.fontSize! * textScale 
+        : null,
+    );
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
+import 'package:pocketa/shared/services/services.dart';
 
 import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
 import 'package:pocketa/features/wallets/presentations/viewmodels/wallet_providers.dart';
@@ -110,11 +111,7 @@ class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _saving = false);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).errorGeneric)),
-      );
+      SnackbarService.showGenericError(context);
     }
   }
 
@@ -166,6 +163,16 @@ class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
                   () => _applyPreset(l10n.wallet_nagad, WalletType.nagad),
                 ),
                 _PresetChip(
+                  l10n.wallet_upay,
+                  Icons.account_balance_wallet_outlined,
+                  () => _applyPreset(l10n.wallet_upay, WalletType.upay),
+                ),
+                _PresetChip(
+                  l10n.wallet_rocket,
+                  Icons.account_balance_wallet_outlined,
+                  () => _applyPreset(l10n.wallet_rocket, WalletType.rocket),
+                ),
+                _PresetChip(
                   l10n.wallet_preset_bank_ac,
                   Icons.account_balance_outlined,
                   () => _applyPreset(l10n.wallet_preset_bank_ac, WalletType.bank),
@@ -198,7 +205,7 @@ class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
 
             SizedBox(height: L.spaceM),
             DropdownButtonFormField<WalletType>(
-              initialValue: _type,
+              value: _type,
               isExpanded: true,
               decoration: InputDecoration(
                 labelText: l10n.walletType,

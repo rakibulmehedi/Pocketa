@@ -5,8 +5,6 @@ import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/viewmodels.dart';
 import 'package:pocketa/features/transaction/presentation/widgets/transaction_list_view.dart';
 import 'package:pocketa/features/transaction/presentation/widgets/transaction_tile.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
-import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:pocketa/shared/widgets/widgets.dart';
 
@@ -17,6 +15,7 @@ class TransactionListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // reactive list
     final txsAsync = ref.watch(allTransactionsProvider);
+    final device = context.device;
 
     final l10n = AppLocalizations.of(context);
     return Scaffold(
@@ -32,7 +31,10 @@ class TransactionListScreen extends ConsumerWidget {
             actions: [
               IconButton(
                 tooltip: l10n.accessibilityAddTransaction,
-                icon: const Icon(Icons.add),
+                icon: Icon(
+                  Icons.add,
+                  size: device == DeviceSize.phone ? 24.ic(context) : 28.ic(context),
+                ),
                 onPressed: () => context.push('/add_edit_transaction'),
               ),
             ],
@@ -48,17 +50,7 @@ class TransactionListScreen extends ConsumerWidget {
                 : TransactionSliverList(
                     transactions: transactions,
                     separated: true,
-                    prototypeItem: TransactionTile(
-                      transaction: TransactionEntity(
-                        id: '__prototype__',
-                        amount: 0,
-                        date: DateTime(2024),
-                        type: TransactionType.expense,
-                        walletId: '',
-                        note: 'n',
-                        categoryId: null,
-                      ),
-                    ),
+                    prototypeItem: const TransactionTile.prototype(),
                   ),
             error: (e, _) => SliverFillRemaining(
               hasScrollBody: false,

@@ -12,5 +12,5 @@ Failure mapExceptionToFailure(Object error) {
     return NetworkFailure(error.message, cause: error);
   }
   // default: include type to make message informative for tests/logs
-  return DatabaseFailure('${error.runtimeType}: ${error.toString()}', cause: error);
+  return DatabaseFailure('Database error: ${error.runtimeType}', cause: error);
 }

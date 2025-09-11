@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
 import 'package:pocketa/features/transaction/presentation/widgets/transaction_tile.dart';
@@ -64,35 +65,8 @@ class TransactionListView extends StatelessWidget {
         (ctx, index) => const Divider(height: 0, thickness: 0.6);
 
     if (separated) {
-      // When a prototype is provided, use ListView.builder so we can supply
-      // `prototypeItem` and still render a separator inside each row. This
-      // keeps rows uniform-height for smoother scroll.
-      if (prototypeItem != null) {
-        final proto = Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            prototypeItem!,
-            // Keep a consistent bottom divider for uniform height
-            const Divider(height: 0, thickness: 0.6),
-          ],
-        );
-        return ListView.builder(
-          controller: controller,
-          physics: physics,
-          shrinkWrap: shrinkWrap,
-          padding: resolvedPadding,
-          itemCount: transactions.length,
-          itemBuilder: (ctx, i) => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              builder(ctx, transactions[i]),
-              const Divider(height: 0, thickness: 0.6),
-            ],
-          ),
-          prototypeItem: proto,
-        );
-      }
-
+      // Use ListView.separated for proper separator handling
+      // to avoid overlapping issues with prototype items
       return ListView.separated(
         controller: controller,
         physics: physics,
@@ -144,6 +118,18 @@ class TransactionSliverList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final L = context.layout;
+    final isWide = L.isTablet || L.isDesktop;
+    
+    // Use masonry grid for wide layouts, regular list for compact/mobile
+    if (isWide && !separated) {
+      return TransactionSliverMasonryGrid(
+        transactions: transactions,
+        itemBuilder: itemBuilder,
+        prototypeItem: prototypeItem,
+      );
+    }
+
     final builder = itemBuilder ?? _defaultTxBuilder(context);
 
     if (transactions.isEmpty) {
@@ -165,33 +151,8 @@ class TransactionSliverList extends StatelessWidget {
     }
 
     if (separated) {
-      // If a prototype is provided, render the separator as part of each row
-      // and use SliverPrototypeExtentList for uniform row heights.
-      if (prototypeItem != null) {
-        final proto = Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            prototypeItem!,
-            const Divider(height: 0, thickness: 0.6),
-          ],
-        );
-        return SliverPrototypeExtentList(
-          prototypeItem: proto,
-          delegate: SliverChildBuilderDelegate(
-            (ctx, i) => Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                builder(ctx, transactions[i]),
-                const Divider(height: 0, thickness: 0.6),
-              ],
-            ),
-            childCount: transactions.length,
-            addAutomaticKeepAlives: true,
-            addRepaintBoundaries: true,
-            addSemanticIndexes: false,
-          ),
-        );
-      }
+      // For separated lists, use SliverList with proper separator handling
+      // to avoid overlapping issues with SliverPrototypeExtentList
       final sep = separatorBuilder ??
           (ctx, index) => const Divider(height: 0, thickness: 0.6);
       final childCount = (transactions.length * 2) - 1;
@@ -220,6 +181,51 @@ class TransactionSliverList extends StatelessWidget {
         addAutomaticKeepAlives: true,
         addRepaintBoundaries: true,
         addSemanticIndexes: true,
+      ),
+    );
+  }
+}
+
+/// SliverMasonryGrid variant for wide layouts (tablet/desktop).
+/// Provides better space utilization and visual hierarchy for larger screens.
+class TransactionSliverMasonryGrid extends StatelessWidget {
+  final List<TransactionEntity> transactions;
+  final TxItemBuilder? itemBuilder;
+  final Widget? prototypeItem;
+
+  const TransactionSliverMasonryGrid({
+    super.key,
+    required this.transactions,
+    this.itemBuilder,
+    this.prototypeItem,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final L = context.layout;
+    final builder = itemBuilder ?? _defaultTxBuilder(context);
+
+    if (transactions.isEmpty) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
+
+    // Calculate responsive column count based on screen width
+    final screenWidth = context.vw;
+    int crossAxisCount;
+    if (L.isDesktop) {
+      crossAxisCount = screenWidth > 1400 ? 4 : 3;
+    } else {
+      crossAxisCount = screenWidth > 1000 ? 3 : 2;
+    }
+
+    return SliverMasonryGrid.count(
+      crossAxisCount: crossAxisCount,
+      mainAxisSpacing: L.spaceM,
+      crossAxisSpacing: L.spaceM,
+      childCount: transactions.length,
+      itemBuilder: (ctx, i) => RepaintBoundary(
+        key: ValueKey(transactions[i].id),
+        child: builder(ctx, transactions[i]),
       ),
     );
   }

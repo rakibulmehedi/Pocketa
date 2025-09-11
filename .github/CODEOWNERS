@@ -1,0 +1,51 @@
+# Code Owners file for Pocketa
+# This file defines who is responsible for different parts of the codebase
+
+# Global owners
+* @rakibulislammehedi
+
+# Core architecture and infrastructure
+/lib/core/ @rakibulislammehedi
+/.github/ @rakibulislammehedi
+/pubspec.yaml @rakibulislammehedi
+/analysis_options.yaml @rakibulislammehedi
+
+# CI/CD and deployment
+/.github/workflows/ @rakibulislammehedi
+/scripts/ @rakibulislammehedi
+
+# Security and configuration
+/.gitignore @rakibulislammehedi
+/.github/dependabot.yml @rakibulislammehedi
+/.github/CODEOWNERS @rakibulislammehedi
+
+# Documentation
+/README.md @rakibulislammehedi
+/CHANGELOG.md @rakibulislammehedi
+/.github/CI_CD_DOCUMENTATION.md @rakibulislammehedi
+
+# Features (require review for major changes)
+/lib/features/ @rakibulislammehedi
+
+# Shared components
+/lib/shared/ @rakibulislammehedi
+
+# Localization
+/lib/l10n/ @rakibulislammehedi
+
+# Assets
+/assets/ @rakibulislammehedi
+
+# Platform-specific code
+/android/ @rakibulislammehedi
+/ios/ @rakibulislammehedi
+/macos/ @rakibulislammehedi
+/windows/ @rakibulislammehedi
+/linux/ @rakibulislammehedi
+/web/ @rakibulislammehedi
+
+# Tests
+/test/ @rakibulislammehedi
+
+# Reports and documentation
+/reports/ @rakibulislammehedi

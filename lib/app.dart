@@ -1,9 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/core/locale/local_notifier.dart';
+import 'package:pocketa/core/providers/theme_provider.dart';
 import 'package:pocketa/core/routing/router.dart';
 import 'package:pocketa/core/theme/app_theme.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
@@ -24,12 +24,14 @@ class _PocketaScrollBehavior extends MaterialScrollBehavior {
       };
 }
 
+// Rakibul Islam Mehedi
 class PocketaApp extends ConsumerWidget {
   const PocketaApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localeProvider);
+    final themeMode = ref.watch(themeProvider);
 
     return MaterialApp.router(
       // 3) Localized app title
@@ -40,7 +42,7 @@ class PocketaApp extends ConsumerWidget {
 
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
+      themeMode: themeMode,
 
       // 4) Locale wiring
       locale: locale,

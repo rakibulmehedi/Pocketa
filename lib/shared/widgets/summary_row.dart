@@ -21,7 +21,7 @@ class SummaryRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
-    final theme = Theme.of(context);
+    // final theme = Theme.of(context);
     final L = context.layout;
 
     final compact = L.isMobile || L.isCompact;

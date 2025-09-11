@@ -1,0 +1,365 @@
+name: Performance Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run performance checks weekly on Sundays at 3 AM UTC
+    - cron: '0 3 * * 0'
+  workflow_dispatch:
+
+env:
+  FLUTTER_VERSION: '3.24.0'
+
+jobs:
+  # =============================================================================
+  # PERFORMANCE ANALYSIS
+  # =============================================================================
+  performance-analysis:
+    name: Performance Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Generate code
+        run: flutter packages pub run build_runner build --delete-conflicting-outputs
+
+      - name: Run performance tests
+        run: |
+          echo "🚀 Running performance tests..."
+          chmod +x scripts/perf_checks.sh
+          ./scripts/perf_checks.sh
+
+      - name: Analyze performance anti-patterns
+        run: |
+          echo "🔍 Analyzing performance anti-patterns..."
+          
+          # Check for excessive setState calls
+          setstate_count=$(grep -r "setState" lib/ --include="*.dart" | wc -l)
+          echo "setState calls: $setstate_count"
+          if [ "$setstate_count" -gt 50 ]; then
+            echo "⚠️  High number of setState calls detected: $setstate_count"
+          fi
+          
+          # Check for missing const constructors
+          const_missing=$(grep -r "Widget(" lib/ --include="*.dart" | grep -v "const " | grep -v "test/" | wc -l)
+          echo "Non-const Widget constructors: $const_missing"
+          if [ "$const_missing" -gt 20 ]; then
+            echo "⚠️  High number of non-const Widget constructors: $const_missing"
+          fi
+          
+          # Check for 'new' keyword usage
+          new_keyword=$(grep -r "new " lib/ --include="*.dart" | grep -v "// TODO" | wc -l)
+          echo "'new' keyword usage: $new_keyword"
+          if [ "$new_keyword" -gt 0 ]; then
+            echo "❌ 'new' keyword usage detected: $new_keyword"
+            exit 1
+          fi
+          
+          # Check for List constructors without const
+          list_const=$(grep -r "List<" lib/ --include="*.dart" | grep -v "const " | grep -v "test/" | wc -l)
+          echo "Non-const List constructors: $list_const"
+          if [ "$list_const" -gt 10 ]; then
+            echo "⚠️  High number of non-const List constructors: $list_const"
+          fi
+          
+          # Check for excessive MediaQuery usage
+          mediaquery_count=$(grep -r "MediaQuery\.of" lib/ --include="*.dart" | wc -l)
+          echo "MediaQuery usage: $mediaquery_count"
+          if [ "$mediaquery_count" -gt 30 ]; then
+            echo "⚠️  High number of MediaQuery usage: $mediaquery_count"
+          fi
+          
+          # Check for potential memory leaks
+          streamcontroller_count=$(grep -r "StreamController" lib/ --include="*.dart" | wc -l)
+          timer_count=$(grep -r "Timer\." lib/ --include="*.dart" | wc -l)
+          animation_count=$(grep -r "AnimationController" lib/ --include="*.dart" | wc -l)
+          
+          echo "StreamController usage: $streamcontroller_count"
+          echo "Timer usage: $timer_count"
+          echo "AnimationController usage: $animation_count"
+          
+          # Check for proper disposal
+          dispose_count=$(grep -r "dispose\|cancel\|close" lib/ --include="*.dart" | wc -l)
+          echo "Disposal methods: $dispose_count"
+          
+          if [ "$streamcontroller_count" -gt 0 ] && [ "$dispose_count" -lt "$streamcontroller_count" ]; then
+            echo "⚠️  Potential memory leaks - StreamControllers without proper disposal"
+          fi
+
+      - name: Check widget tree complexity
+        run: |
+          echo "🌳 Analyzing widget tree complexity..."
+          
+          # Find deeply nested widgets
+          deep_nesting=$(find lib/ -name "*.dart" -exec grep -l "Widget.*Widget.*Widget.*Widget" {} \; | wc -l)
+          echo "Files with deep widget nesting: $deep_nesting"
+          
+          # Check for excessive widget parameters
+          high_params=$(grep -r "Widget(" lib/ --include="*.dart" | grep -o "," | wc -l)
+          echo "Widget parameter complexity: $high_params"
+          
+          # Check for large widget files
+          large_files=$(find lib/ -name "*.dart" -size +500c | wc -l)
+          echo "Large widget files (>500 lines): $large_files"
+          
+          if [ "$large_files" -gt 5 ]; then
+            echo "⚠️  High number of large widget files detected"
+          fi
+
+  # =============================================================================
+  # MEMORY USAGE ANALYSIS
+  # =============================================================================
+  memory-analysis:
+    name: Memory Usage Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Generate code
+        run: flutter packages pub run build_runner build --delete-conflicting-outputs
+
+      - name: Analyze memory patterns
+        run: |
+          echo "🧠 Analyzing memory usage patterns..."
+          
+          # Check for potential memory leaks
+          if grep -r "StreamController\|Timer\|AnimationController" lib/ --include="*.dart" | grep -v "dispose\|cancel\|close"; then
+            echo "⚠️  Potential memory leaks detected"
+          fi
+          
+          # Check for circular references
+          circular_refs=$(grep -r "this\." lib/ --include="*.dart" | wc -l)
+          echo "Circular reference indicators: $circular_refs"
+          
+          # Check for large data structures
+          large_lists=$(grep -r "List<.*List<" lib/ --include="*.dart" | wc -l)
+          echo "Nested list structures: $large_lists"
+          
+          # Check for image caching issues
+          image_cache=$(grep -r "Image\|NetworkImage\|AssetImage" lib/ --include="*.dart" | wc -l)
+          echo "Image usage: $image_cache"
+          
+          if [ "$image_cache" -gt 50 ]; then
+            echo "⚠️  High image usage - consider caching strategies"
+          fi
+
+      - name: Check for memory-intensive operations
+        run: |
+          echo "🔍 Checking for memory-intensive operations..."
+          
+          # Check for large file operations
+          file_ops=$(grep -r "File\|Directory" lib/ --include="*.dart" | wc -l)
+          echo "File operations: $file_ops"
+          
+          # Check for database operations
+          db_ops=$(grep -r "Hive\|Database" lib/ --include="*.dart" | wc -l)
+          echo "Database operations: $db_ops"
+          
+          # Check for network operations
+          network_ops=$(grep -r "http\|dio\|dio" lib/ --include="*.dart" | wc -l)
+          echo "Network operations: $network_ops"
+          
+          # Check for JSON parsing
+          json_ops=$(grep -r "json\|JSON" lib/ --include="*.dart" | wc -l)
+          echo "JSON operations: $json_ops"
+
+  # =============================================================================
+  # BUILD PERFORMANCE
+  # =============================================================================
+  build-performance:
+    name: Build Performance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Measure build time
+        run: |
+          echo "⏱️  Measuring build performance..."
+          
+          # Clean build
+          flutter clean
+          
+          # Measure clean build time
+          start_time=$(date +%s)
+          flutter build apk --debug
+          end_time=$(date +%s)
+          clean_build_time=$((end_time - start_time))
+          echo "Clean build time: ${clean_build_time}s"
+          
+          # Measure incremental build time
+          start_time=$(date +%s)
+          flutter build apk --debug
+          end_time=$(date +%s)
+          incremental_build_time=$((end_time - start_time))
+          echo "Incremental build time: ${incremental_build_time}s"
+          
+          # Check if build times are reasonable
+          if [ "$clean_build_time" -gt 300 ]; then
+            echo "⚠️  Clean build time is high: ${clean_build_time}s"
+          fi
+          
+          if [ "$incremental_build_time" -gt 60 ]; then
+            echo "⚠️  Incremental build time is high: ${incremental_build_time}s"
+          fi
+
+      - name: Analyze build artifacts
+        run: |
+          echo "📦 Analyzing build artifacts..."
+          
+          # Check APK size
+          if [ -f "build/app/outputs/flutter-apk/app-debug.apk" ]; then
+            apk_size=$(du -h build/app/outputs/flutter-apk/app-debug.apk | cut -f1)
+            echo "Debug APK size: $apk_size"
+            
+            # Check if APK size is reasonable (should be < 50MB for debug)
+            apk_size_bytes=$(du -b build/app/outputs/flutter-apk/app-debug.apk | cut -f1)
+            if [ "$apk_size_bytes" -gt 52428800 ]; then
+              echo "⚠️  Debug APK size is large: $apk_size"
+            fi
+          fi
+          
+          # Check for unused assets
+          if [ -d "assets" ]; then
+            asset_count=$(find assets -type f | wc -l)
+            echo "Asset count: $asset_count"
+            
+            if [ "$asset_count" -gt 100 ]; then
+              echo "⚠️  High number of assets: $asset_count"
+            fi
+          fi
+
+  # =============================================================================
+  # RUNTIME PERFORMANCE
+  # =============================================================================
+  runtime-performance:
+    name: Runtime Performance
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Generate code
+        run: flutter packages pub run build_runner build --delete-conflicting-outputs
+
+      - name: Run performance tests
+        run: |
+          echo "🏃 Running runtime performance tests..."
+          
+          # Run tests with coverage
+          flutter test --coverage
+          
+          # Check test performance
+          if [ -f "coverage/lcov.info" ]; then
+            coverage_lines=$(wc -l < coverage/lcov.info)
+            echo "Coverage file lines: $coverage_lines"
+          fi
+
+      - name: Analyze test performance
+        run: |
+          echo "📊 Analyzing test performance..."
+          
+          # Check test execution time
+          start_time=$(date +%s)
+          flutter test --reporter=json > test_results.json
+          end_time=$(date +%s)
+          test_time=$((end_time - start_time))
+          echo "Test execution time: ${test_time}s"
+          
+          # Analyze test results
+          if [ -f "test_results.json" ]; then
+            test_count=$(jq '.testCount' test_results.json 2>/dev/null || echo "0")
+            success_count=$(jq '.successCount' test_results.json 2>/dev/null || echo "0")
+            failure_count=$(jq '.failureCount' test_results.json 2>/dev/null || echo "0")
+            
+            echo "Test count: $test_count"
+            echo "Success count: $success_count"
+            echo "Failure count: $failure_count"
+            
+            if [ "$failure_count" -gt 0 ]; then
+              echo "❌ Test failures detected: $failure_count"
+              exit 1
+            fi
+          fi
+
+  # =============================================================================
+  # PERFORMANCE SUMMARY
+  # =============================================================================
+  performance-summary:
+    name: Performance Summary
+    runs-on: ubuntu-latest
+    needs: [performance-analysis, memory-analysis, build-performance, runtime-performance]
+    if: always()
+    
+    steps:
+      - name: Generate performance summary
+        run: |
+          echo "📈 Performance Pipeline Summary"
+          echo "================================"
+          echo "Performance Analysis: ${{ needs.performance-analysis.result }}"
+          echo "Memory Analysis: ${{ needs.memory-analysis.result }}"
+          echo "Build Performance: ${{ needs.build-performance.result }}"
+          echo "Runtime Performance: ${{ needs.runtime-performance.result }}"
+          
+          if [[ "${{ needs.performance-analysis.result }}" != "success" || 
+                "${{ needs.memory-analysis.result }}" != "success" || 
+                "${{ needs.build-performance.result }}" != "success" || 
+                "${{ needs.runtime-performance.result }}" != "success" ]]; then
+            echo "❌ Performance pipeline failed"
+            exit 1
+          fi
+          
+          echo "✅ All performance checks passed"

@@ -54,7 +54,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get continuee => 'চালিয়ে যান';
 
   @override
-  String get retry => 'আবার চেষ্টা করুন';
+  String get retry => 'পুনরায় চেষ্টা করুন';
 
   @override
   String get confirm => 'নিশ্চিত করুন';
@@ -583,10 +583,10 @@ class AppLocalizationsBn extends AppLocalizations {
   String get errorsTitle => 'কিছু সমস্যা হয়েছে';
 
   @override
-  String get errorGeneric => 'আবার চেষ্টা করুন।';
+  String get errorGeneric => 'একটি অপ্রত্যাশিত ত্রুটি ঘটেছে';
 
   @override
-  String get errorNetwork => 'ইন্টারনেট সংযোগ নেই।';
+  String get errorNetwork => 'নেটওয়ার্ক ত্রুটি ঘটেছে';
 
   @override
   String get errorTimeout => 'সময়ের সীমা শেষ।';
@@ -601,7 +601,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get errorNotFound => 'পাওয়া যায়নি।';
 
   @override
-  String get errorValidation => 'ঘরগুলো যাচাই করুন।';
+  String get errorValidation => 'ভ্যালিডেশন ত্রুটি';
 
   @override
   String errorRequired(Object field) {
@@ -952,6 +952,157 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String onb_premium_testimonial1(Object amount) {
-    return '“৩ মাসে $amount সেভ করেছি।”';
+    return '\"৩ মাসে $amount সেভ করেছি।\"';
   }
+
+  @override
+  String get onb_welcome_title => 'আজ থেকেই নিয়ন্ত্রণ আপনার হাতে।';
+
+  @override
+  String get onb_welcome_subtitle =>
+      'ছোট ছোট খরচই বড় ফাঁক তৈরি করে—এবার থেকে সবকিছু সহজে ট্র্যাক হবে।';
+
+  @override
+  String get onb_persona_title => 'আপনি কেমন ইউজার?';
+
+  @override
+  String get onb_persona_helper => 'ভাষা, আয় টাইপ, মুদ্রা—সব নিজের মতো।';
+
+  @override
+  String get onb_language_label => 'ভাষা';
+
+  @override
+  String get onb_income_type_label => 'আয় টাইপ';
+
+  @override
+  String get onb_currency_label => 'মুদ্রা';
+
+  @override
+  String get onb_income_student => 'স্টুডেন্ট';
+
+  @override
+  String get onb_income_freelancer => 'ফ্রিল্যান্সার';
+
+  @override
+  String get onb_income_family => 'ফ্যামিলি';
+
+  @override
+  String get onb_save_continue => 'সেভ করে এগোন';
+
+  @override
+  String get onb_demo_title => '৫ সেকেন্ডে খরচ যোগ করুন।';
+
+  @override
+  String get onb_demo_helper =>
+      'এক ট্যাপে ডেমোটি অ্যাড করুন—তারপর চাইলে এডিট করুন।';
+
+  @override
+  String get onb_demo_amount => '৳৫০';
+
+  @override
+  String get onb_demo_category => 'চা/স্ন্যাকস';
+
+  @override
+  String get onb_demo_note => 'বন্ধুদের সাথে';
+
+  @override
+  String get onb_demo_cta => 'এখনই যোগ করুন';
+
+  @override
+  String get onb_demo_success_toast => 'যোগ হয়েছে! আপনি পারেন।';
+
+  @override
+  String get onb_trust_title => 'আপনার ডেটা আপনার ডিভাইসে।';
+
+  @override
+  String get onb_trust_bullet_offline =>
+      'অফলাইন‑ফার্স্ট—ইন্টারনেট না থাকলেও কাজ করবে।';
+
+  @override
+  String get onb_trust_bullet_privacy => 'ক্লাউডে না গেলে আমরা দেখতেই পাই না।';
+
+  @override
+  String get onb_trust_bullet_lock => 'লক‑পিন ও বায়োমেট্রিক সাপোর্ট।';
+
+  @override
+  String get onb_trust_primary => 'বুঝেছি';
+
+  @override
+  String get onb_trust_learn_more => 'আরও জানুন';
+
+  @override
+  String get onb_continue => 'চালিয়ে যান';
+
+  @override
+  String get onb_features_secure => 'নিরাপদ';
+
+  @override
+  String get onb_features_simple => 'সহজ';
+
+  @override
+  String get onb_features_smart => 'চতুর';
+
+  @override
+  String get onb_feature_secure_desc => 'আপনার ডেটা এনক্রিপ্টেড এবং নিরাপদ';
+
+  @override
+  String get onb_feature_simple_desc => 'সহজ ব্যবহারযোগ্য ইন্টারফেস';
+
+  @override
+  String get onb_feature_smart_desc => 'এআই-চালিত অন্তর্দৃষ্টি';
+
+  @override
+  String get language_bengali => 'বাংলা';
+
+  @override
+  String get language_english => 'English';
+
+  @override
+  String get currency_bdt => '৳ BDT';
+
+  @override
+  String get currency_usd => '\$ USD';
+
+  @override
+  String get onb_habit_title => 'আজ Day 1—কালও দেখা হবে?';
+
+  @override
+  String get onb_habit_helper =>
+      'প্রতিদিন ১০ সেকেন্ড—স্ট্রিক বজায় রাখুন, স্বপ্নে বিনিয়োগ করুন।';
+
+  @override
+  String get onb_habit_cta => 'শুরু করুন';
+
+  @override
+  String get onb_habit_toggle_reminder => 'ডেইলি রিমাইন্ডার';
+
+  @override
+  String onb_habit_day_label(int day) {
+    return 'Day $day';
+  }
+
+  @override
+  String get onb_welcome_chip_offline => 'অফলাইন';
+
+  @override
+  String get onb_welcome_chip_fast => '৫ সেকেন্ডে যোগ';
+
+  @override
+  String get onb_welcome_chip_secure => 'নিরাপদ';
+
+  @override
+  String get onb_welcome_chip_offline_info => 'ইন্টারনেট ছাড়াই কাজ করে';
+
+  @override
+  String get onb_welcome_chip_fast_info => 'মাত্র ৫ সেকেন্ডে খরচ যোগ করুন';
+
+  @override
+  String get onb_welcome_chip_secure_info =>
+      'আপনার ডেটা ব্যক্তিগত এবং নিরাপদ থাকে';
+
+  @override
+  String get errorCache => 'ক্যাশ ত্রুটি ঘটেছে';
+
+  @override
+  String get errorDatabase => 'ডেটাবেস ত্রুটি ঘটেছে';
 }

@@ -1,26 +1,222 @@
-name: CI Guard
+name: CI Guard - Code Quality Enforcement
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, 'feature/*', 'hotfix/*' ]
   pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+env:
+  FLUTTER_VERSION: '3.24.0'
 
 jobs:
-  guard:
+  code-quality-guard:
+    name: Code Quality Guard
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: subosito/flutter-action@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          flutter-version: '3.x'
+          fetch-depth: 0
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: 'stable'
-      - run: flutter --version
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
 
       - name: Get dependencies
         run: flutter pub get
+
+      - name: Generate code
+        run: flutter packages pub run build_runner build --delete-conflicting-outputs
 
       - name: Run CI guard scripts
         run: |
           chmod +x scripts/perf_checks.sh
           ./scripts/perf_checks.sh
+
+      - name: Additional quality checks
+        run: |
+          echo "=== Additional Code Quality Checks ==="
+          
+          # Check for TODO/FIXME comments in production code
+          echo "Checking for unresolved TODOs/FIXMEs..."
+          if grep -r "TODO\|FIXME\|HACK" lib/ --include="*.dart" | grep -v "// TODO\|// FIXME\|// HACK"; then
+            echo "❌ Unresolved TODO/FIXME/HACK comments found in production code"
+            exit 1
+          fi
+          
+          # Check for console.log equivalents
+          echo "Checking for debug prints..."
+          if grep -r "print(" lib/ --include="*.dart" | grep -v "// TODO\|// FIXME\|// NOTE"; then
+            echo "❌ print() statements found in production code"
+            exit 1
+          fi
+          
+          # Check for proper error handling
+          echo "Checking for proper error handling..."
+          if grep -r "catch.*{" lib/ --include="*.dart" | grep -v "// TODO\|// FIXME" | grep -v "rethrow"; then
+            echo "⚠️  Empty catch blocks detected - ensure proper error handling"
+          fi
+          
+          # Check for magic numbers
+          echo "Checking for magic numbers..."
+          if grep -r "[^a-zA-Z_][0-9]\{3,\}[^a-zA-Z_]" lib/ --include="*.dart" | grep -v "// TODO\|// FIXME\|// NOTE"; then
+            echo "⚠️  Potential magic numbers detected - consider using named constants"
+          fi
+          
+          echo "✅ Additional quality checks passed"
+
+      - name: Architecture compliance check
+        run: |
+          echo "=== Architecture Compliance Check ==="
+          
+          # Check for proper layer separation
+          if grep -r "import.*features.*data" lib/features/*/presentation/ --include="*.dart"; then
+            echo "❌ Presentation layer importing data layer directly"
+            exit 1
+          fi
+          
+          # Check for proper dependency injection
+          if grep -r "Provider\." lib/ --include="*.dart" | grep -v "test/"; then
+            echo "⚠️  Direct Provider usage detected - consider using ConsumerWidget"
+          fi
+          
+          echo "✅ Architecture compliance check passed"
+
+  performance-guard:
+    name: Performance Guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Performance anti-patterns check
+        run: |
+          echo "=== Performance Anti-patterns Check ==="
+          
+          # Check for excessive rebuilds
+          if grep -r "setState" lib/ --include="*.dart" | wc -l | grep -q "[5-9][0-9]\|[0-9][0-9][0-9]"; then
+            echo "⚠️  High number of setState calls detected"
+          fi
+          
+          # Check for missing const constructors
+          if grep -r "new " lib/ --include="*.dart" | grep -v "// TODO"; then
+            echo "❌ 'new' keyword usage detected (use const instead)"
+            exit 1
+          fi
+          
+          # Check for missing const widgets
+          if grep -r "Widget(" lib/ --include="*.dart" | grep -v "const " | grep -v "// TODO" | grep -v "test/"; then
+            echo "⚠️  Non-const Widget constructors detected"
+          fi
+          
+          # Check for proper list usage
+          if grep -r "List<" lib/ --include="*.dart" | grep -v "const " | grep -v "// TODO" | grep -v "test/"; then
+            echo "⚠️  Non-const List constructors detected"
+          fi
+          
+          echo "✅ Performance anti-patterns check completed"
+
+      - name: Memory leak detection
+        run: |
+          echo "=== Memory Leak Detection ==="
+          
+          # Check for proper disposal
+          if grep -r "StreamController\|Timer\|AnimationController" lib/ --include="*.dart" | grep -v "dispose\|cancel\|close"; then
+            echo "⚠️  Potential memory leaks - ensure proper disposal of resources"
+          fi
+          
+          # Check for circular references
+          if grep -r "this\." lib/ --include="*.dart" | grep -v "// TODO" | wc -l | grep -q "[5-9][0-9]\|[0-9][0-9][0-9]"; then
+            echo "⚠️  High number of 'this.' references - check for circular dependencies"
+          fi
+          
+          echo "✅ Memory leak detection completed"
+
+  security-guard:
+    name: Security Guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Security audit
+        run: |
+          echo "=== Security Audit ==="
+          
+          # Check for hardcoded secrets
+          if grep -r -i "password\|secret\|key\|token\|api_key" lib/ --include="*.dart" | grep -v "// TODO\|// FIXME\|// NOTE"; then
+            echo "❌ Potential hardcoded secrets found"
+            exit 1
+          fi
+          
+          # Check for debug prints in production code
+          if grep -r "print\|debugPrint\|printDebugInformation" lib/ --include="*.dart" | grep -v "// TODO\|// FIXME\|// NOTE"; then
+            echo "❌ Debug prints found in production code"
+            exit 1
+          fi
+          
+          # Check for sensitive files
+          if find . -name "*.keystore" -o -name "*.jks" -o -name "*.p12" -o -name "*.pem" -o -name "*.key" | grep -v ".gitignore"; then
+            echo "❌ Sensitive files found in repository"
+            exit 1
+          fi
+          
+          # Check for proper error handling (no sensitive data in error messages)
+          if grep -r "throw.*Exception.*password\|throw.*Exception.*secret" lib/ --include="*.dart"; then
+            echo "❌ Potential sensitive data in error messages"
+            exit 1
+          fi
+          
+          echo "✅ Security audit passed"
+
+  final-guard:
+    name: Final Guard Status
+    runs-on: ubuntu-latest
+    needs: [code-quality-guard, performance-guard, security-guard]
+    if: always()
+    
+    steps:
+      - name: Check all guard jobs
+        run: |
+          if [[ "${{ needs.code-quality-guard.result }}" != "success" || 
+                "${{ needs.performance-guard.result }}" != "success" || 
+                "${{ needs.security-guard.result }}" != "success" ]]; then
+            echo "❌ One or more guard jobs failed"
+            exit 1
+          fi
+          echo "✅ All guard jobs passed successfully"

@@ -253,7 +253,7 @@ class TransactionFormNotifier extends StateNotifier<TransactionFormState> {
     if (state.amount <= 0) return null; // amount handled in UI with i18n
 
     if (state.walletId == null || state.walletId!.isEmpty) {
-      return 'Wallet is required';
+      return 'Please select a wallet';
     }
 
     if (state.type == TransactionType.transfer) {
@@ -271,7 +271,7 @@ class TransactionFormNotifier extends StateNotifier<TransactionFormState> {
     }
 
     if (state.categoryId == null || state.categoryId!.isEmpty) {
-      return 'Category is required';
+      return 'Please select a category';
     }
 
     return null; // OK

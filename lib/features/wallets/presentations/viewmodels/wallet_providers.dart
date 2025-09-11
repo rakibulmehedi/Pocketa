@@ -31,9 +31,7 @@ final getWalletsProvider = Provider(
 );
 
 /// Reactive list (watch hive events)
-final walletsStreamProvider = StreamProvider.autoDispose<List<WalletEntity>>((
-  ref,
-) async* {
+final walletsStreamProvider = StreamProvider.autoDispose<List<WalletEntity>>((ref) async* {
   final box = ref.watch(walletBoxProvider);
   List<WalletEntity> snapshot() => box.values.map((m) => m.toEntity()).toList()
     ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));

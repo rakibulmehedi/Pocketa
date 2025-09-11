@@ -1223,13 +1223,13 @@ abstract class AppLocalizations {
   /// No description provided for @errorGeneric.
   ///
   /// In en, this message translates to:
-  /// **'Try again.'**
+  /// **'An unexpected error occurred'**
   String get errorGeneric;
 
   /// No description provided for @errorNetwork.
   ///
   /// In en, this message translates to:
-  /// **'No internet connection.'**
+  /// **'Network error occurred'**
   String get errorNetwork;
 
   /// No description provided for @errorTimeout.
@@ -1259,7 +1259,7 @@ abstract class AppLocalizations {
   /// No description provided for @errorValidation.
   ///
   /// In en, this message translates to:
-  /// **'Check the fields.'**
+  /// **'Validation error'**
   String get errorValidation;
 
   /// Shown when a required field is empty
@@ -1835,8 +1835,296 @@ abstract class AppLocalizations {
   /// Short premium testimonial with saved amount
   ///
   /// In en, this message translates to:
-  /// **'“Saved {amount} in 3 months.”'**
+  /// **'\"Saved {amount} in 3 months.\"'**
   String onb_premium_testimonial1(Object amount);
+
+  /// No description provided for @onb_welcome_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting today, money is in your control.'**
+  String get onb_welcome_title;
+
+  /// No description provided for @onb_welcome_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Small expenses create big gaps—now they\'ll be easy to track.'**
+  String get onb_welcome_subtitle;
+
+  /// No description provided for @onb_persona_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us about you.'**
+  String get onb_persona_title;
+
+  /// No description provided for @onb_persona_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Language, income type, currency—make it yours.'**
+  String get onb_persona_helper;
+
+  /// No description provided for @onb_language_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get onb_language_label;
+
+  /// No description provided for @onb_income_type_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Income type'**
+  String get onb_income_type_label;
+
+  /// No description provided for @onb_currency_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get onb_currency_label;
+
+  /// No description provided for @onb_income_student.
+  ///
+  /// In en, this message translates to:
+  /// **'Student'**
+  String get onb_income_student;
+
+  /// No description provided for @onb_income_freelancer.
+  ///
+  /// In en, this message translates to:
+  /// **'Freelancer'**
+  String get onb_income_freelancer;
+
+  /// No description provided for @onb_income_family.
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get onb_income_family;
+
+  /// No description provided for @onb_save_continue.
+  ///
+  /// In en, this message translates to:
+  /// **'Save & continue'**
+  String get onb_save_continue;
+
+  /// No description provided for @onb_demo_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an expense in 5 seconds.'**
+  String get onb_demo_title;
+
+  /// No description provided for @onb_demo_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'One tap to add the demo—edit if you want.'**
+  String get onb_demo_helper;
+
+  /// No description provided for @onb_demo_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'৳50'**
+  String get onb_demo_amount;
+
+  /// No description provided for @onb_demo_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Tea/Snacks'**
+  String get onb_demo_category;
+
+  /// No description provided for @onb_demo_note.
+  ///
+  /// In en, this message translates to:
+  /// **'With friends'**
+  String get onb_demo_note;
+
+  /// No description provided for @onb_demo_cta.
+  ///
+  /// In en, this message translates to:
+  /// **'Add now'**
+  String get onb_demo_cta;
+
+  /// No description provided for @onb_demo_success_toast.
+  ///
+  /// In en, this message translates to:
+  /// **'Added! You\'ve got this.'**
+  String get onb_demo_success_toast;
+
+  /// No description provided for @onb_trust_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data stays on your device.'**
+  String get onb_trust_title;
+
+  /// No description provided for @onb_trust_bullet_offline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline-first—works without internet.'**
+  String get onb_trust_bullet_offline;
+
+  /// No description provided for @onb_trust_bullet_privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'We can\'t see your data unless you choose cloud backup.'**
+  String get onb_trust_bullet_privacy;
+
+  /// No description provided for @onb_trust_bullet_lock.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock PIN and biometric support.'**
+  String get onb_trust_bullet_lock;
+
+  /// No description provided for @onb_trust_primary.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand'**
+  String get onb_trust_primary;
+
+  /// No description provided for @onb_trust_learn_more.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn more'**
+  String get onb_trust_learn_more;
+
+  /// No description provided for @onb_continue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get onb_continue;
+
+  /// No description provided for @onb_features_secure.
+  ///
+  /// In en, this message translates to:
+  /// **'Secure'**
+  String get onb_features_secure;
+
+  /// No description provided for @onb_features_simple.
+  ///
+  /// In en, this message translates to:
+  /// **'Simple'**
+  String get onb_features_simple;
+
+  /// No description provided for @onb_features_smart.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart'**
+  String get onb_features_smart;
+
+  /// No description provided for @onb_feature_secure_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is encrypted and secure'**
+  String get onb_feature_secure_desc;
+
+  /// No description provided for @onb_feature_simple_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Easy to use interface'**
+  String get onb_feature_simple_desc;
+
+  /// No description provided for @onb_feature_smart_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'AI-powered insights'**
+  String get onb_feature_smart_desc;
+
+  /// No description provided for @language_bengali.
+  ///
+  /// In en, this message translates to:
+  /// **'বাংলা'**
+  String get language_bengali;
+
+  /// No description provided for @language_english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get language_english;
+
+  /// No description provided for @currency_bdt.
+  ///
+  /// In en, this message translates to:
+  /// **'৳ BDT'**
+  String get currency_bdt;
+
+  /// No description provided for @currency_usd.
+  ///
+  /// In en, this message translates to:
+  /// **'\$ USD'**
+  String get currency_usd;
+
+  /// No description provided for @onb_habit_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Today is Day 1—see you tomorrow?'**
+  String get onb_habit_title;
+
+  /// No description provided for @onb_habit_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'10 seconds a day—keep your streak, invest in your dreams.'**
+  String get onb_habit_helper;
+
+  /// No description provided for @onb_habit_cta.
+  ///
+  /// In en, this message translates to:
+  /// **'Start now'**
+  String get onb_habit_cta;
+
+  /// No description provided for @onb_habit_toggle_reminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily reminder'**
+  String get onb_habit_toggle_reminder;
+
+  /// Day label with day number
+  ///
+  /// In en, this message translates to:
+  /// **'Day {day}'**
+  String onb_habit_day_label(int day);
+
+  /// No description provided for @onb_welcome_chip_offline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get onb_welcome_chip_offline;
+
+  /// No description provided for @onb_welcome_chip_fast.
+  ///
+  /// In en, this message translates to:
+  /// **'5-second add'**
+  String get onb_welcome_chip_fast;
+
+  /// No description provided for @onb_welcome_chip_secure.
+  ///
+  /// In en, this message translates to:
+  /// **'Secure'**
+  String get onb_welcome_chip_secure;
+
+  /// No description provided for @onb_welcome_chip_offline_info.
+  ///
+  /// In en, this message translates to:
+  /// **'Works without internet connection'**
+  String get onb_welcome_chip_offline_info;
+
+  /// No description provided for @onb_welcome_chip_fast_info.
+  ///
+  /// In en, this message translates to:
+  /// **'Add expenses in just 5 seconds'**
+  String get onb_welcome_chip_fast_info;
+
+  /// No description provided for @onb_welcome_chip_secure_info.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data stays private and secure'**
+  String get onb_welcome_chip_secure_info;
+
+  /// No description provided for @errorCache.
+  ///
+  /// In en, this message translates to:
+  /// **'Cache error occurred'**
+  String get errorCache;
+
+  /// No description provided for @errorDatabase.
+  ///
+  /// In en, this message translates to:
+  /// **'Database error occurred'**
+  String get errorDatabase;
 }
 
 class _AppLocalizationsDelegate

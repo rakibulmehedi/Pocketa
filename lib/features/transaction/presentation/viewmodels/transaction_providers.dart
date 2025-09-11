@@ -32,10 +32,10 @@ final allTransactionsProvider =
   final box = ref.watch(txBoxProvider);
 
   // Descending by date (newest first)
-  int _compare(Transaction a, Transaction b) => b.date.compareTo(a.date);
+  int compare(Transaction a, Transaction b) => b.date.compareTo(a.date);
 
   // Binary search lowerBound for descending list by date
-  int _lowerBoundDesc(List<Transaction> list, DateTime date) {
+  int lowerBoundDesc(List<Transaction> list, DateTime date) {
     var low = 0;
     var high = list.length;
     while (low < high) {
@@ -61,7 +61,7 @@ final allTransactionsProvider =
         sorted.add(t);
       }
     }
-    sorted.sort(_compare);
+    sorted.sort(compare);
 
     void emit() {
       // Emit a fresh list instance of entities
@@ -78,15 +78,14 @@ final allTransactionsProvider =
       debounce = Timer(const Duration(milliseconds: 16), emit);
     }
 
-    int _indexById(String id) =>
-        sorted.indexWhere((x) => x.id == id);
+    int indexById(String id) => sorted.indexWhere((x) => x.id == id);
 
     final sub = box.watch().listen((event) {
       try {
         if (event.deleted == true) {
           final old = byKey.remove(event.key);
           if (old != null) {
-            final i = _indexById(old.id);
+            final i = indexById(old.id);
             if (i >= 0) sorted.removeAt(i);
             scheduleEmit();
           }
@@ -99,7 +98,7 @@ final allTransactionsProvider =
         if (nv.isDeleted) {
           final old = byKey.remove(event.key);
           if (old != null) {
-            final i = _indexById(old.id);
+            final i = indexById(old.id);
             if (i >= 0) sorted.removeAt(i);
             scheduleEmit();
           }
@@ -111,7 +110,7 @@ final allTransactionsProvider =
 
         if (prev == null) {
           // New insert
-          final idx = _lowerBoundDesc(sorted, nv.date);
+          final idx = lowerBoundDesc(sorted, nv.date);
           sorted.insert(idx, nv);
           scheduleEmit();
           return;
@@ -119,27 +118,27 @@ final allTransactionsProvider =
 
         // Update
         final sameDate = prev.date.isAtSameMomentAs(nv.date);
-        final i = _indexById(prev.id);
+        final i = indexById(prev.id);
         if (i >= 0) {
           if (sameDate) {
             // In-place replace keeps position stable
             sorted[i] = nv;
           } else {
             sorted.removeAt(i);
-            final idx = _lowerBoundDesc(sorted, nv.date);
+            final idx = lowerBoundDesc(sorted, nv.date);
             sorted.insert(idx, nv);
           }
           scheduleEmit();
         } else {
           // Not found (shouldn't happen) — fallback to insert
-          final idx = _lowerBoundDesc(sorted, nv.date);
+          final idx = lowerBoundDesc(sorted, nv.date);
           sorted.insert(idx, nv);
           scheduleEmit();
         }
       } catch (_) {
         // On any inconsistency, fall back to a full rebuild
         final list = box.values.where((t) => !t.isDeleted).toList()
-          ..sort(_compare);
+          ..sort(compare);
         byKey
           ..clear()
           ..addEntries(list.map((t) => MapEntry(t.key, t)));

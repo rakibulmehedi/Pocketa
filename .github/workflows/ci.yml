@@ -1,0 +1,389 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, develop, 'feature/*', 'hotfix/*' ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+env:
+  FLUTTER_VERSION: '3.24.0'
+  DART_VERSION: '3.5.0'
+
+jobs:
+  # =============================================================================
+  # CODE QUALITY & ANALYSIS
+  # =============================================================================
+  analyze:
+    name: Code Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze project source
+        run: flutter analyze --fatal-infos
+
+      - name: Check for unused dependencies
+        run: dart pub deps --json | jq '.packages[] | select(.kind == "direct") | .name' | xargs -I {} sh -c 'grep -r "import.*{}" lib/ || echo "Unused: {}"'
+
+      - name: Check for missing dependencies
+        run: |
+          # Find all imports and check if they're in pubspec.yaml
+          find lib/ -name "*.dart" -exec grep -h "^import" {} \; | \
+          grep -v "dart:" | \
+          grep -v "package:flutter" | \
+          sed 's/import.*package:\([^/]*\).*/\1/' | \
+          sort -u | \
+          while read pkg; do
+            if ! grep -q "^\s*$pkg:" pubspec.yaml; then
+              echo "Missing dependency: $pkg"
+            fi
+          done
+
+  # =============================================================================
+  # SECURITY SCANNING
+  # =============================================================================
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Run security audit
+        run: |
+          # Check for known vulnerabilities
+          flutter pub audit
+          
+          # Check for hardcoded secrets
+          if grep -r -i "password\|secret\|key\|token" lib/ --include="*.dart" | grep -v "// TODO\|// FIXME\|// NOTE"; then
+            echo "❌ Potential hardcoded secrets found"
+            exit 1
+          fi
+          
+          # Check for debug prints in production code
+          if grep -r "print\|debugPrint\|printDebugInformation" lib/ --include="*.dart" | grep -v "// TODO\|// FIXME\|// NOTE"; then
+            echo "❌ Debug prints found in production code"
+            exit 1
+          fi
+
+      - name: Check for sensitive files
+        run: |
+          # Check for accidentally committed sensitive files
+          if find . -name "*.keystore" -o -name "*.jks" -o -name "*.p12" -o -name "*.pem" -o -name "*.key" | grep -v ".gitignore"; then
+            echo "❌ Sensitive files found in repository"
+            exit 1
+          fi
+
+  # =============================================================================
+  # TESTING
+  # =============================================================================
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    
+    strategy:
+      matrix:
+        test-type: [unit, widget, integration]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Generate code
+        run: flutter packages pub run build_runner build --delete-conflicting-outputs
+
+      - name: Run unit tests
+        if: matrix.test-type == 'unit'
+        run: flutter test test/ --coverage
+
+      - name: Run widget tests
+        if: matrix.test-type == 'widget'
+        run: flutter test test/widget_test.dart --coverage
+
+      - name: Run integration tests
+        if: matrix.test-type == 'integration'
+        run: |
+          # Start emulator for integration tests
+          flutter emulators --launch android_emulator || true
+          flutter test integration_test/ --coverage
+
+      - name: Upload coverage to Codecov
+        if: matrix.test-type == 'unit'
+        uses: codecov/codecov-action@v3
+        with:
+          file: coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+
+  # =============================================================================
+  # BUILD VERIFICATION
+  # =============================================================================
+  build:
+    name: Build Verification
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: macos-latest
+            platform: macos
+          - os: windows-latest
+            platform: windows
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Generate code
+        run: flutter packages pub run build_runner build --delete-conflicting-outputs
+
+      - name: Build APK (Android)
+        if: matrix.platform == 'linux'
+        run: flutter build apk --release --target-platform android-arm64
+
+      - name: Build App Bundle (Android)
+        if: matrix.platform == 'linux'
+        run: flutter build appbundle --release
+
+      - name: Build iOS
+        if: matrix.platform == 'macos'
+        run: flutter build ios --release --no-codesign
+
+      - name: Build macOS
+        if: matrix.platform == 'macos'
+        run: flutter build macos --release
+
+      - name: Build Windows
+        if: matrix.platform == 'windows'
+        run: flutter build windows --release
+
+      - name: Build Web
+        run: flutter build web --release
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-${{ matrix.platform }}
+          path: build/
+
+  # =============================================================================
+  # PERFORMANCE TESTING
+  # =============================================================================
+  performance:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Run performance tests
+        run: |
+          chmod +x scripts/perf_checks.sh
+          ./scripts/perf_checks.sh
+
+      - name: Run custom performance checks
+        run: |
+          # Check for performance anti-patterns
+          echo "=== Performance Anti-patterns Check ==="
+          
+          # Check for excessive setState calls
+          if grep -r "setState" lib/ --include="*.dart" | wc -l | grep -q "[5-9][0-9]\|[0-9][0-9][0-9]"; then
+            echo "⚠️  High number of setState calls detected"
+          fi
+          
+          # Check for missing const constructors
+          if grep -r "new " lib/ --include="*.dart" | grep -v "// TODO"; then
+            echo "⚠️  'new' keyword usage detected (use const instead)"
+          fi
+          
+          # Check for missing const widgets
+          if grep -r "Widget(" lib/ --include="*.dart" | grep -v "const " | grep -v "// TODO"; then
+            echo "⚠️  Non-const Widget constructors detected"
+          fi
+
+  # =============================================================================
+  # LOCALIZATION VERIFICATION
+  # =============================================================================
+  localization:
+    name: Localization Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Generate localization files
+        run: flutter gen-l10n
+
+      - name: Verify localization completeness
+        run: |
+          # Check that all ARB files have the same keys
+          echo "=== Localization Completeness Check ==="
+          
+          # Get all ARB files
+          ARB_FILES=$(find lib/l10n -name "*.arb" | sort)
+          
+          if [ -n "$ARB_FILES" ]; then
+            # Extract keys from each ARB file
+            for file in $ARB_FILES; do
+              echo "Checking $file"
+              jq -r 'keys[]' "$file" | sort > "/tmp/$(basename "$file").keys"
+            done
+            
+            # Compare key files
+            FIRST_FILE="/tmp/$(basename $(echo $ARB_FILES | head -n1)).keys"
+            for file in /tmp/*.arb.keys; do
+              if ! diff -q "$FIRST_FILE" "$file" > /dev/null; then
+                echo "❌ Key mismatch in $(basename "$file" .arb.keys)"
+                diff "$FIRST_FILE" "$file" || true
+                exit 1
+              fi
+            done
+            
+            echo "✅ All ARB files have consistent keys"
+          fi
+
+  # =============================================================================
+  # DEPENDENCY AUDIT
+  # =============================================================================
+  dependencies:
+    name: Dependency Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Audit dependencies
+        run: |
+          echo "=== Dependency Audit ==="
+          flutter pub audit
+          
+          # Check for outdated dependencies
+          echo "=== Outdated Dependencies ==="
+          flutter pub outdated || true
+          
+          # Check for dependency conflicts
+          echo "=== Dependency Conflicts ==="
+          flutter pub deps --json | jq '.packages[] | select(.kind == "direct") | .name' | \
+          while read dep; do
+            if flutter pub deps --json | jq -r ".packages[] | select(.name == \"$dep\") | .version" | sort -u | wc -l | grep -q "[2-9]"; then
+              echo "⚠️  Version conflict detected for: $dep"
+            fi
+          done
+
+  # =============================================================================
+  # FINAL STATUS
+  # =============================================================================
+  ci-success:
+    name: CI Success
+    runs-on: ubuntu-latest
+    needs: [analyze, security, test, build, performance, localization, dependencies]
+    if: always()
+    
+    steps:
+      - name: Check all jobs
+        run: |
+          if [[ "${{ needs.analyze.result }}" != "success" || 
+                "${{ needs.security.result }}" != "success" || 
+                "${{ needs.test.result }}" != "success" || 
+                "${{ needs.build.result }}" != "success" || 
+                "${{ needs.performance.result }}" != "success" || 
+                "${{ needs.localization.result }}" != "success" || 
+                "${{ needs.dependencies.result }}" != "success" ]]; then
+            echo "❌ One or more CI jobs failed"
+            exit 1
+          fi
+          echo "✅ All CI jobs passed successfully"

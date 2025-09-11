@@ -13,6 +13,7 @@ final categoryBoxProvider = Provider<Box<CategoryModel>>(
 final categoryRepoProvider = Provider<CategoryRepository>(
   (ref) => CategoryRepoImpl(ref.watch(categoryBoxProvider)),
 );
+
 final categoriesMapProvider = Provider<Map<String, CategoryEntity>>((ref) {
   // Watch only the data portion to reduce rebuilds on loading/error transitions
   final list = ref.watch(
@@ -40,10 +41,9 @@ final categoryByIdProvider = Provider.family<CategoryEntity?, String?>((ref, id)
   return match;
 });
 
-final categoriesStreamProvider =
-    StreamProvider.autoDispose<List<CategoryEntity>>((ref) {
-      return ref.watch(categoryRepoProvider).watchAll();
-    });
+final categoriesStreamProvider = StreamProvider.autoDispose<List<CategoryEntity>>((ref) {
+  return ref.watch(categoryRepoProvider).watchAll();
+});
 
 // convenience actions
 final saveCategoryProvider = Provider((ref) {

@@ -90,7 +90,7 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
                 if (t.length > 24) return l10n.errorMaxLength(l10n.name, 24);
                 return null;
               },
-              onFieldSubmitted: (_) => _submit(saveCategory),
+              onFieldSubmitted: (_) => _submit((entity) => saveCategory(entity)),
             ),
             const SizedBox(height: 12),
 
@@ -100,7 +100,9 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
                 CircleAvatar(
                   backgroundColor: Color(_colorHex).withValues(alpha: 0.15),
                   child: Icon(
-                    IconData(_iconCodePoint, fontFamily: _iconFontFamily),
+                    _iconCodePoint != 0 
+                        ? IconData(_iconCodePoint, fontFamily: _iconFontFamily)
+                        : Icons.category,
                     color: Color(_colorHex),
                   ),
                 ),
@@ -127,7 +129,7 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
           child: Text(l10n.cancel),
         ),
         FilledButton(
-          onPressed: () => _submit(saveCategory),
+          onPressed: () => _submit((entity) => saveCategory(entity)),
           child: Text(l10n.addCategory),
         ),
       ],
@@ -206,7 +208,7 @@ class _IconPickerSheet extends StatelessWidget {
             onTap: () => Navigator.pop(context, ic),
             child: DecoratedBox(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.black12),
+                border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.12)),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Center(child: Icon(ic)),

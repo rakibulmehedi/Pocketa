@@ -12,27 +12,24 @@ import 'package:pocketa/features/transaction/domain/entities/transaction_entity.
 import 'package:pocketa/l10n/app_localizations.dart';
 
 class TransactionTile extends ConsumerWidget {
-  final TransactionEntity transaction;
+  final TransactionEntity? transaction;
   const TransactionTile({super.key, required this.transaction});
 
   /// Prototype for SliverPrototypeExtentList (stable height)
-  TransactionTile.prototype({super.key})
-      : transaction = TransactionEntity(
-          id: 'prototype',
-          amount: 0,
-          date: DateTime(2024),
-          type: TransactionType.expense,
-          categoryId: '',
-          walletId: '',
-        );
+  const TransactionTile.prototype({super.key}) : transaction = null;
 
   // Cache DateFormat per-locale to avoid re-allocations on every build
-  static final Map<String, DateFormat> _fmtCache = {};
-  static DateFormat _fmt(String locale) =>
-      _fmtCache.putIfAbsent(locale, () => DateFormat.yMMMd(locale).add_jm());
+  static final Map<Locale, DateFormat> _fmtCache = {};
+  static DateFormat _fmt(Locale locale) =>
+      _fmtCache.putIfAbsent(locale, () => DateFormat.yMMMd(locale.toString()).add_jm());
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Handle prototype case
+    if (transaction == null) {
+      return _buildPrototype(context);
+    }
+
     final t = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
@@ -40,14 +37,14 @@ class TransactionTile extends ConsumerWidget {
 
     // Select exactly what we need (narrow rebuilds)
     final persisted = ref.watch(
-      categoryByIdProvider(transaction.categoryId).select((c) => c),
+      categoryByIdProvider(transaction!.categoryId).select((c) => c),
     );
 
     // Fallback to default catalog if not found in storage
     final fallback = () {
       try {
         return defaultCategories.firstWhere(
-          (c) => c.id == transaction.categoryId,
+          (c) => c.id == transaction!.categoryId,
         );
       } catch (_) {
         return null;
@@ -56,87 +53,246 @@ class TransactionTile extends ConsumerWidget {
 
     final category = persisted ?? fallback;
 
-    final icon = category != null
+    final icon = category != null && category.iconCodePoint != 0
         ? IconData(category.iconCodePoint, fontFamily: category.iconFontFamily)
-        : _defaultIcon(transaction.type);
+        : _defaultIcon(transaction!.type);
 
     final baseColor = category != null
         ? Color(category.colorHex)
-        : _defaultColor(transaction.type);
+        : _defaultColor(transaction!.type, context);
 
     final title = category?.name ?? t.uncategorized;
-    final dateText = _fmt(t.localeName).format(transaction.date.toLocal());
+    final dateText = _fmt(Localizations.localeOf(context)).format(transaction!.date.toLocal());
 
-    final signedAmount = transaction.type == TransactionType.expense
-        ? -transaction.amount
-        : transaction.amount;
+    final signedAmount = transaction!.type == TransactionType.expense
+        ? -transaction!.amount
+        : transaction!.amount;
     final amountText = formatAmount(signedAmount);
 
     final isCompact = L.isMobile || L.isCompact;
-    final leadingSize = isCompact ? L.rem(4.5) : L.rem(5);
-    final iconSize = isCompact ? L.iconM : L.iconL;
+    final isDesktop = L.isDesktop;
+    
+    // Consistent sizing for better alignment
+    final leadingSize = L.responsiveSize(
+      phone: 5.0,
+      tablet: 6.0,
+      desktop: 7.0,
+    );
+    final iconSize = L.responsiveIconSize(
+      phone: 20,
+      tablet: 24,
+      desktop: 28,
+    );
+    final containerSize = L.responsiveSize(
+      phone: 4.5,
+      tablet: 5.5,
+      desktop: 6.5,
+    );
 
     return ListTile(
-      key: ValueKey(transaction.id),
+      key: ValueKey(transaction!.id),
       dense: isCompact,
-      contentPadding: L.insetsSymmetric(h: isCompact ? 1.5 : 2, v: 0.25),
-      horizontalTitleGap: L.rem(1),
+      contentPadding: L.insetsSymmetric(
+        h: L.responsiveSize(phone: 1.5, tablet: 2, desktop: 3), 
+        v: L.responsiveSize(phone: 0.2, tablet: 0.3, desktop: 0.4),
+      ),
+      horizontalTitleGap: L.responsiveSize(phone: 1.2, tablet: 1.8, desktop: 2.2),
       minLeadingWidth: leadingSize,
-      minVerticalPadding: 0,
-      titleAlignment: ListTileTitleAlignment.center,
+      minVerticalPadding: L.responsiveSize(phone: 6, tablet: 8, desktop: 10),
+      titleAlignment: ListTileTitleAlignment.top,
       leading: SizedBox.square(
-        dimension: leadingSize,
+        dimension: containerSize,
         child: DecoratedBox(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: baseColor.withValues(alpha: 0.12),
           ),
           child: Center(
-            child: Icon(icon, color: baseColor, size: iconSize),
+            child: Icon(
+              icon,
+              color: baseColor,
+              size: iconSize,
+            ),
           ),
         ),
       ),
       title: Text(
         title,
-        maxLines: 1,
+        maxLines: isDesktop ? 2 : 1,
         overflow: TextOverflow.ellipsis,
-        style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+        style: L.responsiveTextStyle(
+          phone: (theme.textTheme.bodyLarge ?? const TextStyle()).copyWith(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            height: 1.2,
+          ),
+          tablet: (theme.textTheme.bodyLarge ?? const TextStyle()).copyWith(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            height: 1.2,
+          ),
+          desktop: (theme.textTheme.bodyLarge ?? const TextStyle()).copyWith(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            height: 1.3,
+          ),
+        ),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          if (transaction.note?.isNotEmpty == true)
+          if (transaction!.note?.isNotEmpty == true) ...[
             Text(
-              transaction.note!,
-              maxLines: 1,
+              transaction!.note!,
+              maxLines: isDesktop ? 2 : 1,
               overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: L.responsiveTextSize(
+                  phone: 13,
+                  tablet: 15,
+                  desktop: 16,
+                ),
+                height: 1.25,
+                color: cs.onSurfaceVariant,
+                fontWeight: FontWeight.w400,
+              ),
             ),
-          SizedBox(height: L.spaceXs),
+            SizedBox(height: L.responsiveSize(phone: 2, tablet: 4, desktop: 6)),
+          ],
           Text(
             dateText,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: cs.onSurfaceVariant,
+            style: TextStyle(
+              fontSize: L.responsiveTextSize(
+                phone: 11,
+                tablet: 12,
+                desktop: 13,
+              ),
+              height: 1.2,
+              color: cs.onSurfaceVariant.withValues(alpha: 0.8),
+              fontWeight: FontWeight.w400,
             ),
           ),
         ],
       ),
       trailing: ConstrainedBox(
-        constraints: BoxConstraints(minWidth: L.rem(10)),
-        child: FittedBox(
-          fit: BoxFit.scaleDown,
+        constraints: BoxConstraints(
+          minWidth: L.responsiveSize(
+            phone: 12,
+            tablet: 14,
+            desktop: 18,
+          ),
+        ),
+        child: Align(
           alignment: Alignment.centerRight,
           child: Text(
             amountText,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: _amountColor(transaction.type),
+            textAlign: TextAlign.end,
+            style: TextStyle(
+              fontSize: L.responsiveTextSize(
+                phone: 15,
+                tablet: 17,
+                desktop: 19,
+              ),
+              fontWeight: FontWeight.w700,
+              color: _amountColor(transaction!.type, context),
+              height: 1.2,
+              letterSpacing: -0.2,
             ),
           ),
         ),
       ),
       onTap: () => context.pushNamed('add_edit_tx', extra: transaction),
+    );
+  }
+
+  /// Builds a lightweight prototype tile for SliverPrototypeExtentList
+  Widget _buildPrototype(BuildContext context) {
+    final L = context.layout;
+    final theme = Theme.of(context);
+    final isCompact = L.isMobile || L.isCompact;
+    
+    // Match the actual tile sizing for consistency
+    final leadingSize = L.responsiveSize(
+      phone: 5.0,
+      tablet: 6.0,
+      desktop: 7.0,
+    );
+    final iconSize = L.responsiveIconSize(
+      phone: 20,
+      tablet: 24,
+      desktop: 28,
+    );
+    final containerSize = L.responsiveSize(
+      phone: 4.5,
+      tablet: 5.5,
+      desktop: 6.5,
+    );
+
+    // Use a more conservative height calculation to prevent overlapping
+    final tileHeight = L.responsiveSize(phone: 5.5, tablet: 7, desktop: 7.5);
+
+    return SizedBox(
+      height: tileHeight,
+      child: ListTile(
+        dense: isCompact,
+        contentPadding: L.insetsSymmetric(
+          h: L.responsiveSize(phone: 1.5, tablet: 2, desktop: 3), 
+          v: L.responsiveSize(phone: 0.2, tablet: 0.3, desktop: 0.4),
+        ),
+        horizontalTitleGap: L.responsiveSize(phone: 1.2, tablet: 1.8, desktop: 2.2),
+        minLeadingWidth: leadingSize,
+        minVerticalPadding: L.responsiveSize(phone: 6, tablet: 8, desktop: 10),
+        titleAlignment: ListTileTitleAlignment.top,
+        leading: SizedBox.square(
+          dimension: containerSize,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: theme.colorScheme.outline.withValues(alpha: 0.12),
+            ),
+            child: Center(
+              child: Icon(
+                Icons.place,
+                color: theme.colorScheme.outline,
+                size: iconSize,
+              ),
+            ),
+          ),
+        ),
+        title: Container(
+          height: L.responsiveTextSize(phone: 16, tablet: 18, desktop: 20),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.outline.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: L.responsiveSize(phone: 2, tablet: 4, desktop: 6)),
+            Container(
+              height: L.responsiveTextSize(phone: 11, tablet: 12, desktop: 13),
+              width: 80,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ],
+        ),
+        trailing: Container(
+          height: L.responsiveTextSize(phone: 15, tablet: 17, desktop: 19),
+          width: 60,
+          decoration: BoxDecoration(
+            color: theme.colorScheme.outline.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+      ),
     );
   }
 
@@ -147,15 +303,25 @@ class TransactionTile extends ConsumerWidget {
         TransactionType.transfer => Icons.swap_horiz_rounded,
       };
 
-  static Color _defaultColor(TransactionType type) => switch (type) {
-        TransactionType.income => Colors.green,
-        TransactionType.expense => Colors.red,
-        TransactionType.transfer => Colors.blueGrey,
-      };
+  static Color _defaultColor(TransactionType type, BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
+    return switch (type) {
+      TransactionType.income => isDark ? Colors.greenAccent : Colors.green,
+      TransactionType.expense => isDark ? Colors.redAccent : Colors.red,
+      TransactionType.transfer => isDark ? Colors.blueAccent : Colors.blueGrey,
+    };
+  }
 
-  static Color _amountColor(TransactionType type) => switch (type) {
-        TransactionType.expense => Colors.redAccent,
-        TransactionType.income => Colors.green,
-        TransactionType.transfer => Colors.blueGrey,
-      };
+  static Color _amountColor(TransactionType type, BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
+    return switch (type) {
+      TransactionType.expense => isDark ? Colors.redAccent : Colors.red,
+      TransactionType.income => isDark ? Colors.greenAccent : Colors.green,
+      TransactionType.transfer => isDark ? Colors.blueAccent : Colors.blueGrey,
+    };
+  }
 }

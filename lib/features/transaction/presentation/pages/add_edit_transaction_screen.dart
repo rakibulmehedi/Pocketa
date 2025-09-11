@@ -10,6 +10,7 @@ import 'package:pocketa/features/transaction/presentation/viewmodels/transaction
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_usecases_providers.dart';
 import 'package:pocketa/shared/widgets/more_menu.dart';
 import 'package:uuid/uuid.dart';
+import 'package:pocketa/shared/services/services.dart';
 
 import 'package:pocketa/core/constants/default_categories.dart';
 import 'package:pocketa/core/utils/currency_utils.dart';
@@ -137,7 +138,10 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
   void _ensureDefaultsOnce() {
     final f = ref.read(transactionFormProvider);
 
-    // Wallet default (snapshot)
+    // Only set defaults if this is a new transaction (not editing)
+    if (widget.initial != null) return;
+
+    // Wallet default (snapshot) - only if no wallet selected
     if (f.walletId == null) {
       final wallets = ref
           .read(walletsStreamProvider)
@@ -151,14 +155,8 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
       }
     }
 
-    // Category default by type
-    if (f.categoryId == null) {
-      final kind = kindFromTxType(f.type);
-      final list = defaultCategoriesByKind(kind);
-      if (list.isNotEmpty) {
-        ref.read(transactionFormProvider.notifier).setCategoryId(list.first.id);
-      }
-    }
+    // Don't auto-select category - let user choose
+    // This prevents automatic transaction creation
   }
 
   @override
@@ -184,8 +182,10 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
     final form = ref.watch(transactionFormProvider);
     final isEdit = widget.initial != null;
 
+    final L = context.layout;
     final w = context.vw;
     final isWide = w >= 900;
+    final isMobile = L.isMobile;
 
     // Header KPI (safe: wallet can be null)
     final now = DateTime.now();
@@ -216,7 +216,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
         trailingPillIcon: isPositive
             ? Icons.trending_up_rounded
             : Icons.trending_down_rounded,
-        trailingPillColor: isPositive ? Colors.green : Colors.red,
+        trailingPillColor: isPositive ? _accentByType(TransactionType.income) : _accentByType(TransactionType.expense),
         accentColor: Theme.of(context).colorScheme.primary,
       ),
       body: Column(
@@ -277,30 +277,38 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
       ),
       bottomNavigationBar: SafeArea(
         child: Container(
-          margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          margin: EdgeInsets.fromLTRB(
+            isMobile ? 16 : 24, 
+            0, 
+            isMobile ? 16 : 24, 
+            isMobile ? 12 : 16
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 12 : 16, 
+            vertical: isMobile ? 12 : 16
+          ),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(isMobile ? 16 : 20),
             boxShadow: [
               BoxShadow(
-                color: Theme.of(
-                  context,
-                ).colorScheme.primary.withValues(alpha: 0.05),
-                blurRadius: 16,
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
+                blurRadius: isMobile ? 16 : 20,
                 offset: const Offset(0, -4),
               ),
             ],
             border: Border.all(
-              color: Theme.of(
-                context,
-              ).colorScheme.outlineVariant.withValues(alpha: 0.20),
+              color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.20),
             ),
           ),
           child: Row(
             children: [
-              Icon(Icons.receipt_long_rounded, color: _accentByType(form.type)),
-              const SizedBox(width: 10),
+              Icon(
+                Icons.receipt_long_rounded, 
+                color: _accentByType(form.type),
+                size: isMobile ? 20 : 24,
+              ),
+              SizedBox(width: isMobile ? 10 : 12),
               Expanded(
                 child: Text(
                   previewText,
@@ -309,16 +317,32 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w800,
                         color: _accentByType(form.type),
+                        fontSize: isMobile ? 16 : 18,
                       ),
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: isMobile ? 10 : 12),
               FilledButton.icon(
                 onPressed: _submit,
-                icon: const Icon(Icons.check),
-                label: Text(isEdit
-                    ? AppLocalizations.of(context).save
-                    : AppLocalizations.of(context).addTransaction),
+                icon: Icon(
+                  Icons.check,
+                  size: isMobile ? 18 : 20,
+                ),
+                label: Text(
+                  isEdit
+                      ? AppLocalizations.of(context).save
+                      : AppLocalizations.of(context).addTransaction,
+                  style: TextStyle(
+                    fontSize: isMobile ? 14 : 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                style: FilledButton.styleFrom(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isMobile ? 16 : 20,
+                    vertical: isMobile ? 12 : 16,
+                  ),
+                ),
               ),
             ],
           ),
@@ -330,26 +354,44 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
   // ----------------- Layouts -----------------
   Widget _buildNarrow(TransactionFormState form) {
     final L = context.layout;
+    final isMobile = L.isMobile;
+    
     return ListView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      padding: L.insetsOnly(l: 2, t: 1.5, r: 2, b: 2),
+      padding: L.insetsOnly(
+        l: isMobile ? 2 : 3, 
+        t: isMobile ? 1.5 : 2, 
+        r: isMobile ? 2 : 3, 
+        b: isMobile ? 2 : 3,
+      ),
       children: [
         _typeCard(form),
         _amountCard(form),
-        _quickAmountChips(form),
+        if (isMobile) _quickAmountChips(form),
         _categoryCard(form),
         _detailsCard(form),
         if (form.type == TransactionType.transfer) _transferTargetCard(form),
         _notesCard(form),
-        SizedBox(height: L.space3xl),
+        SizedBox(height: isMobile ? L.space3xl : L.space3xl),
       ],
     );
   }
 
   Widget _buildWide(TransactionFormState form) {
     final L = context.layout;
-    final cols = L.columnsFor(480);
-    final cross = cols < 2 ? 2 : (cols > 3 ? 3 : cols);
+    final isTablet = L.isTablet;
+    final isDesktop = L.isDesktop;
+    
+    // Dynamic column calculation based on screen width
+    final screenWidth = context.vw;
+    int crossAxisCount;
+    if (isDesktop) {
+      crossAxisCount = screenWidth > 1400 ? 4 : 3;
+    } else if (isTablet) {
+      crossAxisCount = screenWidth > 1000 ? 3 : 2;
+    } else {
+      crossAxisCount = 2;
+    }
 
     final cards = <Widget>[
       _typeCard(form),
@@ -362,24 +404,28 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       slivers: [
         SliverPadding(
-          padding: L.insetsSymmetric(h: 2, v: 1.5),
+          padding: L.insetsSymmetric(
+            h: isTablet ? 2 : 3, 
+            v: isTablet ? 1.5 : 2,
+          ),
           sliver: SliverMasonryGrid.count(
-            crossAxisCount: cross,
-            mainAxisSpacing: L.spaceL,
-            crossAxisSpacing: L.spaceL,
+            crossAxisCount: crossAxisCount,
+            mainAxisSpacing: isTablet ? L.spaceL : L.spaceXL,
+            crossAxisSpacing: isTablet ? L.spaceL : L.spaceXL,
             childCount: cards.length,
             itemBuilder: (context, index) => cards[index],
           ),
         ),
+        if (form.type == TransactionType.transfer)
+          SliverPadding(
+            padding: L.insetsSymmetric(h: isTablet ? 2 : 3),
+            sliver: SliverToBoxAdapter(child: _transferTargetCard(form)),
+          ),
         SliverPadding(
-          padding: L.insetsSymmetric(h: 2),
-          sliver: SliverToBoxAdapter(child: _transferTargetCard(form)),
-        ),
-        SliverPadding(
-          padding: L.insetsAll(2),
+          padding: L.insetsAll(isTablet ? 2 : 3),
           sliver: SliverToBoxAdapter(child: _notesCard(form)),
         ),
-        SliverToBoxAdapter(child: SizedBox(height: L.space3xl)),
+        SliverToBoxAdapter(child: SizedBox(height: isTablet ? L.space3xl : L.space3xl)),
       ],
     );
   }
@@ -423,120 +469,113 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
   Widget _amountCard(TransactionFormState form) {
     final nf = ref.read(transactionFormProvider.notifier);
 
-    return LayoutBuilder(
-      builder: (context, c) {
-        const gap = 12.0;
+    final layout = context.layout;
+    const gap = 12.0;
+    
+    final dropW = layout.responsiveSize(
+      phone: 110,
+      tablet: 130,
+      desktop: 160,
+    ).clamp(70.0, layout.screenWidth * 0.30);
+    final canRow = layout.screenWidth >= (dropW + gap + 200.0);
 
-        double targetDropW;
-        if (c.maxWidth < 360) {
-          targetDropW = 110;
-        } else if (c.maxWidth < 420) {
-          targetDropW = 130;
-        } else {
-          targetDropW = 150;
-        }
-        final dropW = targetDropW.clamp(70.0, c.maxWidth * 0.30).toDouble();
-        final canRow = c.maxWidth >= (dropW + gap + 200.0);
+    final amountField = Expanded(
+      child: AmountField(
+        controller: _amountCtrl,
+        label: AppLocalizations.of(context).amount,
+        currencySymbol: AppCurrencies.symbol(form.currency),
+      ),
+    );
 
-        final amountField = Expanded(
-          child: AmountField(
-            controller: _amountCtrl,
-            label: AppLocalizations.of(context).amount,
-            currencySymbol: AppCurrencies.symbol(form.currency),
+    final currencyField = SizedBox(
+      width: dropW,
+      child: AppDropdownField<String>(
+        label: AppLocalizations.of(context).currency,
+        initialValue: form.currency,
+        items: AppCurrencies.list
+            .map(
+              (code) => DropdownMenuItem<String>(
+                value: code,
+                child: Text(
+                  '${AppCurrencies.symbol(code)} $code',
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            )
+            .toList(),
+        onChanged: (v) => nf.setCurrency(v!),
+        validator: (v) => v == null
+            ? AppLocalizations.of(context)
+                .errorRequired(AppLocalizations.of(context).currency)
+            : null,
+        isDense: true,
+      ),
+    );
+
+    final color = _accentByType(form.type);
+
+    return SectionCard(
+      title: AppLocalizations.of(context).amount,
+      trailing: IconButton(
+        tooltip: AppLocalizations.of(context).clear,
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          _amountCtrl.clear();
+          nf.setAmount(0);
+          HapticFeedback.selectionClick();
+        },
+      ),
+      children: [
+        if (canRow)
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              amountField,
+              const SizedBox(width: gap),
+              Flexible(flex: 0, child: currencyField),
+            ],
+          )
+        else
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              amountField,
+              const SizedBox(height: gap),
+              currencyField,
+            ],
           ),
-        );
+        const SizedBox(height: 8),
+        ValueListenableBuilder<TextEditingValue>(
+          valueListenable: _amountCtrl,
+          builder: (context, value, _) {
+            final parsed =
+                double.tryParse(value.text.replaceAll(',', '')) ?? 0;
+            final signed =
+                form.type == TransactionType.expense ? -parsed : parsed;
 
-        final currencyField = SizedBox(
-          width: dropW,
-          child: AppDropdownField<String>(
-            label: AppLocalizations.of(context).currency,
-            value: form.currency,
-            items: AppCurrencies.list
-                .map(
-                  (code) => DropdownMenuItem<String>(
-                    value: code,
-                    child: Text(
-                      '${AppCurrencies.symbol(code)} $code',
-                      overflow: TextOverflow.ellipsis,
+            return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 180),
+              child: Row(
+                key: ValueKey('${form.type}-$parsed-${form.currency}'),
+                children: [
+                  Icon(Icons.equalizer_rounded, color: color),
+                  const SizedBox(width: 6),
+                  Text(
+                    formatAmount(
+                      signed,
+                      currency: AppCurrencies.symbol(form.currency),
+                    ),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      color: color,
                     ),
                   ),
-                )
-                .toList(),
-            onChanged: (v) => nf.setCurrency(v!),
-            validator: (v) => v == null
-                ? AppLocalizations.of(context)
-                    .errorRequired(AppLocalizations.of(context).currency)
-                : null,
-            isDense: true,
-          ),
-        );
-
-        final color = _accentByType(form.type);
-
-        return SectionCard(
-          title: AppLocalizations.of(context).amount,
-          trailing: IconButton(
-            tooltip: AppLocalizations.of(context).clear,
-            icon: const Icon(Icons.clear),
-            onPressed: () {
-              _amountCtrl.clear();
-              nf.setAmount(0);
-              HapticFeedback.selectionClick();
-            },
-          ),
-          children: [
-            if (canRow)
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  amountField,
-                  const SizedBox(width: gap),
-                  Flexible(flex: 0, child: currencyField),
-                ],
-              )
-            else
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  amountField,
-                  const SizedBox(height: gap),
-                  currencyField,
                 ],
               ),
-            const SizedBox(height: 8),
-            ValueListenableBuilder<TextEditingValue>(
-              valueListenable: _amountCtrl,
-              builder: (context, value, _) {
-                final parsed =
-                    double.tryParse(value.text.replaceAll(',', '')) ?? 0;
-                final signed =
-                    form.type == TransactionType.expense ? -parsed : parsed;
-
-                return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 180),
-                  child: Row(
-                    key: ValueKey('${form.type}-$parsed-${form.currency}'),
-                    children: [
-                      Icon(Icons.equalizer_rounded, color: color),
-                      const SizedBox(width: 6),
-                      Text(
-                        formatAmount(
-                          signed,
-                          currency: AppCurrencies.symbol(form.currency),
-                        ),
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          color: color,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ],
-        );
-      },
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -577,7 +616,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
 
     return SectionCard(
       title: AppLocalizations.of(context).category,
-      subtitle: AppLocalizations.of(context).tapToSelect,
+      subtitle: '${AppLocalizations.of(context).tapToSelect} *',
       trailing: IconButton(
         tooltip: AppLocalizations.of(context).reset,
         icon: const Icon(Icons.restart_alt),
@@ -626,7 +665,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
         const SizedBox(height: 12),
         WalletPickerButton(
           walletId: form.walletId,
-          label: AppLocalizations.of(context).wallet,
+          label: '${AppLocalizations.of(context).wallet} *',
           onSelected: (w) => notifier.setWalletId(w.id),
         ),
       ],
@@ -834,7 +873,9 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
         'amount': resolvedAmount,
       },
     );
-    context.canPop() ? context.pop() : context.goNamed('transactions');
+    if (mounted) {
+      context.canPop() ? context.pop() : context.goNamed('transactions');
+    }
   }
 
   Future<void> _confirmDelete(String id) async {
@@ -867,25 +908,28 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
       await ref.read(analyticsProvider).logEvent('txn_deleted', params: {
         'id': id,
       });
-      context.canPop() ? context.pop() : context.goNamed('transactions');
+      if (mounted) {
+        context.canPop() ? context.pop() : context.goNamed('transactions');
+      }
     } catch (e) {
       if (!mounted) return;
       _toast(AppLocalizations.of(context).errorGeneric);
     }
   }
 
-  void _toast(String message) => ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+  void _toast(String message) => SnackbarService.showInfo(context, message: message);
 
-  static Color _accentByType(TransactionType t) {
+  Color _accentByType(TransactionType t) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
     switch (t) {
       case TransactionType.income:
-        return Colors.green;
+        return isDark ? Colors.greenAccent : Colors.green;
       case TransactionType.expense:
-        return Colors.red;
+        return isDark ? Colors.redAccent : Colors.red;
       case TransactionType.transfer:
-        return Colors.blueGrey;
+        return isDark ? Colors.blueAccent : Colors.blueGrey;
     }
   }
 }

@@ -1,116 +1,466 @@
-# ------------------------------------------------------------------
-# Flutter / Dart / Pub
-# ------------------------------------------------------------------
+# =============================================================================
+# POCKETA - Flutter Expense Management App
+# Senior-Level .gitignore Configuration
+# =============================================================================
+# This file follows enterprise-grade patterns for Flutter/Dart projects
+# with comprehensive coverage for security, performance, and maintainability.
+
+# =============================================================================
+# FLUTTER / DART / PUB
+# =============================================================================
+# Core Flutter artifacts
 .dart_tool/
 .packages
+.pub-cache/
 .pub/
 build/
-reports/latest/
 .flutter-plugins
 .flutter-plugins-dependencies
 .flutter-versions
 fvm_config.json
-flutter_*.png
 
-# Flutter gen-l10n generated files (safe to regenerate)
-lib/l10n/*.g.dart
+# Generated files (safe to regenerate)
 lib/generated_plugin_registrant.dart
-
-# Riverpod / Freezed / json_serializable build artifacts
-*.freezed.dart
+lib/l10n/*.g.dart
 *.g.dart
+*.freezed.dart
+*.gr.dart
+*.mocks.dart
 
-# ------------------------------------------------------------------
-# Android
-# ------------------------------------------------------------------
-local.properties
-**/android/.gradle/
-**/android/captures/
-**/android/app/debug
-**/android/app/profile
-**/android/app/release
-*.keystore
-*.jks
+# Flutter version management
+.fvm/
+fvm_config.json
+
+# =============================================================================
+# ANDROID
+# =============================================================================
+# Gradle
 .gradle/
 gradle-wrapper.jar
+gradle.properties
+local.properties
 
-# ------------------------------------------------------------------
+# Android build outputs
+**/android/.gradle/
+**/android/captures/
+**/android/app/debug/
+**/android/app/profile/
+**/android/app/release/
+**/android/build/
+**/android/.externalNativeBuild/
+**/android/.cxx/
+
+# Android Studio
+**/android/.idea/
+**/android/*.iml
+**/android/*.ipr
+**/android/*.iws
+
+# Keystore files (CRITICAL: Never commit these)
+*.keystore
+*.jks
+*.p8
+*.p12
+*.key
+key.properties
+keystore.properties
+upload-keystore.jks
+release-keystore.jks
+
+# Signing configs
+signing.properties
+keystore/
+
+# =============================================================================
 # iOS
-# ------------------------------------------------------------------
+# =============================================================================
+# CocoaPods
 **/ios/Pods/
+**/ios/Podfile.lock
 **/ios/.symlinks/
 **/ios/Flutter/Flutter.framework
 **/ios/Flutter/Flutter.podspec
 **/ios/Flutter/Generated.xcconfig
 **/ios/Flutter/ephemeral/
 **/ios/.generated/
-*.xcworkspace
-!default.xcworkspace
-*.xcuserdata
-*.xcuserstate
-DerivedData/
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
 
-# ------------------------------------------------------------------
-# macOS
-# ------------------------------------------------------------------
+# Xcode
+**/ios/*.xcworkspace
+!**/ios/default.xcworkspace
+**/ios/*.xcuserdata
+**/ios/*.xcuserstate
+**/ios/DerivedData/
+**/ios/*.pbxuser
+!**/ios/default.pbxuser
+**/ios/*.mode1v3
+!**/ios/default.mode1v3
+**/ios/*.mode2v3
+!**/ios/default.mode2v3
+**/ios/UserInterfaceState.xcuserstate
+
+# iOS build artifacts
+**/ios/build/
+**/ios/Archive/
+**/ios/Export/
+
+# =============================================================================
+# MACOS
+# =============================================================================
 **/macos/Pods/
+**/macos/Podfile.lock
 **/macos/Flutter/ephemeral/
-DerivedData/
+**/macos/DerivedData/
+**/macos/build/
+**/macos/*.xcworkspace
+!**/macos/default.xcworkspace
+**/macos/*.xcuserdata
+**/macos/*.xcuserstate
 
-# ------------------------------------------------------------------
-# Windows
-# ------------------------------------------------------------------
+# =============================================================================
+# WINDOWS
+# =============================================================================
 **/windows/flutter/ephemeral/
 **/windows/.vs/
 **/windows/x64/Debug/
 **/windows/x64/Release/
+**/windows/x86/Debug/
+**/windows/x86/Release/
+**/windows/build/
+**/windows/CMakeFiles/
+**/windows/CMakeCache.txt
+**/windows/cmake_install.cmake
+**/windows/Makefile
 
-# ------------------------------------------------------------------
-# Linux
-# ------------------------------------------------------------------
+# =============================================================================
+# LINUX
+# =============================================================================
 **/linux/flutter/ephemeral/
 **/linux/build/
+**/linux/CMakeFiles/
+**/linux/CMakeCache.txt
+**/linux/cmake_install.cmake
+**/linux/Makefile
 
-# ------------------------------------------------------------------
-# IDE / Editor
-# ------------------------------------------------------------------
+# =============================================================================
+# WEB
+# =============================================================================
+**/web/build/
+**/web/.dart_tool/
+**/web/.packages
+
+# =============================================================================
+# IDE / EDITORS
+# =============================================================================
+# IntelliJ / Android Studio
 .idea/
-.vscode/
 *.iml
 *.ipr
 *.iws
+.idea_modules/
+atlassian-ide-plugin.xml
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
 
-# ------------------------------------------------------------------
-# Node / Web (if using web or npm packages)
-# ------------------------------------------------------------------
-node_modules/
-package-lock.json
-yarn.lock
-.pnpm-debug.log
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
 
-# ------------------------------------------------------------------
-# Misc
-# ------------------------------------------------------------------
-*.log
-*.lock
-*.tmp
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
 *.swp
-.DS_Store
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# =============================================================================
+# NODE.JS / WEB DEPENDENCIES
+# =============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Grunt intermediate storage
+.grunt
+
+# Bower dependency directory
+bower_components
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons
+build/Release
+
+# Dependency directories
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# parcel-bundler cache
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+out
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Gatsby files
+.cache/
+public
+
+# Storybook build outputs
+.out
+.storybook-out
+storybook-static
+
+# =============================================================================
+# SECURITY & SENSITIVE DATA
+# =============================================================================
+# API Keys and secrets
+.env
+.env.*
+!.env.example
+secrets.json
+secrets.yaml
+secrets.yml
+config/secrets/
+**/secrets/
+
+# Certificates and keys
 *.pem
 *.crt
 *.key
-*.orig
+*.p12
+*.pfx
+*.cer
+*.der
+*.csr
+*.p8
+*.mobileprovision
+*.provisionprofile
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
+# Backup files
+*.backup
 *.bak
+*.old
+*.orig
 *.rej
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+*.swp
+*.swo
+*~
+
+# =============================================================================
+# LOGS & TEMPORARY FILES
+# =============================================================================
+# Logs
+*.log
+logs/
+log/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+Desktop.ini
+
+# =============================================================================
+# TESTING & COVERAGE
+# =============================================================================
+# Test coverage
+coverage/
+test_coverage/
+lcov.info
+*.lcov
+
+# Test results
+test-results/
+junit.xml
+test-results.xml
+
+# Performance test results
+performance/
+perf-results/
+
+# =============================================================================
+# BUILD ARTIFACTS & REPORTS
+# =============================================================================
+# Build reports
+reports/
+build-reports/
+**/build/reports/
+
+# Generated documentation
+doc/api/
+docs/build/
+
+# Package files
+*.dmg
+*.pkg
+*.deb
+*.rpm
+*.msi
+*.exe
+
+# =============================================================================
+# DEPLOYMENT & CI/CD
+# =============================================================================
+# Deployment configs (keep templates, ignore actual configs)
+deploy/
+deployment/
+!deploy/*.template
+!deployment/*.template
+
+# CI/CD artifacts
+.github/workflows/secrets/
+ci-secrets/
+deploy-secrets/
+
+# =============================================================================
+# FLUTTER SPECIFIC PATTERNS
+# =============================================================================
+# Flutter test coverage
+coverage/
+test/coverage_helper_test.dart
+
+# Flutter driver
+test_driver/
+
+# Flutter web
+web/manifest.json.bak
+
+# Flutter desktop
+**/windows/runner/Release/
+**/macos/Runner/Release/
+**/linux/runner/Release/
+
+# =============================================================================
+# DEVELOPMENT TOOLS
+# =============================================================================
+# FVM (Flutter Version Management)
+.fvm/
+
+# Melos (monorepo tool)
+.melos_tool/
+
+# Very Good CLI
+coverage/
+
+# =============================================================================
+# CUSTOM PROJECT PATTERNS
+# =============================================================================
+# Project-specific ignores
+flutter_*.png
+flutter_*.jpg
+flutter_*.jpeg
+flutter_*.gif
+
+# Generated localization files (if not using standard structure)
+lib/generated/
+lib/l10n/generated/
+
+# Custom build outputs
+dist/
+out/
+build_output/
+
+# =============================================================================
+# END OF FILE
+# =============================================================================

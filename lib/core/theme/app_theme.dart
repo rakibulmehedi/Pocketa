@@ -19,9 +19,9 @@ class AppTheme {
     final accent =
         ColorScheme.fromSeed(seedColor: _accentSeed, brightness: brightness);
 
-    final surface = isDark ? const Color(0xFF0F1216) : const Color(0xFFFDFDFE);
+    final surface = isDark ? const Color(0xFF1A1D23) : const Color(0xFFFAFAFA);
     final surfaceContainerHighest =
-        isDark ? const Color(0xFF171B20) : const Color(0xFFEDEFF3);
+        isDark ? const Color(0xFF242831) : const Color(0xFFF0F2F5);
 
     final scheme = base.copyWith(
       secondary: accent.primary,

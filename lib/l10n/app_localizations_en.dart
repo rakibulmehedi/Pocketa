@@ -583,10 +583,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorsTitle => 'Something went wrong';
 
   @override
-  String get errorGeneric => 'Try again.';
+  String get errorGeneric => 'An unexpected error occurred';
 
   @override
-  String get errorNetwork => 'No internet connection.';
+  String get errorNetwork => 'Network error occurred';
 
   @override
   String get errorTimeout => 'Request timed out.';
@@ -601,7 +601,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorNotFound => 'Not found.';
 
   @override
-  String get errorValidation => 'Check the fields.';
+  String get errorValidation => 'Validation error';
 
   @override
   String errorRequired(Object field) {
@@ -952,6 +952,159 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String onb_premium_testimonial1(Object amount) {
-    return '“Saved $amount in 3 months.”';
+    return '\"Saved $amount in 3 months.\"';
   }
+
+  @override
+  String get onb_welcome_title => 'Starting today, money is in your control.';
+
+  @override
+  String get onb_welcome_subtitle =>
+      'Small expenses create big gaps—now they\'ll be easy to track.';
+
+  @override
+  String get onb_persona_title => 'Tell us about you.';
+
+  @override
+  String get onb_persona_helper =>
+      'Language, income type, currency—make it yours.';
+
+  @override
+  String get onb_language_label => 'Language';
+
+  @override
+  String get onb_income_type_label => 'Income type';
+
+  @override
+  String get onb_currency_label => 'Currency';
+
+  @override
+  String get onb_income_student => 'Student';
+
+  @override
+  String get onb_income_freelancer => 'Freelancer';
+
+  @override
+  String get onb_income_family => 'Family';
+
+  @override
+  String get onb_save_continue => 'Save & continue';
+
+  @override
+  String get onb_demo_title => 'Add an expense in 5 seconds.';
+
+  @override
+  String get onb_demo_helper => 'One tap to add the demo—edit if you want.';
+
+  @override
+  String get onb_demo_amount => '৳50';
+
+  @override
+  String get onb_demo_category => 'Tea/Snacks';
+
+  @override
+  String get onb_demo_note => 'With friends';
+
+  @override
+  String get onb_demo_cta => 'Add now';
+
+  @override
+  String get onb_demo_success_toast => 'Added! You\'ve got this.';
+
+  @override
+  String get onb_trust_title => 'Your data stays on your device.';
+
+  @override
+  String get onb_trust_bullet_offline =>
+      'Offline-first—works without internet.';
+
+  @override
+  String get onb_trust_bullet_privacy =>
+      'We can\'t see your data unless you choose cloud backup.';
+
+  @override
+  String get onb_trust_bullet_lock => 'Lock PIN and biometric support.';
+
+  @override
+  String get onb_trust_primary => 'I understand';
+
+  @override
+  String get onb_trust_learn_more => 'Learn more';
+
+  @override
+  String get onb_continue => 'Continue';
+
+  @override
+  String get onb_features_secure => 'Secure';
+
+  @override
+  String get onb_features_simple => 'Simple';
+
+  @override
+  String get onb_features_smart => 'Smart';
+
+  @override
+  String get onb_feature_secure_desc => 'Your data is encrypted and secure';
+
+  @override
+  String get onb_feature_simple_desc => 'Easy to use interface';
+
+  @override
+  String get onb_feature_smart_desc => 'AI-powered insights';
+
+  @override
+  String get language_bengali => 'বাংলা';
+
+  @override
+  String get language_english => 'English';
+
+  @override
+  String get currency_bdt => '৳ BDT';
+
+  @override
+  String get currency_usd => '\$ USD';
+
+  @override
+  String get onb_habit_title => 'Today is Day 1—see you tomorrow?';
+
+  @override
+  String get onb_habit_helper =>
+      '10 seconds a day—keep your streak, invest in your dreams.';
+
+  @override
+  String get onb_habit_cta => 'Start now';
+
+  @override
+  String get onb_habit_toggle_reminder => 'Daily reminder';
+
+  @override
+  String onb_habit_day_label(int day) {
+    return 'Day $day';
+  }
+
+  @override
+  String get onb_welcome_chip_offline => 'Offline';
+
+  @override
+  String get onb_welcome_chip_fast => '5-second add';
+
+  @override
+  String get onb_welcome_chip_secure => 'Secure';
+
+  @override
+  String get onb_welcome_chip_offline_info =>
+      'Works without internet connection';
+
+  @override
+  String get onb_welcome_chip_fast_info => 'Add expenses in just 5 seconds';
+
+  @override
+  String get onb_welcome_chip_secure_info =>
+      'Your data stays private and secure';
+
+  @override
+  String get errorCache => 'Cache error occurred';
+
+  @override
+  String get errorDatabase => 'Database error occurred';
 }

@@ -32,7 +32,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final IconData? trailingPillIcon;
   final Color? trailingPillColor;
 
-  /// Accent color for the thin gradient strip below the app bar
+  /// Accent color for the trailing pill
   final Color? accentColor;
 
   /// Optional custom height
@@ -68,6 +68,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     final onSurface = theme.colorScheme.onSurface;
     final muted = onSurface.withValues(alpha: 0.65);
     final accent = accentColor ?? theme.colorScheme.primary;
+    final device = context.device;
 
     // Title + optional subtitle
     final titleColumn = Column(
@@ -80,6 +81,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: theme.textTheme.titleLarge?.copyWith(
+            fontSize: device == DeviceSize.phone 
+              ? 20.sp(context) 
+              : device == DeviceSize.tablet 
+                ? 24.sp(context) 
+                : 28.sp(context),
             fontWeight: FontWeight.w800,
             letterSpacing: -0.2,
           ),
@@ -93,6 +99,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: muted,
+                fontSize: device == DeviceSize.phone 
+                  ? 12.sp(context) 
+                  : device == DeviceSize.tablet 
+                    ? 14.sp(context) 
+                    : 16.sp(context),
                 fontWeight: FontWeight.w600,
               ),
             ),
