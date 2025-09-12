@@ -4,6 +4,7 @@ import 'package:pocketa/core/analytics/analytics_service.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/features/transaction/presentation/pages/pages.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
+import 'package:pocketa/shared/ui/motion.dart';
 
 /// Global nav index state (survives across widgets)
 final navIndexProvider = StateProvider<int>((ref) => 0);
@@ -94,15 +95,17 @@ class DashboardScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
-                child: Column(
+                child: StaggerList(
                   children: destinations.asMap().entries.map((entry) {
                     final i = entry.key;
                     final dest = entry.value;
-                    return ListTile(
-                      leading: dest.icon,
-                      title: Text(dest.label),
-                      selected: i == index,
+                    return ScaleTap(
                       onTap: () => ref.read(navIndexProvider.notifier).state = i,
+                      child: ListTile(
+                        leading: dest.icon,
+                        title: Text(dest.label),
+                        selected: i == index,
+                      ),
                     );
                   }).toList(),
                 ),
@@ -163,80 +166,93 @@ class _DashboardBody extends ConsumerWidget {
           sliver: SliverList(
             delegate: SliverChildListDelegate([
               // Welcome message
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(device == DeviceSize.phone ? layout.spaceL : layout.spaceXL),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(layout.radiusL),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Welcome to Pocketa!',
-                      style: TextStyle(
-                        fontSize: device == DeviceSize.phone 
-                          ? 20.sp(context) 
-                          : device == DeviceSize.tablet 
-                            ? 24.sp(context) 
-                            : 28.sp(context),
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface,
+              FadeSlide(
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(device == DeviceSize.phone ? layout.spaceL : layout.spaceXL),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(layout.radiusL),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
                       ),
-                    ),
-                    SizedBox(height: layout.spaceM),
-                    Text(
-                      'Track your expenses, manage your budget, and achieve your financial goals.',
-                      style: TextStyle(
-                        fontSize: device == DeviceSize.phone 
-                          ? 16.sp(context) 
-                          : 18.sp(context),
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                        height: 1.5,
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Welcome to Pocketa!',
+                        style: TextStyle(
+                          fontSize: device == DeviceSize.phone 
+                            ? 20.sp(context) 
+                            : device == DeviceSize.tablet 
+                              ? 24.sp(context) 
+                              : 28.sp(context),
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                       ),
-                    ),
-                  ],
+                      SizedBox(height: layout.spaceM),
+                      Text(
+                        'Track your expenses, manage your budget, and achieve your financial goals.',
+                        style: TextStyle(
+                          fontSize: device == DeviceSize.phone 
+                            ? 16.sp(context) 
+                            : 18.sp(context),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                          height: 1.5,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: layout.spaceXL),
               // Quick actions
-              Text(
-                'Quick Actions',
-                style: TextStyle(
-                  fontSize: device == DeviceSize.phone 
-                    ? 18.sp(context) 
-                    : 20.sp(context),
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).colorScheme.onSurface,
+              FadeSlide(
+                delay: Motion.d060,
+                child: Text(
+                  'Quick Actions',
+                  style: TextStyle(
+                    fontSize: device == DeviceSize.phone 
+                      ? 18.sp(context) 
+                      : 20.sp(context),
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
               ),
               SizedBox(height: layout.spaceM),
               // Action buttons grid
               device == DeviceSize.desktop 
-                ? Row(
+                ? StaggerList(
                     children: [
-                      Expanded(child: _buildActionCard(context, 'Add Transaction', Icons.add, () {})),
-                      SizedBox(width: layout.spaceM),
-                      Expanded(child: _buildActionCard(context, 'View Reports', Icons.analytics, () {})),
-                      SizedBox(width: layout.spaceM),
-                      Expanded(child: _buildActionCard(context, 'Manage Budget', Icons.account_balance_wallet, () {})),
+                      Row(
+                        children: [
+                          Expanded(child: _buildActionCard(context, 'Add Transaction', Icons.add, () {})),
+                          SizedBox(width: layout.spaceM),
+                          Expanded(child: _buildActionCard(context, 'View Reports', Icons.analytics, () {})),
+                          SizedBox(width: layout.spaceM),
+                          Expanded(child: _buildActionCard(context, 'Manage Budget', Icons.account_balance_wallet, () {})),
+                        ],
+                      ),
                     ],
                   )
-                : Wrap(
-                    spacing: layout.spaceM,
-                    runSpacing: layout.spaceM,
+                : StaggerList(
                     children: [
-                      _buildActionCard(context, 'Add Transaction', Icons.add, () {}),
-                      _buildActionCard(context, 'View Reports', Icons.analytics, () {}),
-                      _buildActionCard(context, 'Manage Budget', Icons.account_balance_wallet, () {}),
+                      Wrap(
+                        spacing: layout.spaceM,
+                        runSpacing: layout.spaceM,
+                        children: [
+                          _buildActionCard(context, 'Add Transaction', Icons.add, () {}),
+                          _buildActionCard(context, 'View Reports', Icons.analytics, () {}),
+                          _buildActionCard(context, 'Manage Budget', Icons.account_balance_wallet, () {}),
+                        ],
+                      ),
                     ],
                   ),
             ]),
@@ -250,7 +266,7 @@ class _DashboardBody extends ConsumerWidget {
     final device = context.device;
     final layout = context.layout;
     
-    return GestureDetector(
+    return ScaleTap(
       onTap: onTap,
       child: Container(
         width: device == DeviceSize.desktop ? null : 150.ic(context),

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/core/providers/theme_provider.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/theme/app_colors.dart';
 import 'package:pocketa/features/onboarding/presentation/viewmodels/onboarding_providers.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:pocketa/core/locale/local_notifier.dart';
+import 'package:pocketa/shared/ui/glass_card.dart';
+import 'package:pocketa/shared/ui/motion.dart';
 
 class OnboardingPersonalizationScreen extends ConsumerWidget {
   final OnboardingNotifier notifier;
@@ -29,12 +30,11 @@ class OnboardingPersonalizationScreen extends ConsumerWidget {
       children: [
         Expanded(
           child: SingleChildScrollView(
-            child: Padding(
-              padding: layout.pageGutter,
-              child: Column(
-                children: [
-                  // Header
-                  Text(
+            child: Column(
+              children: [
+                // Header
+                FadeSlide(
+                  child: Text(
                     l10n.onb_persona_title,
                     style: layout.responsiveTextStyle(
                       phone: (Theme.of(context).textTheme.headlineMedium ?? const TextStyle()).copyWith(
@@ -55,10 +55,13 @@ class OnboardingPersonalizationScreen extends ConsumerWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
+                ),
 
-                  SizedBox(height: layout.spaceL),
+                SizedBox(height: layout.spaceL),
 
-                  Text(
+                FadeSlide(
+                  delay: Motion.d060,
+                  child: Text(
                     l10n.onb_persona_helper,
                     style: layout.responsiveTextStyle(
                       phone: (Theme.of(context).textTheme.bodyLarge ?? const TextStyle()).copyWith(
@@ -73,101 +76,101 @@ class OnboardingPersonalizationScreen extends ConsumerWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
+                ),
 
-                  SizedBox(height: layout.space2xl),
+                SizedBox(height: layout.space2xl),
 
-                  // Personalization options
-                  _buildSection(
-                    context,
-                    l10n.onb_currency_label,
-                    [
-                      _buildOption(
-                        context,
-                        'USD',
-                        'US Dollar',
-                        state.data.currency == 'USD',
-                        () => notifier.updateCurrency('USD'),
-                      ),
-                      _buildOption(
-                        context,
-                        'EUR',
-                        'Euro',
-                        state.data.currency == 'EUR',
-                        () => notifier.updateCurrency('EUR'),
-                      ),
-                      _buildOption(
-                        context,
-                        'BDT',
-                        'Bangladeshi Taka',
-                        state.data.currency == 'BDT',
-                        () => notifier.updateCurrency('BDT'),
-                      ),
-                    ],
-                    layout,
-                  ),
-
-                  SizedBox(height: layout.space2xl),
-
-                  _buildSection(
-                    context,
-                    l10n.onb_language_label,
-                    [
-                      _buildOption(
-                        context,
-                        'English',
-                        'English',
-                        currentLocale.languageCode == 'en',
-                        () {
-                          notifier.updateLanguage('en');
-                          localeNotifier.setLocale(const Locale('en'));
-                        },
-                      ),
-                      _buildOption(
-                        context,
-                        'বাংলা',
-                        'Bengali',
-                        currentLocale.languageCode == 'bn',
-                        () {
-                          notifier.updateLanguage('bn');
-                          localeNotifier.setLocale(const Locale('bn'));
-                        },
-                      ),
-                    ],
-                    layout,
-                  ),
-
-                  SizedBox(height: layout.space2xl),
-
-                  _buildSection(
-                    context,
-                    'Theme',
-                    [
-                      _buildOption(
-                        context,
-                        'Light',
-                        'Light Theme',
-                        themeMode == ThemeMode.light,
-                        () => themeNotifier.setLight(),
-                      ),
-                      _buildOption(
-                        context,
-                        'Dark',
-                        'Dark Theme',
-                        themeMode == ThemeMode.dark,
-                        () => themeNotifier.setDark(),
-                      ),
-                      _buildOption(
-                        context,
-                        'System',
-                        'System Default',
-                        themeMode == ThemeMode.system,
-                        () => themeNotifier.setSystem(),
-                      ),
-                    ],
-                    layout,
-                  ),
-                ],
-              ),
+                // Personalization options with staggered animation
+                StaggerList(
+                  children: [
+                    _buildSection(
+                      context,
+                      l10n.onb_currency_label,
+                      [
+                        _buildOption(
+                          context,
+                          'USD',
+                          l10n.onb_currency_usd,
+                          state.data.currency == 'USD',
+                          () => notifier.updateCurrency('USD'),
+                        ),
+                        _buildOption(
+                          context,
+                          'EUR',
+                          l10n.onb_currency_eur,
+                          state.data.currency == 'EUR',
+                          () => notifier.updateCurrency('EUR'),
+                        ),
+                        _buildOption(
+                          context,
+                          'BDT',
+                          l10n.onb_currency_bdt,
+                          state.data.currency == 'BDT',
+                          () => notifier.updateCurrency('BDT'),
+                        ),
+                      ],
+                      layout,
+                    ),
+                    SizedBox(height: layout.space2xl),
+                    _buildSection(
+                      context,
+                      l10n.onb_language_label,
+                      [
+                        _buildOption(
+                          context,
+                          'English',
+                          l10n.onb_language_en,
+                          currentLocale.languageCode == 'en',
+                          () {
+                            notifier.updateLanguage('en');
+                            localeNotifier.setLocale(const Locale('en'));
+                          },
+                        ),
+                        _buildOption(
+                          context,
+                          'বাংলা',
+                          l10n.onb_language_bn,
+                          currentLocale.languageCode == 'bn',
+                          () {
+                            notifier.updateLanguage('bn');
+                            localeNotifier.setLocale(const Locale('bn'));
+                          },
+                        ),
+                      ],
+                      layout,
+                    ),
+                    SizedBox(height: layout.space2xl),
+                    _buildSection(
+                      context,
+                      'Theme',
+                      [
+                        _buildOption(
+                          context,
+                          'Light',
+                          l10n.onb_theme_light,
+                          themeMode == ThemeMode.light,
+                          () => themeNotifier.setLight(),
+                        ),
+                        _buildOption(
+                          context,
+                          'Dark',
+                          l10n.onb_theme_dark,
+                          themeMode == ThemeMode.dark,
+                          () => themeNotifier.setDark(),
+                        ),
+                        _buildOption(
+                          context,
+                          'System',
+                          l10n.onb_theme_system,
+                          themeMode == ThemeMode.system,
+                          () => themeNotifier.setSystem(),
+                        ),
+                      ],
+                      layout,
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
@@ -232,33 +235,10 @@ class OnboardingPersonalizationScreen extends ConsumerWidget {
   ) {
     final layout = context.layout;
     
-    return GestureDetector(
+    return ScaleTap(
       onTap: onTap,
-      child: Container(
+      child: GlassCard(
         padding: EdgeInsets.all(layout.spaceM),
-        decoration: BoxDecoration(
-          color: isSelected 
-            ? AppColors.primaryStrong(context)
-            : AppColors.surfaceElevated(context),
-          borderRadius: BorderRadius.circular(layout.radiusM),
-          border: Border.all(
-            color: isSelected 
-              ? Theme.of(context).colorScheme.primary
-              : AppColors.borderMedium(context),
-            width: isSelected ? 2 : 1,
-          ),
-          boxShadow: isSelected ? [
-            BoxShadow(
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-              blurRadius: layout.responsiveSize(
-                phone: 4,
-                tablet: 6,
-                desktop: 8,
-              ),
-              offset: const Offset(0, 2),
-            ),
-          ] : null,
-        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -267,8 +247,8 @@ class OnboardingPersonalizationScreen extends ConsumerWidget {
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: isSelected 
-                  ? AppColors.buttonTextPrimary(context)
-                  : AppColors.textPrimary(context),
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.onSurface,
               ),
             ),
             SizedBox(height: layout.spaceS),
@@ -276,8 +256,8 @@ class OnboardingPersonalizationScreen extends ConsumerWidget {
               subtitle,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: isSelected 
-                  ? AppColors.buttonTextPrimary(context).withValues(alpha: 0.8)
-                  : AppColors.textTertiary(context),
+                  ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.8)
+                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
           ],

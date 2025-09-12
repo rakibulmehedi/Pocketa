@@ -192,10 +192,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ],
                 ...(actions ?? const []),
-
-                Column(
-                  
-                )
               ],
               bottom: bottom,
             ),

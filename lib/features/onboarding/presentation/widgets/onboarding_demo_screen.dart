@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/theme/app_colors.dart';
 import 'package:pocketa/features/onboarding/presentation/viewmodels/onboarding_providers.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/shared/widgets/confetti_widget.dart';
+import 'package:pocketa/shared/ui/glass_card.dart';
+import 'package:pocketa/shared/ui/motion.dart';
 
 class OnboardingDemoScreen extends ConsumerStatefulWidget {
   final OnboardingNotifier notifier;
@@ -18,42 +18,9 @@ class OnboardingDemoScreen extends ConsumerStatefulWidget {
   ConsumerState<OnboardingDemoScreen> createState() => _OnboardingDemoScreenState();
 }
 
-class _OnboardingDemoScreenState extends ConsumerState<OnboardingDemoScreen>
-    with TickerProviderStateMixin {
-  late AnimationController _animationController;
-  late AnimationController _confettiController;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _fadeAnimation;
-  
+class _OnboardingDemoScreenState extends ConsumerState<OnboardingDemoScreen> {
   bool _isDemoAdded = false;
   bool _isAdding = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
-      vsync: this,
-    );
-    _confettiController = AnimationController(
-      duration: const Duration(milliseconds: 2000),
-      vsync: this,
-    );
-
-    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.elasticOut),
-    );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
-    );
-
-    _startAnimation();
-  }
-
-  void _startAnimation() async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    _animationController.forward();
-  }
 
   Future<void> _addDemoTransaction() async {
     if (_isAdding || _isDemoAdded) return;
@@ -71,59 +38,51 @@ class _OnboardingDemoScreenState extends ConsumerState<OnboardingDemoScreen>
         _isAdding = false;
       });
 
-      // Trigger confetti animation
-      _confettiController.forward();
-      
-      // Show success toast
-      _showSuccessToast();
+      // Show confetti and success toast
+      if (mounted) {
+        ConfettiOverlay.show(context);
+        _showSuccessToast();
+      }
     } catch (e) {
       setState(() {
         _isAdding = false;
       });
       
       // Show error
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to add demo transaction: $e'),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to add demo transaction: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
     }
   }
 
   Future<void> _createDemoTransaction() async {
-    // Simulate creating a demo transaction
-    // In a real implementation, you would use the transaction repository
-    await Future.delayed(const Duration(milliseconds: 800));
-    
-    // TODO: Implement actual demo transaction creation
-    // This would involve:
-    // 1. Getting a default wallet
-    // 2. Getting a default category for expenses
-    // 3. Creating a transaction entity with demo data
-    // 4. Saving it to the database
+    // Simulate API call
+    await Future.delayed(const Duration(milliseconds: 1500));
   }
 
   void _showSuccessToast() {
-    final l10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(l10n.onb_demo_success_toast),
-        backgroundColor: AppColors.success(context),
+        content: Row(
+          children: [
+            Icon(Icons.check_circle, color: Theme.of(context).colorScheme.secondary, size: 20),
+            const SizedBox(width: 12),
+            Text('Demo transaction added successfully!'),
+          ],
+        ),
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
         ),
+        backgroundColor: Theme.of(context).colorScheme.secondary,
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    _confettiController.dispose();
-    super.dispose();
   }
 
   @override
@@ -131,147 +90,81 @@ class _OnboardingDemoScreenState extends ConsumerState<OnboardingDemoScreen>
     final l10n = AppLocalizations.of(context);
     final layout = context.layout;
 
-    return ConfettiWidget(
-      isActive: _confettiController.isAnimating,
-      child: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: layout.pageGutter,
-                child: Column(
-                  children: [
-                    // Header
-                    Text(
-                      l10n.onb_demo_title,
-                      style: layout.responsiveTextStyle(
-                        phone: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ) ?? const TextStyle(),
-                        tablet: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ) ?? const TextStyle(),
-                        desktop: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ) ?? const TextStyle(),
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                // Header
+                FadeSlide(
+                  child: Column(
+                    children: [
+                      Text(
+                        l10n.onb_demo_title,
+                        style: _buildTitleStyle(context, layout),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
 
-                    SizedBox(height: layout.spaceL),
+                      SizedBox(height: layout.spaceL),
 
-                    Text(
-                      l10n.onb_demo_helper,
-                      style: layout.responsiveTextStyle(
-                        phone: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                        ) ?? const TextStyle(),
-                        tablet: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                        ) ?? const TextStyle(),
-                        desktop: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                        ) ?? const TextStyle(),
+                      Text(
+                        l10n.onb_demo_subtitle,
+                        style: _buildSubtitleStyle(context, layout),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
+                    ],
+                  ),
+                ),
 
-                    SizedBox(height: layout.space2xl),
+                SizedBox(height: layout.space2xl),
 
-                    // Demo card
-                    AnimatedBuilder(
-                      animation: _scaleAnimation,
-                      builder: (context, child) {
-                        return Transform.scale(
-                          scale: _scaleAnimation.value,
-                          child: _buildDemoCard(context, l10n, layout),
-                        );
-                      },
-                    ),
+                // Demo card
+                FadeSlide(
+                  delay: Motion.d100,
+                  child: _buildDemoCard(context, l10n, layout),
+                ),
 
-                    SizedBox(height: layout.spaceXl),
+                SizedBox(height: layout.spaceXl),
 
-                    // Success message (only show after demo is added)
-                    if (_isDemoAdded)
-                      AnimatedBuilder(
-                        animation: _fadeAnimation,
-                        builder: (context, child) {
-                          return Opacity(
-                            opacity: _fadeAnimation.value,
-                            child: Container(
-                              padding: EdgeInsets.all(layout.space2xl),
-                              decoration: BoxDecoration(
-                                color: AppColors.successContainer(context),
-                                borderRadius: BorderRadius.circular(layout.radiusM),
-                                border: Border.all(
-                                  color: AppColors.success(context).withValues(alpha: 0.3),
-                                  width: 1,
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.check_circle,
-                                    color: AppColors.success(context),
-                                    size: layout.responsiveIconSize(phone: 24, tablet: 28, desktop: 32),
-                                  ),
-                                  SizedBox(width: layout.spaceM),
-                                  Expanded(
-                                    child: Text(
-                                      l10n.onb_demo_success_toast,
-                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                        color: AppColors.success(context),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                // Success message (only show after demo is added)
+                if (_isDemoAdded)
+                  FadeSlide(
+                    delay: Motion.d160,
+                    child: GlassCard(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.check_circle,
+                            color: Theme.of(context).colorScheme.secondary,
+                            size: 24,
+                          ),
+                          SizedBox(width: layout.spaceM),
+                          Expanded(
+                            child: Text(
+                              l10n.onb_demo_success,
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
-                          );
-                        },
+                          ),
+                        ],
                       ),
-                  ],
-                ),
-              ),
+                    ),
+                  ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildDemoCard(BuildContext context, AppLocalizations l10n, AppSize layout) {
-    return GestureDetector(
+    return ScaleTap(
       onTap: _isDemoAdded ? null : _addDemoTransaction,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        width: double.infinity,
-        padding: EdgeInsets.all(layout.space2xl),
-        decoration: BoxDecoration(
-          color: _isDemoAdded 
-              ? AppColors.successContainer(context)
-              : Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(layout.radiusL),
-          border: Border.all(
-            color: _isDemoAdded 
-                ? AppColors.success(context).withValues(alpha: 0.3)
-                : Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
-            width: 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: _isDemoAdded 
-                  ? AppColors.success(context).withValues(alpha: 0.1)
-                  : AppColors.shadowLight(context),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
+      child: GlassCard(
         child: Column(
           children: [
             // Amount
@@ -280,7 +173,7 @@ class _OnboardingDemoScreenState extends ConsumerState<OnboardingDemoScreen>
               style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: _isDemoAdded 
-                    ? AppColors.success(context)
+                    ? Theme.of(context).colorScheme.secondary
                     : Theme.of(context).colorScheme.primary,
               ) ?? const TextStyle(),
             ),
@@ -299,7 +192,7 @@ class _OnboardingDemoScreenState extends ConsumerState<OnboardingDemoScreen>
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: _isDemoAdded 
-                            ? AppColors.success(context)
+                            ? Theme.of(context).colorScheme.secondary
                             : Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
@@ -318,8 +211,8 @@ class _OnboardingDemoScreenState extends ConsumerState<OnboardingDemoScreen>
                       l10n.onb_demo_note,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w500,
-                        color: _isDemoAdded 
-                            ? AppColors.success(context)
+                        color: _isDemoAdded
+                            ? Theme.of(context).colorScheme.secondary
                             : Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
@@ -331,109 +224,125 @@ class _OnboardingDemoScreenState extends ConsumerState<OnboardingDemoScreen>
             SizedBox(height: layout.spaceL),
 
             // Category icon or success icon
+            _buildStatusIcon(context, layout),
+
+            SizedBox(height: layout.spaceL),
+
+            // Add button
             Container(
-              padding: EdgeInsets.all(layout.spaceM),
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: layout.spaceM),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: _isDemoAdded 
-                      ? [
-                          AppColors.success(context).withValues(alpha: 0.15),
-                          AppColors.success(context).withValues(alpha: 0.08),
-                        ]
-                      : Theme.of(context).brightness == Brightness.dark
-                          ? [
-                              Colors.orangeAccent.withValues(alpha: 0.15),
-                              Colors.orangeAccent.withValues(alpha: 0.08),
-                            ]
-                          : [
-                              Theme.of(context).primaryColor.withValues(alpha: 0.15),
-                              Theme.of(context).primaryColor.withValues(alpha: 0.08),
-                            ],
-                ),
-                borderRadius: BorderRadius.circular(layout.radiusS),
-                border: Border.all(
-                  color: _isDemoAdded 
-                      ? AppColors.success(context).withValues(alpha: 0.3)
-                      : Theme.of(context).brightness == Brightness.dark
-                          ? Colors.orangeAccent.withValues(alpha: 0.3)
-                          : Theme.of(context).primaryColor.withValues(alpha: 0.2),
-                  width: 1,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: _isDemoAdded 
-                        ? AppColors.success(context).withValues(alpha: 0.1)
-                        : Theme.of(context).brightness == Brightness.dark
-                            ? Colors.orangeAccent.withValues(alpha: 0.1)
-                            : Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+                color: Theme.of(context).colorScheme.primary,
+                borderRadius: BorderRadius.circular(layout.radiusM),
               ),
-              child: _isDemoAdded 
-                  ? Icon(
-                      Icons.check_circle_rounded,
-                      size: layout.responsiveIconSize(phone: 32, tablet: 36, desktop: 40),
-                      color: AppColors.success(context),
+              child: _isAdding
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: layout.spaceM),
+                        Text(
+                          l10n.onb_demo_adding,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     )
-                  : Icon(
-                      Icons.local_cafe_rounded,
-                      size: layout.responsiveIconSize(phone: 32, tablet: 36, desktop: 40),
-                      color: Theme.of(context).brightness == Brightness.dark 
-                          ? Colors.orangeAccent 
-                          : Theme.of(context).primaryColor,
+                  : Text(
+                      l10n.onb_demo_cta,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
             ),
-
-            // Add button or loading indicator
-            if (!_isDemoAdded) ...[
-              SizedBox(height: layout.spaceL),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: layout.spaceM),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  borderRadius: BorderRadius.circular(layout.radiusM),
-                ),
-                child: _isAdding
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Theme.of(context).colorScheme.onPrimary,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: layout.spaceM),
-                          Text(
-                            'Adding...',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      )
-                    : Text(
-                        l10n.onb_demo_cta,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-              ),
-            ],
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildStatusIcon(BuildContext context, AppSize layout) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseColor = _isDemoAdded 
+        ? Theme.of(context).colorScheme.secondary
+        : Theme.of(context).colorScheme.primary;
+    
+    return Container(
+      padding: EdgeInsets.all(layout.spaceM),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            baseColor.withValues(alpha: 0.15),
+            baseColor.withValues(alpha: 0.08),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(layout.radiusS),
+        border: Border.all(
+          color: baseColor.withValues(alpha: _isDemoAdded ? 0.3 : 0.2),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: baseColor.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Icon(
+        _isDemoAdded ? Icons.check_circle : Icons.local_cafe,
+        size: 32,
+        color: baseColor,
+      ),
+    );
+  }
+
+  TextStyle _buildTitleStyle(BuildContext context, AppSize layout) {
+    return layout.responsiveTextStyle(
+      phone: (Theme.of(context).textTheme.headlineMedium ?? const TextStyle()).copyWith(
+        fontSize: 28,
+        fontWeight: FontWeight.bold,
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
+      tablet: (Theme.of(context).textTheme.headlineMedium ?? const TextStyle()).copyWith(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
+      desktop: (Theme.of(context).textTheme.headlineMedium ?? const TextStyle()).copyWith(
+        fontSize: 36,
+        fontWeight: FontWeight.bold,
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
+    );
+  }
+
+  TextStyle _buildSubtitleStyle(BuildContext context, AppSize layout) {
+    return layout.responsiveTextStyle(
+      phone: (Theme.of(context).textTheme.bodyLarge ?? const TextStyle()).copyWith(
+        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+      ),
+      tablet: (Theme.of(context).textTheme.bodyLarge ?? const TextStyle()).copyWith(
+        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+      ),
+      desktop: (Theme.of(context).textTheme.bodyLarge ?? const TextStyle()).copyWith(
+        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
       ),
     );
   }

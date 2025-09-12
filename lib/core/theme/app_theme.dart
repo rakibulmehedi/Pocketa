@@ -1,46 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pocketa/core/theme/app_typography.dart';
+import 'package:pocketa/core/theme/app_elevation.dart';
+import 'package:pocketa/core/theme/app_radius.dart';
+import 'package:pocketa/core/theme/app_spacing.dart';
+import 'package:pocketa/core/theme/app_color_scheme.dart';
 
 class AppTheme {
-  // Brand seeds
-  static const _brandSeed = Color(0xFF1565C0); // primary (calm blue)
-  static const _accentSeed = Color(0xFF2E7D32); // accent (trusty green)
-
   static ThemeData get light => _buildTheme(Brightness.light);
   static ThemeData get dark => _buildTheme(Brightness.dark);
 
   static ThemeData _buildTheme(Brightness brightness) {
     final isDark = brightness == Brightness.dark;
-
-    // Color schemes (Material 3 seed-based)
-    final base =
-        ColorScheme.fromSeed(seedColor: _brandSeed, brightness: brightness);
-    final accent =
-        ColorScheme.fromSeed(seedColor: _accentSeed, brightness: brightness);
-
-    final surface = isDark ? const Color(0xFF1A1D23) : const Color(0xFFFAFAFA);
-    final surfaceContainerHighest =
-        isDark ? const Color(0xFF242831) : const Color(0xFFF0F2F5);
-
-    final scheme = base.copyWith(
-      secondary: accent.primary,
-      onSecondary: accent.onPrimary,
-      secondaryContainer: accent.primaryContainer,
-      onSecondaryContainer: accent.onPrimaryContainer,
-      surface: surface,
-      surfaceContainerHighest: surfaceContainerHighest,
-    );
+    final scheme = isDark ? AppColorScheme.dark : AppColorScheme.light;
 
     final textTheme = AppTypography.build(brightness);
-
-    const r12 = 12.0, r14 = 14.0, r16 = 16.0;
 
     RoundedRectangleBorder rounded(double r) =>
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(r));
 
     OutlineInputBorder iBorder(Color c, [double w = 1]) => OutlineInputBorder(
-        borderRadius: BorderRadius.circular(r14),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         borderSide: BorderSide(color: c, width: w));
 
     WidgetStateProperty<T> state<T>(T normal,
@@ -66,11 +46,10 @@ class AppTheme {
     }
 
     ButtonStyle baseBtn() => ButtonStyle(
-          shape: state<OutlinedBorder>(rounded(r14)),
-          padding:
-              state(const EdgeInsets.symmetric(horizontal: 16, vertical: 14)),
+          shape: state<OutlinedBorder>(rounded(AppRadius.md)),
+          padding: state(const EdgeInsets.symmetric(horizontal: 16, vertical: 14)),
           minimumSize: state(const Size(200, 48)),
-          elevation: state(0.0),
+          elevation: state(AppElevation.level1),
           animationDuration: const Duration(milliseconds: 120),
           splashFactory: InkSparkle.splashFactory,
         );
@@ -122,7 +101,7 @@ class AppTheme {
 
       colorScheme: scheme,
       textTheme: textTheme,
-      scaffoldBackgroundColor: scheme.surface,
+      scaffoldBackgroundColor: scheme.background,
 
       appBarTheme: AppBarTheme(
         backgroundColor: scheme.surface,
@@ -140,16 +119,16 @@ class AppTheme {
 
       cardTheme: CardThemeData(
         color: scheme.surface,
-        elevation: 0,
-        margin: const EdgeInsets.all(12),
-        shape: rounded(r16),
+        elevation: AppElevation.level1,
+        margin: const EdgeInsets.all(AppSpacing.md),
+        shape: rounded(AppRadius.lg),
         surfaceTintColor: Colors.transparent,
       ),
 
       dividerTheme: DividerThemeData(
         color: scheme.outlineVariant.withValues(alpha: 0.7),
         thickness: 1,
-        space: 16,
+        space: AppSpacing.lg,
       ),
 
       textButtonTheme: TextButtonThemeData(style: textButtonStyle),
@@ -160,10 +139,10 @@ class AppTheme {
       iconButtonTheme: IconButtonThemeData(
         style: ButtonStyle(
           minimumSize: state(const Size(40, 40)),
-          padding: state(const EdgeInsets.all(8)),
+          padding: state(const EdgeInsets.all(AppSpacing.sm)),
           overlayColor: state(scheme.primary.withValues(alpha: 0.08),
               pressed: scheme.primary.withValues(alpha: 0.12)),
-          shape: state(rounded(r12)),
+          shape: state(rounded(AppRadius.sm)),
         ),
       ),
 
@@ -175,7 +154,7 @@ class AppTheme {
         floatingLabelStyle:
             TextStyle(color: scheme.primary, fontWeight: FontWeight.w600),
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: 14),
         enabledBorder: iBorder(scheme.outlineVariant),
         focusedBorder: iBorder(scheme.primary, 1.8),
         errorBorder: iBorder(scheme.error),
@@ -205,12 +184,12 @@ class AppTheme {
       ),
 
       chipTheme: ChipThemeData(
-        elevation: 0,
+        elevation: AppElevation.level0,
         side: BorderSide(color: scheme.outlineVariant),
         selectedColor: scheme.primaryContainer,
         backgroundColor: scheme.surfaceContainerHighest,
         labelStyle: textTheme.labelMedium!,
-        shape: rounded(r12),
+        shape: rounded(AppRadius.sm),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       ),
 
@@ -218,30 +197,30 @@ class AppTheme {
         style: MenuStyle(
           backgroundColor: state(scheme.surface),
           surfaceTintColor: state(Colors.transparent),
-          shape: state(rounded(r12)),
-          elevation: state(8),
+          shape: state(rounded(AppRadius.sm)),
+          elevation: state(AppElevation.level2),
           shadowColor:
               state(Colors.black.withValues(alpha: isDark ? 0.24 : 0.12)),
         ),
       ),
       popupMenuTheme: PopupMenuThemeData(
         color: scheme.surface,
-        shape: rounded(r12),
-        elevation: 8,
+        shape: rounded(AppRadius.sm),
+        elevation: AppElevation.level2,
         textStyle: textTheme.bodyMedium,
       ),
 
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: scheme.surface,
         modalBackgroundColor: scheme.surface,
-        shape: rounded(r16),
+        shape: rounded(AppRadius.lg),
         surfaceTintColor: Colors.transparent,
         showDragHandle: true,
         dragHandleColor: scheme.outlineVariant,
       ),
       dialogTheme: DialogThemeData(
         backgroundColor: scheme.surface,
-        shape: rounded(r16),
+        shape: rounded(AppRadius.lg),
         surfaceTintColor: Colors.transparent,
         titleTextStyle: textTheme.titleLarge,
         contentTextStyle: textTheme.bodyMedium,
@@ -250,7 +229,7 @@ class AppTheme {
       tooltipTheme: TooltipThemeData(
         decoration: ShapeDecoration(
           color: isDark ? const Color(0xFF23262B) : const Color(0xFF101317),
-          shape: rounded(8),
+          shape: rounded(AppRadius.sm),
         ),
         textStyle: textTheme.labelSmall?.copyWith(color: Colors.white),
         waitDuration: const Duration(milliseconds: 500),
@@ -262,22 +241,22 @@ class AppTheme {
         backgroundColor: scheme.inverseSurface,
         contentTextStyle:
             textTheme.bodyMedium?.copyWith(color: scheme.onInverseSurface),
-        shape: rounded(r12),
-        elevation: 8,
+        shape: rounded(AppRadius.sm),
+        elevation: AppElevation.level2,
       ),
 
       scrollbarTheme: ScrollbarThemeData(
         thumbVisibility: state(true),
         thickness: state(6),
-        radius: const Radius.circular(12),
+        radius: const Radius.circular(AppRadius.sm),
         thumbColor: state(scheme.onSurface.withValues(alpha: 0.18),
             hovered: scheme.onSurface.withValues(alpha: 0.28)),
       ),
 
       listTileTheme: ListTileThemeData(
-        shape: rounded(r12),
+        shape: rounded(AppRadius.sm),
         minLeadingWidth: 24,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 6),
         iconColor: scheme.onSurfaceVariant,
         textColor: scheme.onSurface,
       ),

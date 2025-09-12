@@ -6,7 +6,7 @@ import 'package:pocketa/features/transaction/presentation/viewmodels/viewmodels.
 import 'package:pocketa/features/transaction/presentation/widgets/transaction_list_view.dart';
 import 'package:pocketa/features/transaction/presentation/widgets/transaction_tile.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/shared/widgets/widgets.dart';
+import 'package:pocketa/shared/ui/motion.dart';
 
 class TransactionListScreen extends ConsumerWidget {
   const TransactionListScreen({super.key});
@@ -24,18 +24,21 @@ class TransactionListScreen extends ConsumerWidget {
         // Use default cacheExtent to avoid over-building offscreen widgets.
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
-          CustomSliverAppBar(
+          SliverAppBar(
             pinned: true,
-            title: l10n.transactions,
-            showBack: false,
+            title: Text(l10n.transactions),
+            automaticallyImplyLeading: false,
             actions: [
-              IconButton(
-                tooltip: l10n.accessibilityAddTransaction,
-                icon: Icon(
-                  Icons.add,
-                  size: device == DeviceSize.phone ? 24.ic(context) : 28.ic(context),
+              ScaleTap(
+                onTap: () => context.push('/add_edit_transaction'),
+                child: IconButton(
+                  tooltip: l10n.accessibilityAddTransaction,
+                  icon: Icon(
+                    Icons.add,
+                    size: device == DeviceSize.phone ? 24.ic(context) : 28.ic(context),
+                  ),
+                  onPressed: null, // Disable default onPressed since we're using ScaleTap
                 ),
-                onPressed: () => context.push('/add_edit_transaction'),
               ),
             ],
           ),
@@ -64,10 +67,13 @@ class TransactionListScreen extends ConsumerWidget {
           SliverToBoxAdapter(child: SizedBox(height: 5.rem(context))),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.pushNamed('add_edit_tx'),
-        icon: const Icon(Icons.add),
-        label: Text(l10n.addTransaction),
+      floatingActionButton: ScaleTap(
+        onTap: () => context.pushNamed('add_edit_tx'),
+        child: FloatingActionButton.extended(
+          onPressed: null, // Disable default onPressed since we're using ScaleTap
+          icon: const Icon(Icons.add),
+          label: Text(l10n.addTransaction),
+        ),
       ),
     );
   }
@@ -82,8 +88,7 @@ class _EmptyState extends StatelessWidget {
     return Center(
       child: Padding(
         padding: EdgeInsets.all(context.layout.space2xl),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: StaggerList(
           children: [
             Icon(Icons.receipt_long_outlined, size: 56.ic(context)),
             SizedBox(height: context.layout.spaceM),

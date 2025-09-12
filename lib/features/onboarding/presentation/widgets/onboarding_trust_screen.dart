@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/theme/app_colors.dart';
 import 'package:pocketa/features/onboarding/presentation/viewmodels/onboarding_providers.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
+import 'package:pocketa/shared/ui/glass_card.dart';
+import 'package:pocketa/shared/ui/motion.dart';
 
 class OnboardingTrustScreen extends StatelessWidget {
   final OnboardingNotifier notifier;
@@ -28,15 +29,12 @@ class OnboardingTrustScreen extends StatelessWidget {
       children: [
         Expanded(
           child: SingleChildScrollView(
-            child: Padding(
-              padding: layout.pageGutter,
-              child: Column(
-                children: [
-                  _buildHeader(context, layout, theme),
-                  SizedBox(height: layout.space2xl),
-                  _buildTrustPoints(context, l10n, layout, theme),
-                ],
-              ),
+            child: Column(
+              children: [
+                FadeSlide(child: _buildHeader(context, layout, theme)),
+                SizedBox(height: layout.space2xl),
+                FadeSlide(delay: Motion.d060, child: _buildTrustPoints(context, l10n, layout, theme)),
+              ],
             ),
           ),
         ),
@@ -53,13 +51,13 @@ class OnboardingTrustScreen extends StatelessWidget {
             width: layout.responsiveSize(phone: 80, tablet: 100, desktop: 120),
             height: layout.responsiveSize(phone: 80, tablet: 100, desktop: 120),
             decoration: BoxDecoration(
-              color: AppColors.successContainer(context),
+              color: Theme.of(context).colorScheme.secondaryContainer,
               borderRadius: BorderRadius.circular(layout.responsiveSize(phone: 40, tablet: 50, desktop: 60)),
             ),
             child: Icon(
               Icons.security,
               size: layout.responsiveIconSize(phone: 40, tablet: 50, desktop: 60),
-              color: AppColors.success(context),
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
         ),
@@ -74,32 +72,28 @@ class OnboardingTrustScreen extends StatelessWidget {
   }
 
   Widget _buildTrustPoints(BuildContext context, AppLocalizations l10n, AppSize layout, ThemeData theme) {
-    return Column(
-      children: _trustPoints.map((point) => Padding(
-        padding: EdgeInsets.only(bottom: layout.spaceXl),
-        child: _buildTrustPoint(context, point.$1, _getLocalizedText(l10n, point.$2), layout, theme),
-      )).toList(),
+    return StaggerList(
+      children: _trustPoints.map((point) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: layout.spaceXl),
+          child: _buildTrustPoint(context, point.$1, _getLocalizedText(l10n, point.$2), layout, theme),
+        );
+      }).toList(),
     );
   }
 
 
   Widget _buildTrustPoint(BuildContext context, IconData icon, String text, AppSize layout, ThemeData theme) {
-    return Container(
-      padding: EdgeInsets.all(layout.space2xl),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(layout.radiusM),
-        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
-      ),
+    return GlassCard(
       child: Row(
         children: [
           Container(
             padding: EdgeInsets.all(layout.spaceM),
             decoration: BoxDecoration(
-              color: AppColors.successContainer(context),
+              color: Theme.of(context).colorScheme.secondaryContainer,
               borderRadius: BorderRadius.circular(layout.radiusS),
             ),
-            child: Icon(icon, size: layout.responsiveIconSize(phone: 24, tablet: 28, desktop: 32), color: AppColors.success(context)),
+            child: Icon(icon, size: layout.responsiveIconSize(phone: 24, tablet: 28, desktop: 32), color: Theme.of(context).colorScheme.secondary),
           ),
           SizedBox(width: layout.space2xl),
           Flexible(child: Text(text, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurface, height: 1.4))),

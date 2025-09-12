@@ -11,18 +11,20 @@ class ErrorRecovery {
   static final Map<String, DateTime> _lastRetryTimes = {};
   
   /// Maximum retry attempts for different error types
-  static final Map<Type, int> _maxRetries = {
-    NetworkFailure: 3,
-    DatabaseFailure: 2,
-    CacheFailure: 1,
-  };
+  // TODO: Implement advanced retry logic
+  // static final Map<Type, int> _maxRetries = {
+  //   NetworkFailure: 3,
+  //   DatabaseFailure: 2,
+  //   CacheFailure: 1,
+  // };
 
   /// Retry delays for different error types (in milliseconds)
-  static final Map<Type, List<int>> _retryDelays = {
-    NetworkFailure: [1000, 2000, 4000], // Exponential backoff
-    DatabaseFailure: [500, 1000],
-    CacheFailure: [100],
-  };
+  // TODO: Implement exponential backoff
+  // static final Map<Type, List<int>> _retryDelays = {
+  //   NetworkFailure: [1000, 2000, 4000], // Exponential backoff
+  //   DatabaseFailure: [500, 1000],
+  //   CacheFailure: [100],
+  // };
 
   /// Get max retries for an operation based on error type
   static int _getMaxRetries(String operationName) {

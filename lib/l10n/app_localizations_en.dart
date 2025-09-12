@@ -991,13 +991,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onb_save_continue => 'Save & continue';
 
   @override
-  String get onb_demo_title => 'Add an expense in 5 seconds.';
+  String get onb_demo_title => 'Add an expense in 5 seconds';
 
   @override
   String get onb_demo_helper => 'One tap to add the demo—edit if you want.';
 
   @override
-  String get onb_demo_amount => '৳50';
+  String get onb_demo_amount => '৳৫০';
 
   @override
   String get onb_demo_category => 'Tea/Snacks';
@@ -1107,4 +1107,144 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorDatabase => 'Database error occurred';
+
+  @override
+  String get onb_welcome_cta => 'Continue →';
+
+  @override
+  String get onb_feature_secure => 'Secure';
+
+  @override
+  String get onb_feature_simple => 'Simple';
+
+  @override
+  String get onb_feature_smart => 'Smart';
+
+  @override
+  String get onb_feature_secure_tooltip =>
+      'Your data is encrypted and stored locally. No cloud sync, maximum privacy.';
+
+  @override
+  String get onb_feature_simple_tooltip =>
+      'Clean, intuitive interface designed for easy expense tracking.';
+
+  @override
+  String get onb_feature_smart_tooltip =>
+      'AI-powered insights and smart categorization for better financial management.';
+
+  @override
+  String get onb_persona_subtitle =>
+      'Language, income type, currency—make it yours.';
+
+  @override
+  String get onb_persona_cta => 'Continue →';
+
+  @override
+  String get onb_currency_usd => 'US Dollar';
+
+  @override
+  String get onb_currency_eur => 'Euro';
+
+  @override
+  String get onb_currency_bdt => 'Bangladeshi Taka';
+
+  @override
+  String get onb_language_en => 'English';
+
+  @override
+  String get onb_language_bn => 'বাংলা';
+
+  @override
+  String get onb_theme_label => 'Theme';
+
+  @override
+  String get onb_theme_light => 'Light';
+
+  @override
+  String get onb_theme_dark => 'Dark';
+
+  @override
+  String get onb_theme_system => 'System Default';
+
+  @override
+  String get onb_demo_subtitle => 'One tap to add the demo—edit if you want.';
+
+  @override
+  String get onb_demo_success => 'Added! You\'ve got this.';
+
+  @override
+  String get onb_demo_adding => 'Adding...';
+
+  @override
+  String get onb_demo_error => 'Failed to add demo transaction';
+
+  @override
+  String get onb_trust_cta_primary => 'I understand';
+
+  @override
+  String get onb_trust_cta_secondary => 'Learn more';
+
+  @override
+  String get onb_habit_subtitle =>
+      '10 seconds a day—keep your streak, invest in your dreams.';
+
+  @override
+  String get onb_habit_reminder_label => 'Daily reminder';
+
+  @override
+  String get onb_habit_day_badge => 'Day 1';
+
+  @override
+  String get onb_habit_streak_label => 'Streak';
+
+  @override
+  String get onb_cta_back => '← Back';
+
+  @override
+  String get onb_cta_skip => 'Skip';
+
+  @override
+  String get onb_error_generic => 'Something went wrong. Please try again.';
+
+  @override
+  String get onb_error_network => 'Check your internet connection.';
+
+  @override
+  String get onb_error_validation => 'Please check your selections.';
+
+  @override
+  String get onb_a11y_welcome_illustration =>
+      'Welcome illustration showing money management';
+
+  @override
+  String get onb_a11y_demo_card => 'Demo transaction card for tea and snacks';
+
+  @override
+  String get onb_a11y_trust_icon => 'Security shield icon';
+
+  @override
+  String get onb_a11y_habit_badge => 'Day 1 streak badge';
+
+  @override
+  String get onb_a11y_reminder_toggle => 'Daily reminder toggle switch';
+
+  @override
+  String onb_progress_step(int current, int total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String onb_progress_percentage(int percentage) {
+    return '$percentage%';
+  }
+
+  @override
+  String onb_error_completion(String error) {
+    return 'Failed to complete onboarding: $error';
+  }
+
+  @override
+  String onb_error_save(String error) {
+    return 'Failed to save progress: $error';
+  }
 }

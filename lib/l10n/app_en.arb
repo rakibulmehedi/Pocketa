@@ -481,6 +481,92 @@
   "errorGeneric": "An unexpected error occurred",
   "retry": "Retry",
   "clearAllTags": "Clear all tags",
-  "addTag": "Add tag"
+  "addTag": "Add tag",
+
+  "onb_welcome_title": "Starting today, money is in your control.",
+  "onb_welcome_subtitle": "Small expenses create big gaps—now they'll be easy to track.",
+  "onb_welcome_cta": "Continue →",
+  "onb_feature_secure": "Secure",
+  "onb_feature_simple": "Simple",
+  "onb_feature_smart": "Smart",
+  "onb_feature_secure_tooltip": "Your data is encrypted and stored locally. No cloud sync, maximum privacy.",
+  "onb_feature_simple_tooltip": "Clean, intuitive interface designed for easy expense tracking.",
+  "onb_feature_smart_tooltip": "AI-powered insights and smart categorization for better financial management.",
+
+  "onb_persona_title": "Tell us about you.",
+  "onb_persona_subtitle": "Language, income type, currency—make it yours.",
+  "onb_persona_cta": "Continue →",
+  "onb_currency_label": "Currency",
+  "onb_currency_usd": "US Dollar",
+  "onb_currency_eur": "Euro",
+  "onb_currency_bdt": "Bangladeshi Taka",
+  "onb_language_label": "Language",
+  "onb_language_en": "English",
+  "onb_language_bn": "বাংলা",
+  "onb_theme_label": "Theme",
+  "onb_theme_light": "Light",
+  "onb_theme_dark": "Dark",
+  "onb_theme_system": "System Default",
+
+  "onb_demo_title": "Add an expense in 5 seconds",
+  "onb_demo_subtitle": "One tap to add the demo—edit if you want.",
+  "onb_demo_cta": "Add now",
+  "onb_demo_success": "Added! You've got this.",
+  "onb_demo_amount": "৳৫০",
+  "onb_demo_category": "Tea/Snacks",
+  "onb_demo_note": "With friends",
+  "onb_demo_adding": "Adding...",
+  "onb_demo_error": "Failed to add demo transaction",
+
+  "onb_trust_title": "Your data stays on your device.",
+  "onb_trust_bullet_offline": "Offline-first—works without internet.",
+  "onb_trust_bullet_privacy": "We can't see your data unless you choose cloud backup.",
+  "onb_trust_bullet_lock": "Lock PIN and biometric support.",
+  "onb_trust_cta_primary": "I understand",
+  "onb_trust_cta_secondary": "Learn more",
+
+  "onb_habit_title": "Today is Day 1—see you tomorrow?",
+  "onb_habit_subtitle": "10 seconds a day—keep your streak, invest in your dreams.",
+  "onb_habit_cta": "Start now",
+  "onb_habit_reminder_label": "Daily reminder",
+  "onb_habit_day_badge": "Day 1",
+  "onb_habit_streak_label": "Streak",
+
+  "onb_cta_continue": "Continue →",
+  "onb_cta_back": "← Back",
+  "onb_cta_skip": "Skip",
+  "onb_cta_finish": "Finish",
+  "onb_cta_start": "Start →",
+
+  "onb_error_generic": "Something went wrong. Please try again.",
+  "onb_error_network": "Check your internet connection.",
+  "onb_error_validation": "Please check your selections.",
+
+  "onb_a11y_welcome_illustration": "Welcome illustration showing money management",
+  "onb_a11y_demo_card": "Demo transaction card for tea and snacks",
+  "onb_a11y_trust_icon": "Security shield icon",
+  "onb_a11y_habit_badge": "Day 1 streak badge",
+  "onb_a11y_reminder_toggle": "Daily reminder toggle switch",
+
+  "onb_progress_step": "Step {current} of {total}",
+  "@onb_progress_step": {
+    "description": "Progress indicator showing current step and total steps",
+    "placeholders": { "current": {"type": "int"}, "total": {"type": "int"} }
+  },
+  "onb_progress_percentage": "{percentage}%",
+  "@onb_progress_percentage": {
+    "description": "Progress percentage",
+    "placeholders": { "percentage": {"type": "int"} }
+  },
+  "onb_error_completion": "Failed to complete onboarding: {error}",
+  "@onb_error_completion": {
+    "description": "Error message when onboarding completion fails",
+    "placeholders": { "error": {"type": "String"} }
+  },
+  "onb_error_save": "Failed to save progress: {error}",
+  "@onb_error_save": {
+    "description": "Error message when saving onboarding progress fails",
+    "placeholders": { "error": {"type": "String"} }
+  }
 
 }

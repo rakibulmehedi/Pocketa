@@ -9,12 +9,13 @@ import 'package:pocketa/features/transaction/presentation/viewmodels/month_args.
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_computed_providers.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_usecases_providers.dart';
 import 'package:pocketa/shared/widgets/more_menu.dart';
+import 'package:pocketa/shared/ui/footer_cta_bar.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pocketa/shared/services/services.dart';
+import 'package:pocketa/shared/ui/motion/confetti.dart';
 
 import 'package:pocketa/core/constants/default_categories.dart';
-import 'package:pocketa/core/utils/currency_utils.dart';
-import 'package:pocketa/core/utils/transaction_utils.dart';
+import 'package:pocketa/core/utils/format_utils.dart';
 import 'package:pocketa/shared/widgets/widgets.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:pocketa/core/analytics/analytics_service.dart';
@@ -182,10 +183,8 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
     final form = ref.watch(transactionFormProvider);
     final isEdit = widget.initial != null;
 
-    final L = context.layout;
     final w = context.vw;
     final isWide = w >= 900;
-    final isMobile = L.isMobile;
 
     // Header KPI (safe: wallet can be null)
     final now = DateTime.now();
@@ -193,26 +192,19 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
     final netBalance = ref.watch(monthNetRxProvider(args));
     final isPositive = ref.watch(isMonthNetPositiveProvider(args));
 
-    final signedPreview =
-        form.type == TransactionType.expense ? -form.amount : form.amount;
-    final previewText = formatAmount(
-      signedPreview,
-      currency: AppCurrencies.symbol(form.currency),
-    );
-
     return Scaffold(
       appBar: CustomAppBar(
         title: isEdit
             ? AppLocalizations.of(context).editTransaction
             : AppLocalizations.of(context).addTransaction,
-        subtitle: formatDate(now),
+        subtitle: FormatUtils.formatDate(now),
         showBack: true,
         actions: [
           MoreMenu(
             onDelete: isEdit ? () => _confirmDelete(widget.initial!.id) : null,
           ),
         ],
-        trailingPillText: formatAmount(netBalance),
+        trailingPillText: FormatUtils.formatCurrency(netBalance),
         trailingPillIcon: isPositive
             ? Icons.trending_up_rounded
             : Icons.trending_down_rounded,
@@ -234,18 +226,18 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
                       vertical: 10,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.red.withValues(alpha: 0.08),
+                      color: Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: Colors.red.withValues(alpha: 0.18),
+                        color: Theme.of(context).colorScheme.error.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.error_outline,
                           size: 18,
-                          color: Colors.red,
+                          color: Theme.of(context).colorScheme.error,
                         ),
                         const SizedBox(width: 8),
                         Expanded(
@@ -253,7 +245,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
                             _inlineError!,
                             style:
                                 Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Colors.red.shade700,
+                                      color: Theme.of(context).colorScheme.onErrorContainer,
                                       fontWeight: FontWeight.w600,
                                     ),
                           ),
@@ -275,78 +267,13 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          margin: EdgeInsets.fromLTRB(
-            isMobile ? 16 : 24, 
-            0, 
-            isMobile ? 16 : 24, 
-            isMobile ? 12 : 16
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: isMobile ? 12 : 16, 
-            vertical: isMobile ? 12 : 16
-          ),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(isMobile ? 16 : 20),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
-                blurRadius: isMobile ? 16 : 20,
-                offset: const Offset(0, -4),
-              ),
-            ],
-            border: Border.all(
-              color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.20),
-            ),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                Icons.receipt_long_rounded, 
-                color: _accentByType(form.type),
-                size: isMobile ? 20 : 24,
-              ),
-              SizedBox(width: isMobile ? 10 : 12),
-              Expanded(
-                child: Text(
-                  previewText,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w800,
-                        color: _accentByType(form.type),
-                        fontSize: isMobile ? 16 : 18,
-                      ),
-                ),
-              ),
-              SizedBox(width: isMobile ? 10 : 12),
-              FilledButton.icon(
-                onPressed: _submit,
-                icon: Icon(
-                  Icons.check,
-                  size: isMobile ? 18 : 20,
-                ),
-                label: Text(
-                  isEdit
-                      ? AppLocalizations.of(context).save
-                      : AppLocalizations.of(context).addTransaction,
-                  style: TextStyle(
-                    fontSize: isMobile ? 14 : 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                style: FilledButton.styleFrom(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: isMobile ? 16 : 20,
-                    vertical: isMobile ? 12 : 16,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+      bottomNavigationBar: FooterCtaBar(
+        primaryLabel: isEdit
+            ? AppLocalizations.of(context).save
+            : AppLocalizations.of(context).addTransaction,
+        onPrimary: _submit,
+        secondaryLabel: AppLocalizations.of(context).back,
+        onSecondary: () => context.canPop() ? context.pop() : context.goNamed('transactions'),
       ),
     );
   }
@@ -372,7 +299,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
         _detailsCard(form),
         if (form.type == TransactionType.transfer) _transferTargetCard(form),
         _notesCard(form),
-        SizedBox(height: isMobile ? L.space3xl : L.space3xl),
+        SizedBox(height: L.space3xl),
       ],
     );
   }
@@ -483,7 +410,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
       child: AmountField(
         controller: _amountCtrl,
         label: AppLocalizations.of(context).amount,
-        currencySymbol: AppCurrencies.symbol(form.currency),
+        currencySymbol: FormatUtils.getCurrencySymbol(form.currency),
       ),
     );
 
@@ -492,12 +419,12 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
       child: AppDropdownField<String>(
         label: AppLocalizations.of(context).currency,
         initialValue: form.currency,
-        items: AppCurrencies.list
+        items: FormatUtils.supportedCurrencies
             .map(
               (code) => DropdownMenuItem<String>(
                 value: code,
                 child: Text(
-                  '${AppCurrencies.symbol(code)} $code',
+                  '${FormatUtils.getCurrencySymbol(code)} $code',
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -561,9 +488,9 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
                   Icon(Icons.equalizer_rounded, color: color),
                   const SizedBox(width: 6),
                   Text(
-                    formatAmount(
+                    FormatUtils.formatAmount(
                       signed,
-                      currency: AppCurrencies.symbol(form.currency),
+                      currency: FormatUtils.getCurrencySymbol(form.currency),
                     ),
                     style: TextStyle(
                       fontWeight: FontWeight.w800,
@@ -592,11 +519,11 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
           for (final a in amounts)
             ActionChip(
               label: Text(
-                formatAmount(
+                FormatUtils.formatAmount(
                   form.type == TransactionType.expense
                       ? -a.toDouble()
                       : a.toDouble(),
-                  currency: AppCurrencies.symbol(form.currency),
+                  currency: FormatUtils.getCurrencySymbol(form.currency),
                 ),
               ),
               onPressed: () {
@@ -866,6 +793,21 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
     HapticFeedback.lightImpact();
     final l10n = AppLocalizations.of(context);
     _toast(isEdit ? l10n.transactionUpdated : l10n.transactionAdded);
+    
+    // Show subtle confetti for new transactions
+    if (!isEdit) {
+      ConfettiOverlay.show(
+        context,
+        duration: const Duration(milliseconds: 800),
+        particleCount: 15,
+        colors: [
+          Theme.of(context).colorScheme.primary,
+          Theme.of(context).colorScheme.secondary,
+          Theme.of(context).colorScheme.tertiary,
+        ],
+      );
+    }
+    
     await ref.read(analyticsProvider).logEvent(
       isEdit ? 'txn_edited' : 'txn_added',
       params: {
@@ -889,7 +831,7 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
                 child: Text(AppLocalizations.of(ctx).cancel),
               ),
               FilledButton(
-                style: FilledButton.styleFrom(backgroundColor: Colors.red),
+                style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.error),
                 onPressed: () => Navigator.pop(ctx, true),
                 child: Text(AppLocalizations.of(ctx).delete),
               ),
@@ -921,15 +863,14 @@ class _TxScreenState extends ConsumerState<AddEditTransactionScreen> {
 
   Color _accentByType(TransactionType t) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     
     switch (t) {
       case TransactionType.income:
-        return isDark ? Colors.greenAccent : Colors.green;
+        return theme.colorScheme.secondary;
       case TransactionType.expense:
-        return isDark ? Colors.redAccent : Colors.red;
+        return theme.colorScheme.error;
       case TransactionType.transfer:
-        return isDark ? Colors.blueAccent : Colors.blueGrey;
+        return theme.colorScheme.tertiary;
     }
   }
 }

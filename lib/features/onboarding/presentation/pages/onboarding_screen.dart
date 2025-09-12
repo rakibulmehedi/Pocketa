@@ -9,7 +9,9 @@ import 'package:pocketa/features/onboarding/presentation/widgets/onboarding_pers
 import 'package:pocketa/features/onboarding/presentation/widgets/onboarding_demo_screen.dart';
 import 'package:pocketa/features/onboarding/presentation/widgets/onboarding_trust_screen.dart';
 import 'package:pocketa/features/onboarding/presentation/widgets/onboarding_habit_screen.dart';
-import 'package:pocketa/features/onboarding/presentation/widgets/onboarding_bottom_footer.dart';
+import 'package:pocketa/shared/ui/app_scaffold.dart';
+import 'package:pocketa/shared/ui/footer_cta_bar.dart';
+import 'package:pocketa/shared/ui/motion.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 
 class OnboardingScreen extends ConsumerWidget {
@@ -20,6 +22,7 @@ class OnboardingScreen extends ConsumerWidget {
     final state = ref.watch(onboardingStateProvider);
     final notifier = ref.read(onboardingStateProvider.notifier);
     final layout = context.layout;
+    final l10n = AppLocalizations.of(context);
 
     // Show error if there's one
     if (state.error != null) {
@@ -29,7 +32,7 @@ class OnboardingScreen extends ConsumerWidget {
             content: Text(state.error!),
             backgroundColor: Theme.of(context).colorScheme.error,
             action: SnackBarAction(
-              label: 'Retry',
+              label: l10n.retry,
               onPressed: () => notifier.saveProgress(),
             ),
           ),
@@ -37,35 +40,29 @@ class OnboardingScreen extends ConsumerWidget {
       });
     }
 
-    return Scaffold(
-      body: SafeArea(
-        child: Responsive.builder(
-          child: Column(
-            children: [
-              // Progress indicator
-              if (state.data.currentStep != OnboardingStep.welcome)
-                _buildProgressIndicator(context, state.data.currentStep, layout),
-              
-              // Current screen
-              Expanded(
-                child: state.isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : _buildCurrentScreen(context, state.data.currentStep, notifier),
-              ),
-              
-              // Dots indicator above footer
-              _buildDotsIndicator(context, state.data.currentStep, layout),
-              
-              // Central footer
-              _buildCentralFooter(context, state.data.currentStep, notifier, layout),
-            ],
+    return AppScaffold(
+      body: Column(
+        children: [
+          // Progress indicator
+          if (state.data.currentStep != OnboardingStep.welcome)
+            FadeSlide(child: _buildProgressIndicator(context, state.data.currentStep, layout, l10n)),
+          
+          // Current screen
+          Expanded(
+            child: state.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _buildCurrentScreen(context, state.data.currentStep, notifier),
           ),
-        ),
+          
+          // Dots indicator above footer
+          FadeSlide(delay: Motion.d060, child: _buildDotsIndicator(context, state.data.currentStep, layout)),
+        ],
       ),
+      footer: _buildCentralFooter(context, state.data.currentStep, notifier, layout),
     );
   }
 
-  Widget _buildProgressIndicator(BuildContext context, OnboardingStep currentStep, AppSize layout) {
+  Widget _buildProgressIndicator(BuildContext context, OnboardingStep currentStep, AppSize layout, AppLocalizations l10n) {
     final totalSteps = OnboardingStep.values.length;
     final currentIndex = currentStep.index;
     final progress = (currentIndex + 1) / totalSteps;
@@ -107,7 +104,7 @@ class OnboardingScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Step ${currentIndex + 1} of $totalSteps',
+                l10n.onb_progress_step(currentIndex + 1, totalSteps),
                 style: layout.responsiveTextStyle(
                   phone: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
@@ -129,22 +126,22 @@ class OnboardingScreen extends ConsumerWidget {
                   vertical: layout.responsiveSize(phone: 4, tablet: 6, desktop: 8),
                 ),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(layout.responsiveSize(phone: 12, tablet: 16, desktop: 20)),
                 ),
                 child: Text(
-                  '${(progress * 100).round()}%',
+                  l10n.onb_progress_percentage((progress * 100).round()),
                   style: layout.responsiveTextStyle(
                     phone: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.w600,
                     ) ?? const TextStyle(),
                     tablet: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.w600,
                     ) ?? const TextStyle(),
                     desktop: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.w600,
                     ) ?? const TextStyle(),
                   ),
@@ -210,7 +207,7 @@ class OnboardingScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _completeOnboarding(BuildContext context, OnboardingNotifier notifier) async {
+  Future<void> _completeOnboarding(BuildContext context, OnboardingNotifier notifier, AppLocalizations l10n) async {
     try {
       // Complete onboarding
       await notifier.completeOnboarding();
@@ -224,7 +221,7 @@ class OnboardingScreen extends ConsumerWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to complete onboarding: $e'),
+            content: Text(l10n.onb_error_completion(e.toString())),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -238,9 +235,8 @@ class OnboardingScreen extends ConsumerWidget {
     // Get button text and actions based on current step
     String primaryButtonText;
     VoidCallback? onPrimaryPressed;
-    String? secondaryButtonText;
-    VoidCallback? onSecondaryPressed;
-    bool showBackButton = currentStep != OnboardingStep.welcome;
+    bool showBack = false;
+    VoidCallback? onBack;
     
     switch (currentStep) {
       case OnboardingStep.welcome:
@@ -250,37 +246,37 @@ class OnboardingScreen extends ConsumerWidget {
       case OnboardingStep.personalization:
         primaryButtonText = l10n.onb_continue;
         onPrimaryPressed = () => notifier.nextStep();
+        showBack = true;
+        onBack = () => notifier.previousStep();
         break;
       case OnboardingStep.demo:
-        // For demo screen, we need to check if demo was added
-        // This is a simplified version - in practice you'd need to watch the demo state
         primaryButtonText = l10n.onb_continue;
         onPrimaryPressed = () => notifier.nextStep();
+        showBack = true;
+        onBack = () => notifier.previousStep();
         break;
       case OnboardingStep.trust:
         primaryButtonText = l10n.onb_trust_primary;
         onPrimaryPressed = () => notifier.nextStep();
-        secondaryButtonText = l10n.onb_trust_learn_more;
-        onSecondaryPressed = () {
-          // TODO: Navigate to privacy policy
-        };
+        showBack = true;
+        onBack = () => notifier.previousStep();
         break;
       case OnboardingStep.habit:
         primaryButtonText = l10n.onb_habit_cta;
         onPrimaryPressed = () {
           // For habit screen, we'll complete onboarding directly
-          _completeOnboarding(context, notifier);
+          _completeOnboarding(context, notifier, l10n);
         };
+        showBack = true;
+        onBack = () => notifier.previousStep();
         break;
     }
     
-    return OnboardingBottomFooter(
-      primaryButtonText: primaryButtonText,
-      onPrimaryPressed: onPrimaryPressed,
-      secondaryButtonText: secondaryButtonText,
-      onSecondaryPressed: onSecondaryPressed,
-      showBackButton: showBackButton,
-      onBackPressed: showBackButton ? () => notifier.previousStep() : null,
+    return FooterCtaBar(
+      primaryLabel: primaryButtonText,
+      onPrimary: onPrimaryPressed,
+      secondaryLabel: showBack ? l10n.back : null,
+      onSecondary: showBack ? onBack : null,
     );
   }
 

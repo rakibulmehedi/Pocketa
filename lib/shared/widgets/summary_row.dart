@@ -1,7 +1,7 @@
 // lib/shared/widgets/summary_row.dart
 import 'package:flutter/material.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/utils/transaction_utils.dart';
+import 'package:pocketa/core/utils/format_utils.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:pocketa/shared/widgets/glass_container.dart';
 
@@ -41,7 +41,7 @@ class SummaryRow extends StatelessWidget {
                 child: _StatTile(
                   label: t.income,
                   value: income,
-                  accent: Colors.greenAccent.shade400,
+                  accent: Theme.of(context).colorScheme.secondary,
                   icon: Icons.south_west_rounded,
                   compact: compact,
                 ),
@@ -51,7 +51,7 @@ class SummaryRow extends StatelessWidget {
                 child: _StatTile(
                   label: t.expense,
                   value: expense,
-                  accent: Colors.redAccent.shade400,
+                  accent: Theme.of(context).colorScheme.error,
                   icon: Icons.north_east_rounded,
                   compact: compact,
                 ),
@@ -71,8 +71,8 @@ class SummaryRow extends StatelessWidget {
             child: _NetTile(
               title: t.netBalance,
               net: net,
-              positiveAccent: Colors.greenAccent.shade400,
-              negativeAccent: Colors.redAccent.shade400,
+              positiveAccent: Theme.of(context).colorScheme.secondary,
+              negativeAccent: Theme.of(context).colorScheme.error,
               compact: compact,
             ),
           ),
@@ -137,7 +137,7 @@ class _StatTile extends StatelessWidget {
                 FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    formatAmount(value, currency: '৳'),
+                    FormatUtils.formatCurrency(value, currencyCode: 'BDT'),
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w800,
                       fontSize: compact ? 16 : 18,
@@ -218,7 +218,7 @@ class _NetTile extends StatelessWidget {
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    formatAmount(net, currency: '৳ '),
+                    FormatUtils.formatCurrency(net, currencyCode: 'BDT'),
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w900,
                       color: accent,

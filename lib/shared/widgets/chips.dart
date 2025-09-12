@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/theme/app_colors.dart';
 import 'package:pocketa/features/onboarding/domain/entities/onboarding_entity.dart';
 
 /// A reusable feature chip widget with responsive sizing
@@ -45,8 +44,8 @@ class FeatureChip extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primaryStrong(context)
-              : AppColors.surfaceElevated(context),
+              ? color.withValues(alpha: 0.3)
+              : theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(
             layout.responsiveSize(
               phone: 20,
@@ -57,7 +56,7 @@ class FeatureChip extends StatelessWidget {
           border: Border.all(
             color: isSelected
                 ? color
-                : AppColors.borderMedium(context),
+                : theme.colorScheme.outline.withValues(alpha: 0.2),
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected ? [
@@ -83,7 +82,7 @@ class FeatureChip extends StatelessWidget {
                 desktop: 22,
               ),
               color: isSelected
-                  ? AppColors.buttonTextPrimary(context)
+                  ? theme.colorScheme.onSurface
                   : color,
             ),
             SizedBox(width: layout.spaceS),
@@ -97,8 +96,8 @@ class FeatureChip extends StatelessWidget {
                 ),
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 color: isSelected
-                    ? AppColors.buttonTextPrimary(context)
-                    : AppColors.textPrimary(context),
+                    ? theme.colorScheme.onSurface
+                    : theme.colorScheme.onSurface,
               ),
             ),
           ],
@@ -151,7 +150,7 @@ class OptionChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? color
-              : AppColors.surfaceElevated(context),
+              : theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(
             layout.responsiveSize(
               phone: 8,
@@ -162,7 +161,7 @@ class OptionChip extends StatelessWidget {
           border: Border.all(
             color: isSelected
                 ? color
-                : AppColors.borderMedium(context),
+                : theme.colorScheme.outline.withValues(alpha: 0.2),
             width: layout.responsiveSize(
               phone: 1.5,
               tablet: 2.0,
@@ -190,8 +189,8 @@ class OptionChip extends StatelessWidget {
               desktop: 18,
             ),
             color: isSelected
-                ? AppColors.buttonTextPrimary(context)
-                : AppColors.textPrimary(context),
+                ? theme.colorScheme.onSurface
+                : theme.colorScheme.onSurface,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
           ),
         ),
@@ -233,13 +232,13 @@ class IncomeOptionChip extends StatelessWidget {
         padding: EdgeInsets.all(layout.spaceM),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primaryStrong(context)
-              : AppColors.surfaceElevated(context),
+              ? color.withValues(alpha: 0.3)
+              : theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(layout.radiusM),
           border: Border.all(
             color: isSelected
                 ? color
-                : AppColors.borderMedium(context),
+                : theme.colorScheme.outline.withValues(alpha: 0.2),
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected ? [
@@ -264,8 +263,8 @@ class IncomeOptionChip extends StatelessWidget {
                 desktop: 36,
               ),
               color: isSelected
-                  ? AppColors.buttonTextPrimary(context)
-                  : AppColors.iconSecondary(context),
+                  ? theme.colorScheme.onSurface
+                  : theme.colorScheme.onSurfaceVariant,
             ),
             SizedBox(height: layout.spaceS),
             Text(
@@ -277,8 +276,8 @@ class IncomeOptionChip extends StatelessWidget {
                   desktop: 15,
                 ),
                 color: isSelected
-                    ? AppColors.buttonTextPrimary(context)
-                    : AppColors.textPrimary(context),
+                    ? theme.colorScheme.onSurface
+                    : theme.colorScheme.onSurface,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
               ),
               textAlign: TextAlign.center,

@@ -24,7 +24,7 @@ class _PocketaScrollBehavior extends MaterialScrollBehavior {
       };
 }
 
-// Rakibul Islam Mehedi
+// Rakibul 
 class PocketaApp extends ConsumerWidget {
   const PocketaApp({super.key});
 

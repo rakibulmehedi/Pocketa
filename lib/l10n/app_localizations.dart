@@ -1907,7 +1907,7 @@ abstract class AppLocalizations {
   /// No description provided for @onb_demo_title.
   ///
   /// In en, this message translates to:
-  /// **'Add an expense in 5 seconds.'**
+  /// **'Add an expense in 5 seconds'**
   String get onb_demo_title;
 
   /// No description provided for @onb_demo_helper.
@@ -1919,7 +1919,7 @@ abstract class AppLocalizations {
   /// No description provided for @onb_demo_amount.
   ///
   /// In en, this message translates to:
-  /// **'৳50'**
+  /// **'৳৫০'**
   String get onb_demo_amount;
 
   /// No description provided for @onb_demo_category.
@@ -2125,6 +2125,258 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Database error occurred'**
   String get errorDatabase;
+
+  /// No description provided for @onb_welcome_cta.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue →'**
+  String get onb_welcome_cta;
+
+  /// No description provided for @onb_feature_secure.
+  ///
+  /// In en, this message translates to:
+  /// **'Secure'**
+  String get onb_feature_secure;
+
+  /// No description provided for @onb_feature_simple.
+  ///
+  /// In en, this message translates to:
+  /// **'Simple'**
+  String get onb_feature_simple;
+
+  /// No description provided for @onb_feature_smart.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart'**
+  String get onb_feature_smart;
+
+  /// No description provided for @onb_feature_secure_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is encrypted and stored locally. No cloud sync, maximum privacy.'**
+  String get onb_feature_secure_tooltip;
+
+  /// No description provided for @onb_feature_simple_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Clean, intuitive interface designed for easy expense tracking.'**
+  String get onb_feature_simple_tooltip;
+
+  /// No description provided for @onb_feature_smart_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'AI-powered insights and smart categorization for better financial management.'**
+  String get onb_feature_smart_tooltip;
+
+  /// No description provided for @onb_persona_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Language, income type, currency—make it yours.'**
+  String get onb_persona_subtitle;
+
+  /// No description provided for @onb_persona_cta.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue →'**
+  String get onb_persona_cta;
+
+  /// No description provided for @onb_currency_usd.
+  ///
+  /// In en, this message translates to:
+  /// **'US Dollar'**
+  String get onb_currency_usd;
+
+  /// No description provided for @onb_currency_eur.
+  ///
+  /// In en, this message translates to:
+  /// **'Euro'**
+  String get onb_currency_eur;
+
+  /// No description provided for @onb_currency_bdt.
+  ///
+  /// In en, this message translates to:
+  /// **'Bangladeshi Taka'**
+  String get onb_currency_bdt;
+
+  /// No description provided for @onb_language_en.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get onb_language_en;
+
+  /// No description provided for @onb_language_bn.
+  ///
+  /// In en, this message translates to:
+  /// **'বাংলা'**
+  String get onb_language_bn;
+
+  /// No description provided for @onb_theme_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get onb_theme_label;
+
+  /// No description provided for @onb_theme_light.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get onb_theme_light;
+
+  /// No description provided for @onb_theme_dark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get onb_theme_dark;
+
+  /// No description provided for @onb_theme_system.
+  ///
+  /// In en, this message translates to:
+  /// **'System Default'**
+  String get onb_theme_system;
+
+  /// No description provided for @onb_demo_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'One tap to add the demo—edit if you want.'**
+  String get onb_demo_subtitle;
+
+  /// No description provided for @onb_demo_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Added! You\'ve got this.'**
+  String get onb_demo_success;
+
+  /// No description provided for @onb_demo_adding.
+  ///
+  /// In en, this message translates to:
+  /// **'Adding...'**
+  String get onb_demo_adding;
+
+  /// No description provided for @onb_demo_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add demo transaction'**
+  String get onb_demo_error;
+
+  /// No description provided for @onb_trust_cta_primary.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand'**
+  String get onb_trust_cta_primary;
+
+  /// No description provided for @onb_trust_cta_secondary.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn more'**
+  String get onb_trust_cta_secondary;
+
+  /// No description provided for @onb_habit_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'10 seconds a day—keep your streak, invest in your dreams.'**
+  String get onb_habit_subtitle;
+
+  /// No description provided for @onb_habit_reminder_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily reminder'**
+  String get onb_habit_reminder_label;
+
+  /// No description provided for @onb_habit_day_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Day 1'**
+  String get onb_habit_day_badge;
+
+  /// No description provided for @onb_habit_streak_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak'**
+  String get onb_habit_streak_label;
+
+  /// No description provided for @onb_cta_back.
+  ///
+  /// In en, this message translates to:
+  /// **'← Back'**
+  String get onb_cta_back;
+
+  /// No description provided for @onb_cta_skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get onb_cta_skip;
+
+  /// No description provided for @onb_error_generic.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get onb_error_generic;
+
+  /// No description provided for @onb_error_network.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your internet connection.'**
+  String get onb_error_network;
+
+  /// No description provided for @onb_error_validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your selections.'**
+  String get onb_error_validation;
+
+  /// No description provided for @onb_a11y_welcome_illustration.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome illustration showing money management'**
+  String get onb_a11y_welcome_illustration;
+
+  /// No description provided for @onb_a11y_demo_card.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo transaction card for tea and snacks'**
+  String get onb_a11y_demo_card;
+
+  /// No description provided for @onb_a11y_trust_icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Security shield icon'**
+  String get onb_a11y_trust_icon;
+
+  /// No description provided for @onb_a11y_habit_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Day 1 streak badge'**
+  String get onb_a11y_habit_badge;
+
+  /// No description provided for @onb_a11y_reminder_toggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily reminder toggle switch'**
+  String get onb_a11y_reminder_toggle;
+
+  /// Progress indicator showing current step and total steps
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String onb_progress_step(int current, int total);
+
+  /// Progress percentage
+  ///
+  /// In en, this message translates to:
+  /// **'{percentage}%'**
+  String onb_progress_percentage(int percentage);
+
+  /// Error message when onboarding completion fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to complete onboarding: {error}'**
+  String onb_error_completion(String error);
+
+  /// Error message when saving onboarding progress fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save progress: {error}'**
+  String onb_error_save(String error);
 }
 
 class _AppLocalizationsDelegate

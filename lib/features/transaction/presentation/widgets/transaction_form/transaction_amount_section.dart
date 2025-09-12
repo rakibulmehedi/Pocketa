@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/utils/currency_utils.dart';
+import 'package:pocketa/core/utils/format_utils.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_notifier.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_state.dart';
 import 'package:pocketa/shared/widgets/input/app_amount_field.dart';
+import 'package:pocketa/shared/ui/motion.dart';
 
 class TransactionAmountSection extends ConsumerWidget {
   final TextEditingController amountController;
@@ -28,7 +29,7 @@ class TransactionAmountSection extends ConsumerWidget {
         // Amount field
         AmountField(
           controller: amountController,
-          currencySymbol: AppCurrencies.symbol(form.currency),
+          currencySymbol: FormatUtils.getCurrencySymbol(form.currency),
           onChanged: (value) {
             final amount = double.tryParse(value) ?? 0.0;
             notifier.setAmount(amount);
@@ -59,15 +60,18 @@ class TransactionAmountSection extends ConsumerWidget {
         //     ? -amount.toDouble()
         //     : amount.toDouble();
 
-        return ActionChip(
-          label: Text(
-            '${AppCurrencies.symbol(form.currency)}$amount',
-          ),
-          onPressed: () {
+        return ScaleTap(
+          onTap: () {
             amountController.text = amount.toString();
             notifier.setAmount(amount.toDouble());
             HapticFeedback.lightImpact();
           },
+          child: ActionChip(
+            label: Text(
+              '${FormatUtils.getCurrencySymbol(form.currency)}$amount',
+            ),
+            onPressed: null, // Disable default onPressed since we're using ScaleTap
+          ),
         );
       }).toList(),
     );

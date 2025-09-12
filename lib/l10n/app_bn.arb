@@ -480,5 +480,91 @@
   "errorGeneric": "একটি অপ্রত্যাশিত ত্রুটি ঘটেছে",
   "retry": "পুনরায় চেষ্টা করুন",
   "clearAllTags": "সব ট্যাগ মুছুন",
-  "addTag": "ট্যাগ যোগ করুন"
+  "addTag": "ট্যাগ যোগ করুন",
+
+  "onb_welcome_title": "আজ থেকে, আপনার টাকার নিয়ন্ত্রণ আপনার হাতে।",
+  "onb_welcome_subtitle": "ছোট খরচ বড় ফাঁক তৈরি করে—এখন সেগুলো ট্র্যাক করা সহজ হবে।",
+  "onb_welcome_cta": "চলুন →",
+  "onb_feature_secure": "নিরাপদ",
+  "onb_feature_simple": "সহজ",
+  "onb_feature_smart": "চতুর",
+  "onb_feature_secure_tooltip": "আপনার ডেটা এনক্রিপ্টেড এবং স্থানীয়ভাবে সংরক্ষিত। কোনো ক্লাউড সিঙ্ক নেই, সর্বোচ্চ গোপনীয়তা।",
+  "onb_feature_simple_tooltip": "সহজ খরচ ট্র্যাকিংয়ের জন্য পরিষ্কার, স্বজ্ঞাত ইন্টারফেস।",
+  "onb_feature_smart_tooltip": "ভালো আর্থিক ব্যবস্থাপনার জন্য AI-চালিত অন্তর্দৃষ্টি এবং স্মার্ট শ্রেণীবিভাগ।",
+
+  "onb_persona_title": "আপনার সম্পর্কে বলুন।",
+  "onb_persona_subtitle": "ভাষা, আয়ের ধরন, মুদ্রা—এটাকে আপনার মতো করুন।",
+  "onb_persona_cta": "চলুন →",
+  "onb_currency_label": "মুদ্রা",
+  "onb_currency_usd": "ইউএস ডলার",
+  "onb_currency_eur": "ইউরো",
+  "onb_currency_bdt": "বাংলাদেশি টাকা",
+  "onb_language_label": "ভাষা",
+  "onb_language_en": "English",
+  "onb_language_bn": "বাংলা",
+  "onb_theme_label": "থিম",
+  "onb_theme_light": "হালকা",
+  "onb_theme_dark": "গাঢ়",
+  "onb_theme_system": "সিস্টেম ডিফল্ট",
+
+  "onb_demo_title": "৫ সেকেন্ডে একটি খরচ যোগ করুন",
+  "onb_demo_subtitle": "ডেমো যোগ করতে এক ট্যাপ—চাইলে এডিট করুন।",
+  "onb_demo_cta": "এখনই যোগ করুন",
+  "onb_demo_success": "যোগ করা হয়েছে! আপনি পারবেন।",
+  "onb_demo_amount": "৳৫০",
+  "onb_demo_category": "চা/স্ন্যাকস",
+  "onb_demo_note": "বন্ধুদের সাথে",
+  "onb_demo_adding": "যোগ করা হচ্ছে...",
+  "onb_demo_error": "ডেমো লেনদেন যোগ করতে ব্যর্থ",
+
+  "onb_trust_title": "আপনার ডেটা আপনার ডিভাইসে থাকে।",
+  "onb_trust_bullet_offline": "অফলাইন-ফার্স্ট—ইন্টারনেট ছাড়াই কাজ করে।",
+  "onb_trust_bullet_privacy": "আপনি ক্লাউড ব্যাকআপ বেছে না নিলে আমরা আপনার ডেটা দেখতে পারি না।",
+  "onb_trust_bullet_lock": "লক পিন এবং বায়োমেট্রিক সাপোর্ট।",
+  "onb_trust_cta_primary": "আমি বুঝেছি",
+  "onb_trust_cta_secondary": "আরো জানুন",
+
+  "onb_habit_title": "আজ দিন ১—কাল দেখা হবে?",
+  "onb_habit_subtitle": "দিনে ১০ সেকেন্ড—স্ট্রিক রাখুন, আপনার স্বপ্নে বিনিয়োগ করুন।",
+  "onb_habit_cta": "এখনই শুরু করুন",
+  "onb_habit_reminder_label": "দৈনিক রিমাইন্ডার",
+  "onb_habit_day_badge": "দিন ১",
+  "onb_habit_streak_label": "স্ট্রিক",
+
+  "onb_cta_continue": "চলুন →",
+  "onb_cta_back": "← ফিরে যান",
+  "onb_cta_skip": "এড়িয়ে যান",
+  "onb_cta_finish": "শেষ করুন",
+  "onb_cta_start": "শুরু করুন →",
+
+  "onb_error_generic": "কিছু সমস্যা হয়েছে। আবার চেষ্টা করুন।",
+  "onb_error_network": "আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন।",
+  "onb_error_validation": "আপনার নির্বাচন পরীক্ষা করুন।",
+
+  "onb_a11y_welcome_illustration": "টাকা ব্যবস্থাপনা দেখানো স্বাগত চিত্র",
+  "onb_a11y_demo_card": "চা এবং স্ন্যাকসের জন্য ডেমো লেনদেন কার্ড",
+  "onb_a11y_trust_icon": "নিরাপত্তা ঢাল আইকন",
+  "onb_a11y_habit_badge": "দিন ১ স্ট্রিক ব্যাজ",
+  "onb_a11y_reminder_toggle": "দৈনিক রিমাইন্ডার টগল সুইচ",
+
+  "onb_progress_step": "ধাপ {current} / {total}",
+  "@onb_progress_step": {
+    "description": "বর্তমান ধাপ এবং মোট ধাপ দেখানো প্রোগ্রেস ইন্ডিকেটর",
+    "placeholders": { "current": {"type": "int"}, "total": {"type": "int"} }
+  },
+  "onb_progress_percentage": "{percentage}%",
+  "@onb_progress_percentage": {
+    "description": "প্রোগ্রেস পার্সেন্টেজ",
+    "placeholders": { "percentage": {"type": "int"} }
+  },
+  "onb_error_completion": "অনবোর্ডিং সম্পূর্ণ করতে ব্যর্থ: {error}",
+  "@onb_error_completion": {
+    "description": "অনবোর্ডিং সম্পূর্ণ করতে ব্যর্থ হলে এরর মেসেজ",
+    "placeholders": { "error": {"type": "String"} }
+  },
+  "onb_error_save": "প্রোগ্রেস সংরক্ষণ করতে ব্যর্থ: {error}",
+  "@onb_error_save": {
+    "description": "অনবোর্ডিং প্রোগ্রেস সংরক্ষণ করতে ব্যর্থ হলে এরর মেসেজ",
+    "placeholders": { "error": {"type": "String"} }
+  }
 }
