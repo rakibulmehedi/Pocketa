@@ -70,7 +70,14 @@ jobs:
         run: flutter analyze --fatal-infos
 
       - name: Check for unused dependencies
-        run: dart pub deps --json | jq '.packages[] | select(.kind == "direct") | .name' | xargs -I {} sh -c 'grep -r "import.*{}" lib/ || echo "Unused: {}"'
+        run: |
+          dart pub deps --json | \
+            jq -r '.packages[] | select(.kind == "direct") | .name' | \
+            while read pkg; do
+              if ! grep -r "import.*package:$pkg" lib/ --include="*.dart" >/dev/null 2>&1; then
+                echo "Unused: $pkg"
+              fi
+            done
 
       - name: Check for missing dependencies
         run: |

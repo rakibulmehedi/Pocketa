@@ -96,7 +96,11 @@ jobs:
           
           # Check for long methods (>50 lines)
           echo "Checking for long methods..."
-          LONG_METHODS=$(find lib/ -name "*.dart" -exec awk 'BEGIN{lines=0; in_method=0} /^[[:space:]]*[a-zA-Z_][a-zA-Z0-9_]*[[:space:]]*\([^)]*\)[[:space:]]*{/{in_method=1; lines=0} in_method && /^[[:space:]]*}/ {if(lines>50) print FILENAME":"NR-1":"lines" lines"; in_method=0; lines=0} in_method{lines++}' {} \; | head -10)
+          LONG_METHODS=$(find lib/ -name "*.dart" -exec awk '
+            BEGIN{lines=0; in_method=0} 
+            /^[[:space:]]*[a-zA-Z_][a-zA-Z0-9_]*[[:space:]]*\([^)]*\)[[:space:]]*{/{in_method=1; lines=0} 
+            in_method && /^[[:space:]]*}/ {if(lines>50) print FILENAME":"NR-1":"lines" lines"; in_method=0; lines=0} 
+            in_method{lines++}' {} \; | head -10)
           if [ -n "$LONG_METHODS" ]; then
             echo "⚠️  Long methods detected (showing first 10):"
             echo "$LONG_METHODS"
@@ -106,7 +110,12 @@ jobs:
           
           # Check for deep nesting
           echo "Checking for deep nesting..."
-          DEEP_NESTING=$(find lib/ -name "*.dart" -exec awk 'BEGIN{max_depth=0; current_depth=0} /{/{current_depth++} /}/{current_depth--} current_depth>max_depth{max_depth=current_depth} END{if(max_depth>5) print FILENAME":"max_depth" levels"}' {} \; | head -5)
+          DEEP_NESTING=$(find lib/ -name "*.dart" -exec awk '
+            BEGIN{max_depth=0; current_depth=0} 
+            /{/{current_depth++} 
+            /}/{current_depth--} 
+            current_depth>max_depth{max_depth=current_depth} 
+            END{if(max_depth>5) print FILENAME":"max_depth" levels"}' {} \; | head -5)
           if [ -n "$DEEP_NESTING" ]; then
             echo "⚠️  Deep nesting detected (showing first 5):"
             echo "$DEEP_NESTING"
@@ -116,7 +125,11 @@ jobs:
           
           # Check for large classes
           echo "Checking for large classes..."
-          LARGE_CLASSES=$(find lib/ -name "*.dart" -exec awk 'BEGIN{in_class=0; lines=0} /^class /{in_class=1; lines=0} in_class && /^}/ {if(lines>200) print FILENAME":"lines" lines"; in_class=0; lines=0} in_class{lines++}' {} \; | head -5)
+          LARGE_CLASSES=$(find lib/ -name "*.dart" -exec awk '
+            BEGIN{in_class=0; lines=0} 
+            /^class /{in_class=1; lines=0} 
+            in_class && /^}/ {if(lines>200) print FILENAME":"lines" lines"; in_class=0; lines=0} 
+            in_class{lines++}' {} \; | head -5)
           if [ -n "$LARGE_CLASSES" ]; then
             echo "⚠️  Large classes detected (showing first 5):"
             echo "$LARGE_CLASSES"

@@ -89,7 +89,13 @@ jobs:
           CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
           
           # Check for large files
-          LARGE_FILES=$(echo "$CHANGED_FILES" | xargs -I {} sh -c 'if [ -f "{}" ]; then size=$(stat -c%s "{}" 2>/dev/null || stat -f%z "{}" 2>/dev/null || echo 0); if [ "$size" -gt 1048576 ]; then echo "{} ($size bytes)"; fi; fi')
+          LARGE_FILES=$(echo "$CHANGED_FILES" | xargs -I {} sh -c '
+            if [ -f "{}" ]; then 
+              size=$(stat -c%s "{}" 2>/dev/null || stat -f%z "{}" 2>/dev/null || echo 0)
+              if [ "$size" -gt 1048576 ]; then 
+                echo "{} ($size bytes)"
+              fi
+            fi')
           
           if [ -n "$LARGE_FILES" ]; then
             echo "⚠️  Large files detected:"

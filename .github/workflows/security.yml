@@ -219,7 +219,7 @@ jobs:
     name: Container Security Scan
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    if: hashFiles('Dockerfile') != ''
+    if: github.event_name == 'push' && contains(github.event.head_commit.modified, 'Dockerfile') || github.event_name == 'pull_request'
     
     steps:
       - name: Checkout code
