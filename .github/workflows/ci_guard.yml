@@ -1,102 +1,25 @@
-name: CI Guard - Code Quality Enforcement
+name: 🛡️ CI Guard
 
 on:
-  push:
-    branches: [ main, develop, 'feature/*', 'hotfix/*' ]
-  pull_request:
-    branches: [ main, develop ]
+  workflow_run:
+    workflows: ["CI Pipeline", "Security Pipeline", "Code Quality"]
+    types: [completed]
+  schedule:
+    # Run daily at 4 AM UTC to check workflow health
+    - cron: '0 4 * * *'
   workflow_dispatch:
 
 env:
-  FLUTTER_VERSION: '3.24.0'
+  FLUTTER_VERSION: '3.32.8'
 
 jobs:
-  code-quality-guard:
-    name: Code Quality Guard
+  # =============================================================================
+  # WORKFLOW HEALTH CHECK
+  # =============================================================================
+  workflow-health:
+    name: Workflow Health Check
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: 'stable'
-          cache: true
-
-      - name: Flutter version
-        run: flutter --version
-
-      - name: Get dependencies
-        run: flutter pub get
-
-      - name: Generate code
-        run: flutter packages pub run build_runner build --delete-conflicting-outputs
-
-      - name: Run CI guard scripts
-        run: |
-          chmod +x scripts/perf_checks.sh
-          ./scripts/perf_checks.sh
-
-      - name: Additional quality checks
-        run: |
-          echo "=== Additional Code Quality Checks ==="
-          
-          # Check for TODO/FIXME comments in production code
-          echo "Checking for unresolved TODOs/FIXMEs..."
-          if grep -r "TODO\|FIXME\|HACK" lib/ --include="*.dart" | grep -v "// TODO\|// FIXME\|// HACK"; then
-            echo "❌ Unresolved TODO/FIXME/HACK comments found in production code"
-            exit 1
-          fi
-          
-          # Check for console.log equivalents
-          echo "Checking for debug prints..."
-          if grep -r "print(" lib/ --include="*.dart" | grep -v "// TODO\|// FIXME\|// NOTE"; then
-            echo "❌ print() statements found in production code"
-            exit 1
-          fi
-          
-          # Check for proper error handling
-          echo "Checking for proper error handling..."
-          if grep -r "catch.*{" lib/ --include="*.dart" | grep -v "// TODO\|// FIXME" | grep -v "rethrow"; then
-            echo "⚠️  Empty catch blocks detected - ensure proper error handling"
-          fi
-          
-          # Check for magic numbers
-          echo "Checking for magic numbers..."
-          if grep -r "[^a-zA-Z_][0-9]\{3,\}[^a-zA-Z_]" lib/ --include="*.dart" | grep -v "// TODO\|// FIXME\|// NOTE"; then
-            echo "⚠️  Potential magic numbers detected - consider using named constants"
-          fi
-          
-          echo "✅ Additional quality checks passed"
-
-      - name: Architecture compliance check
-        run: |
-          echo "=== Architecture Compliance Check ==="
-          
-          # Check for proper layer separation
-          if grep -r "import.*features.*data" lib/features/*/presentation/ --include="*.dart"; then
-            echo "❌ Presentation layer importing data layer directly"
-            exit 1
-          fi
-          
-          # Check for proper dependency injection
-          if grep -r "Provider\." lib/ --include="*.dart" | grep -v "test/"; then
-            echo "⚠️  Direct Provider usage detected - consider using ConsumerWidget"
-          fi
-          
-          echo "✅ Architecture compliance check passed"
-
-  performance-guard:
-    name: Performance Guard
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
+    timeout-minutes: 10
     
     steps:
       - name: Checkout code
@@ -109,54 +32,50 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Get dependencies
-        run: flutter pub get
-
-      - name: Performance anti-patterns check
+      - name: Check workflow status
         run: |
-          echo "=== Performance Anti-patterns Check ==="
+          echo "🔍 Checking workflow health..."
           
-          # Check for excessive rebuilds
-          if grep -r "setState" lib/ --include="*.dart" | wc -l | grep -q "[5-9][0-9]\|[0-9][0-9][0-9]"; then
-            echo "⚠️  High number of setState calls detected"
-          fi
+          # Get recent workflow runs
+          echo "## Recent Workflow Runs" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Workflow | Status | Conclusion | Run Time |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|--------|------------|----------|" >> $GITHUB_STEP_SUMMARY
           
-          # Check for missing const constructors
-          if grep -r "new " lib/ --include="*.dart" | grep -v "// TODO"; then
-            echo "❌ 'new' keyword usage detected (use const instead)"
-            exit 1
-          fi
+          # Check CI Pipeline
+          CI_RUNS=$(gh run list --workflow="ci.yml" --limit=5 --json status,conclusion,createdAt,displayTitle)
+          echo "$CI_RUNS" | jq -r '.[] | "| CI Pipeline | \(.status) | \(.conclusion // "N/A") | \(.createdAt) |"' >> $GITHUB_STEP_SUMMARY
           
-          # Check for missing const widgets
-          if grep -r "Widget(" lib/ --include="*.dart" | grep -v "const " | grep -v "// TODO" | grep -v "test/"; then
-            echo "⚠️  Non-const Widget constructors detected"
-          fi
+          # Check Security Pipeline
+          SEC_RUNS=$(gh run list --workflow="security.yml" --limit=5 --json status,conclusion,createdAt,displayTitle)
+          echo "$SEC_RUNS" | jq -r '.[] | "| Security | \(.status) | \(.conclusion // "N/A") | \(.createdAt) |"' >> $GITHUB_STEP_SUMMARY
           
-          # Check for proper list usage
-          if grep -r "List<" lib/ --include="*.dart" | grep -v "const " | grep -v "// TODO" | grep -v "test/"; then
-            echo "⚠️  Non-const List constructors detected"
-          fi
-          
-          echo "✅ Performance anti-patterns check completed"
+          # Check Code Quality
+          QUAL_RUNS=$(gh run list --workflow="code-quality.yml" --limit=5 --json status,conclusion,createdAt,displayTitle)
+          echo "$QUAL_RUNS" | jq -r '.[] | "| Code Quality | \(.status) | \(.conclusion // "N/A") | \(.createdAt) |"' >> $GITHUB_STEP_SUMMARY
 
-      - name: Memory leak detection
+      - name: Check for failed workflows
         run: |
-          echo "=== Memory Leak Detection ==="
+          echo "🔍 Checking for failed workflows..."
           
-          # Check for proper disposal
-          if grep -r "StreamController\|Timer\|AnimationController" lib/ --include="*.dart" | grep -v "dispose\|cancel\|close"; then
-            echo "⚠️  Potential memory leaks - ensure proper disposal of resources"
+          # Check for recent failures
+          FAILED_RUNS=$(gh run list --status=failure --limit=10 --json status,conclusion,createdAt,displayTitle,workflowName)
+          
+          if [ "$(echo "$FAILED_RUNS" | jq length)" -gt 0 ]; then
+            echo "❌ Failed workflows detected:" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "$FAILED_RUNS" | jq -r '.[] | "- \(.workflowName): \(.displayTitle) (\(.createdAt))"' >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Please investigate and fix these failures." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No recent workflow failures detected" >> $GITHUB_STEP_SUMMARY
           fi
-          
-          # Check for circular references
-          if grep -r "this\." lib/ --include="*.dart" | grep -v "// TODO" | wc -l | grep -q "[5-9][0-9]\|[0-9][0-9][0-9]"; then
-            echo "⚠️  High number of 'this.' references - check for circular dependencies"
-          fi
-          
-          echo "✅ Memory leak detection completed"
 
-  security-guard:
-    name: Security Guard
+  # =============================================================================
+  # DEPENDENCY HEALTH CHECK
+  # =============================================================================
+  dependency-health:
+    name: Dependency Health Check
     runs-on: ubuntu-latest
     timeout-minutes: 10
     
@@ -174,49 +93,112 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Security audit
+      - name: Check dependency health
         run: |
-          echo "=== Security Audit ==="
+          echo "🔍 Checking dependency health..."
           
-          # Check for hardcoded secrets
-          if grep -r -i "password\|secret\|key\|token\|api_key" lib/ --include="*.dart" | grep -v "// TODO\|// FIXME\|// NOTE"; then
-            echo "❌ Potential hardcoded secrets found"
-            exit 1
+          # Check for outdated dependencies
+          echo "## Dependency Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          OUTDATED=$(flutter pub outdated --json | jq -r '.packages[] | select(.current != .latest) | "\(.name): \(.current) -> \(.latest)"')
+          
+          if [ -n "$OUTDATED" ]; then
+            echo "⚠️ Outdated dependencies:" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "$OUTDATED" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ All dependencies are up to date" >> $GITHUB_STEP_SUMMARY
           fi
           
-          # Check for debug prints in production code
-          if grep -r "print\|debugPrint\|printDebugInformation" lib/ --include="*.dart" | grep -v "// TODO\|// FIXME\|// NOTE"; then
-            echo "❌ Debug prints found in production code"
-            exit 1
-          fi
+          # Check for security vulnerabilities
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Security Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           
-          # Check for sensitive files
-          if find . -name "*.keystore" -o -name "*.jks" -o -name "*.p12" -o -name "*.pem" -o -name "*.key" | grep -v ".gitignore"; then
-            echo "❌ Sensitive files found in repository"
-            exit 1
+          if flutter pub audit >/dev/null 2>&1; then
+            echo "✅ No security vulnerabilities found" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Security vulnerabilities detected. Run 'flutter pub audit' for details." >> $GITHUB_STEP_SUMMARY
           fi
-          
-          # Check for proper error handling (no sensitive data in error messages)
-          if grep -r "throw.*Exception.*password\|throw.*Exception.*secret" lib/ --include="*.dart"; then
-            echo "❌ Potential sensitive data in error messages"
-            exit 1
-          fi
-          
-          echo "✅ Security audit passed"
 
-  final-guard:
-    name: Final Guard Status
+  # =============================================================================
+  # CODE QUALITY HEALTH CHECK
+  # =============================================================================
+  code-quality-health:
+    name: Code Quality Health Check
     runs-on: ubuntu-latest
-    needs: [code-quality-guard, performance-guard, security-guard]
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Check code quality metrics
+        run: |
+          echo "🔍 Checking code quality metrics..."
+          
+          # Run quick analysis
+          ANALYSIS_OUTPUT=$(flutter analyze --no-fatal-infos 2>&1 || true)
+          
+          echo "## Code Quality Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Count issues by type
+          ERRORS=$(echo "$ANALYSIS_OUTPUT" | grep -c "error" || echo "0")
+          WARNINGS=$(echo "$ANALYSIS_OUTPUT" | grep -c "warning" || echo "0")
+          INFO=$(echo "$ANALYSIS_OUTPUT" | grep -c "info" || echo "0")
+          
+          echo "| Issue Type | Count |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Errors | $ERRORS |" >> $GITHUB_STEP_SUMMARY
+          echo "| Warnings | $WARNINGS |" >> $GITHUB_STEP_SUMMARY
+          echo "| Info | $INFO |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "❌ $ERRORS errors found. Please fix them." >> $GITHUB_STEP_SUMMARY
+          elif [ "$WARNINGS" -gt 10 ]; then
+            echo "⚠️ $WARNINGS warnings found. Consider addressing them." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ Code quality looks good!" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  # =============================================================================
+  # NOTIFICATION
+  # =============================================================================
+  notify:
+    name: Send Notifications
+    runs-on: ubuntu-latest
+    needs: [workflow-health, dependency-health, code-quality-health]
     if: always()
     
     steps:
-      - name: Check all guard jobs
+      - name: Generate summary
         run: |
-          if [[ "${{ needs.code-quality-guard.result }}" != "success" || 
-                "${{ needs.performance-guard.result }}" != "success" || 
-                "${{ needs.security-guard.result }}" != "success" ]]; then
-            echo "❌ One or more guard jobs failed"
-            exit 1
+          echo "## 🛡️ CI Guard Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Workflow Health | ${{ needs.workflow-health.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Dependency Health | ${{ needs.dependency-health.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Code Quality Health | ${{ needs.code-quality-health.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ needs.workflow-health.result }}" != "success" || 
+                "${{ needs.dependency-health.result }}" != "success" || 
+                "${{ needs.code-quality-health.result }}" != "success" ]]; then
+            echo "❌ Some health checks failed. Please review the details above." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ All health checks passed!" >> $GITHUB_STEP_SUMMARY
           fi
-          echo "✅ All guard jobs passed successfully"

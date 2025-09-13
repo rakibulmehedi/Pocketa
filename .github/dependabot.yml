@@ -9,7 +9,7 @@ updates:
       day: "monday"
       time: "09:00"
       timezone: "UTC"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 15
     reviewers:
       - "rakibulislammehedi"
     assignees:
@@ -20,6 +20,45 @@ updates:
     labels:
       - "dependencies"
       - "flutter"
+      - "automated"
+    groups:
+      # Group minor and patch updates together
+      flutter-minor-patch:
+        patterns:
+          - "flutter*"
+          - "dart*"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group UI/UX dependencies
+      ui-dependencies:
+        patterns:
+          - "*material*"
+          - "*cupertino*"
+          - "*widget*"
+          - "*theme*"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group state management dependencies
+      state-management:
+        patterns:
+          - "*riverpod*"
+          - "*provider*"
+          - "*bloc*"
+          - "*cubit*"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group testing dependencies
+      testing:
+        patterns:
+          - "*test*"
+          - "*mock*"
+          - "*fake*"
+        update-types:
+          - "minor"
+          - "patch"
     ignore:
       # Ignore major version updates for critical dependencies
       - dependency-name: "flutter"
@@ -28,6 +67,13 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "hive"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "path_provider"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "shared_preferences"
+        update-types: ["version-update:semver-major"]
+      # Ignore specific versions that cause issues
+      - dependency-name: "file_picker"
+        versions: ["6.0.0", "6.0.1"]
 
   # GitHub Actions
   - package-ecosystem: "github-actions"

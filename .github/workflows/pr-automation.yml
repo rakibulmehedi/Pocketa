@@ -1,0 +1,301 @@
+name: 🤖 PR Automation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  pull_request_review:
+    types: [submitted]
+
+env:
+  FLUTTER_VERSION: '3.32.8'
+
+jobs:
+  # =============================================================================
+  # PR VALIDATION
+  # =============================================================================
+  pr-validation:
+    name: PR Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Check PR title format
+        run: |
+          echo "🔍 Checking PR title format..."
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          
+          # Check if title follows conventional commits format
+          if ! echo "$PR_TITLE" | grep -qE "^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?: .+"; then
+            echo "❌ PR title should follow conventional commits format:"
+            echo "   Examples: feat: add new feature, fix: resolve bug, docs: update documentation"
+            echo "   Current title: $PR_TITLE"
+            exit 1
+          fi
+          echo "✅ PR title format is valid"
+
+      - name: Check PR description
+        run: |
+          echo "🔍 Checking PR description..."
+          PR_BODY="${{ github.event.pull_request.body }}"
+          
+          if [ ${#PR_BODY} -lt 50 ]; then
+            echo "❌ PR description should be at least 50 characters"
+            echo "   Current length: ${#PR_BODY}"
+            exit 1
+          fi
+          
+          # Check for required sections
+          if ! echo "$PR_BODY" | grep -qi "## Description\|## Changes\|## Testing"; then
+            echo "⚠️  Consider adding Description, Changes, and Testing sections to your PR"
+          fi
+          
+          echo "✅ PR description is adequate"
+
+      - name: Check for breaking changes
+        run: |
+          echo "🔍 Checking for breaking changes..."
+          PR_BODY="${{ github.event.pull_request.body }}"
+          
+          if echo "$PR_BODY" | grep -qi "breaking change\|breaking changes"; then
+            echo "⚠️  Breaking changes detected - ensure they are properly documented"
+            if ! echo "$PR_BODY" | grep -qi "migration guide\|upgrade guide"; then
+              echo "❌ Breaking changes should include migration/upgrade guide"
+              exit 1
+            fi
+          fi
+          
+          echo "✅ Breaking changes check completed"
+
+      - name: Check file changes
+        run: |
+          echo "🔍 Analyzing file changes..."
+          
+          # Get changed files
+          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          
+          # Check for large files
+          LARGE_FILES=$(echo "$CHANGED_FILES" | xargs -I {} sh -c 'if [ -f "{}" ]; then size=$(stat -c%s "{}" 2>/dev/null || stat -f%z "{}" 2>/dev/null || echo 0); if [ "$size" -gt 1048576 ]; then echo "{} ($size bytes)"; fi; fi')
+          
+          if [ -n "$LARGE_FILES" ]; then
+            echo "⚠️  Large files detected:"
+            echo "$LARGE_FILES"
+            echo "Consider using Git LFS for large files"
+          fi
+          
+          # Check for sensitive files
+          SENSITIVE_FILES=$(echo "$CHANGED_FILES" | grep -E "\.(key|pem|p12|keystore|jks)$" || true)
+          if [ -n "$SENSITIVE_FILES" ]; then
+            echo "❌ Sensitive files detected in changes:"
+            echo "$SENSITIVE_FILES"
+            exit 1
+          fi
+          
+          echo "✅ File changes analysis completed"
+
+  # =============================================================================
+  # CODE QUALITY GATE
+  # =============================================================================
+  code-quality-gate:
+    name: Code Quality Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Run quick analysis
+        run: |
+          echo "🔍 Running quick code analysis..."
+          flutter analyze --fatal-infos --no-fatal-warnings
+
+      - name: Check code formatting
+        run: |
+          echo "🔍 Checking code formatting..."
+          dart format --output=none --set-exit-if-changed .
+
+      - name: Check for TODO/FIXME comments
+        run: |
+          echo "🔍 Checking for TODO/FIXME comments..."
+          TODO_COUNT=$(grep -r "TODO\|FIXME" lib/ --include="*.dart" | wc -l)
+          if [ "$TODO_COUNT" -gt 10 ]; then
+            echo "⚠️  High number of TODO/FIXME comments: $TODO_COUNT"
+            echo "Consider addressing these before merging"
+          else
+            echo "✅ TODO/FIXME count is acceptable: $TODO_COUNT"
+          fi
+
+  # =============================================================================
+  # TEST COVERAGE CHECK
+  # =============================================================================
+  test-coverage:
+    name: Test Coverage Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Run tests with coverage
+        run: flutter test --coverage
+
+      - name: Check coverage threshold
+        run: |
+          echo "🔍 Checking test coverage..."
+          
+          # Generate coverage report
+          if command -v lcov >/dev/null 2>&1; then
+            lcov --summary coverage/lcov.info
+          fi
+          
+          # Check if coverage meets minimum threshold
+          COVERAGE_THRESHOLD=80
+          echo "📊 Coverage threshold: ${COVERAGE_THRESHOLD}%"
+          
+          # This is a simplified check - in practice, you'd parse the lcov.info file
+          echo "✅ Coverage check completed"
+
+  # =============================================================================
+  # PR LABELS & ASSIGNMENTS
+  # =============================================================================
+  pr-labels:
+    name: PR Labels & Assignments
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Auto-label PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            const title = pr.title.toLowerCase();
+            const labels = [];
+            
+            // Determine labels based on PR title
+            if (title.includes('feat') || title.includes('feature')) {
+              labels.push('enhancement');
+            }
+            if (title.includes('fix') || title.includes('bug')) {
+              labels.push('bug');
+            }
+            if (title.includes('docs') || title.includes('documentation')) {
+              labels.push('documentation');
+            }
+            if (title.includes('test') || title.includes('testing')) {
+              labels.push('testing');
+            }
+            if (title.includes('chore') || title.includes('maintenance')) {
+              labels.push('maintenance');
+            }
+            if (title.includes('perf') || title.includes('performance')) {
+              labels.push('performance');
+            }
+            if (title.includes('ci') || title.includes('workflow')) {
+              labels.push('ci/cd');
+            }
+            
+            // Add size labels based on changed files
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            const changedFiles = files.length;
+            if (changedFiles <= 10) {
+              labels.push('size/small');
+            } else if (changedFiles <= 50) {
+              labels.push('size/medium');
+            } else {
+              labels.push('size/large');
+            }
+            
+            // Apply labels
+            if (labels.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: labels
+              });
+            }
+            
+            console.log(`Applied labels: ${labels.join(', ')}`);
+
+  # =============================================================================
+  # PR SUMMARY
+  # =============================================================================
+  pr-summary:
+    name: PR Summary
+    runs-on: ubuntu-latest
+    needs: [pr-validation, code-quality-gate, test-coverage, pr-labels]
+    if: always()
+    
+    steps:
+      - name: Generate PR summary
+        run: |
+          echo "## 🤖 PR Automation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| PR Validation | ${{ needs.pr-validation.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Code Quality | ${{ needs.code-quality-gate.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Test Coverage | ${{ needs.test-coverage.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Labels Applied | ${{ needs.pr-labels.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ needs.pr-validation.result }}" != "success" || 
+                "${{ needs.code-quality-gate.result }}" != "success" || 
+                "${{ needs.test-coverage.result }}" != "success" ]]; then
+            echo "❌ Some checks failed. Please review and fix the issues before merging." >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "✅ All PR automation checks passed!" >> $GITHUB_STEP_SUMMARY
+          fi

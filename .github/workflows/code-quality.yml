@@ -1,0 +1,328 @@
+name: 🔍 Code Quality & Standards
+
+on:
+  push:
+    branches: [ main, develop, 'feature/*', 'feat/*', 'fix/*' ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run code quality checks daily at 3 AM UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+env:
+  FLUTTER_VERSION: '3.32.8'
+
+jobs:
+  # =============================================================================
+  # STATIC ANALYSIS
+  # =============================================================================
+  static-analysis:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Run Flutter analyze
+        run: |
+          echo "🔍 Running Flutter analyze..."
+          flutter analyze --fatal-infos --no-fatal-warnings
+
+      - name: Check code formatting
+        run: |
+          echo "🔍 Checking code formatting..."
+          dart format --output=none --set-exit-if-changed .
+
+      - name: Run custom linting rules
+        run: |
+          echo "🔍 Running custom linting rules..."
+          
+          # Check for missing const constructors
+          echo "Checking for missing const constructors..."
+          if grep -r "Widget(" lib/ --include="*.dart" | grep -v "const " | grep -v "// TODO" | head -5; then
+            echo "⚠️  Found widgets without const constructors (showing first 5)"
+          fi
+          
+          # Check for unused imports
+          echo "Checking for unused imports..."
+          dart analyze --fatal-infos | grep "unused_import" || echo "✅ No unused imports found"
+          
+          # Check for missing documentation
+          echo "Checking for missing documentation..."
+          PUBLIC_CLASSES=$(grep -r "class " lib/ --include="*.dart" | grep -v "//" | grep -v "private" | wc -l)
+          DOCUMENTED_CLASSES=$(grep -r "/// " lib/ --include="*.dart" | wc -l)
+          echo "📊 Public classes: $PUBLIC_CLASSES, Documented: $DOCUMENTED_CLASSES"
+
+  # =============================================================================
+  # COMPLEXITY ANALYSIS
+  # =============================================================================
+  complexity-analysis:
+    name: Complexity Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze code complexity
+        run: |
+          echo "🔍 Analyzing code complexity..."
+          
+          # Check for long methods (>50 lines)
+          echo "Checking for long methods..."
+          LONG_METHODS=$(find lib/ -name "*.dart" -exec awk 'BEGIN{lines=0; in_method=0} /^[[:space:]]*[a-zA-Z_][a-zA-Z0-9_]*[[:space:]]*\([^)]*\)[[:space:]]*{/{in_method=1; lines=0} in_method && /^[[:space:]]*}/ {if(lines>50) print FILENAME":"NR-1":"lines" lines"; in_method=0; lines=0} in_method{lines++}' {} \; | head -10)
+          if [ -n "$LONG_METHODS" ]; then
+            echo "⚠️  Long methods detected (showing first 10):"
+            echo "$LONG_METHODS"
+          else
+            echo "✅ No excessively long methods found"
+          fi
+          
+          # Check for deep nesting
+          echo "Checking for deep nesting..."
+          DEEP_NESTING=$(find lib/ -name "*.dart" -exec awk 'BEGIN{max_depth=0; current_depth=0} /{/{current_depth++} /}/{current_depth--} current_depth>max_depth{max_depth=current_depth} END{if(max_depth>5) print FILENAME":"max_depth" levels"}' {} \; | head -5)
+          if [ -n "$DEEP_NESTING" ]; then
+            echo "⚠️  Deep nesting detected (showing first 5):"
+            echo "$DEEP_NESTING"
+          else
+            echo "✅ No excessive nesting found"
+          fi
+          
+          # Check for large classes
+          echo "Checking for large classes..."
+          LARGE_CLASSES=$(find lib/ -name "*.dart" -exec awk 'BEGIN{in_class=0; lines=0} /^class /{in_class=1; lines=0} in_class && /^}/ {if(lines>200) print FILENAME":"lines" lines"; in_class=0; lines=0} in_class{lines++}' {} \; | head -5)
+          if [ -n "$LARGE_CLASSES" ]; then
+            echo "⚠️  Large classes detected (showing first 5):"
+            echo "$LARGE_CLASSES"
+          else
+            echo "✅ No excessively large classes found"
+          fi
+
+  # =============================================================================
+  # DEPENDENCY ANALYSIS
+  # =============================================================================
+  dependency-analysis:
+    name: Dependency Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze dependencies
+        run: |
+          echo "🔍 Analyzing dependencies..."
+          
+          # Check for unused dependencies
+          echo "Checking for unused dependencies..."
+          UNUSED_DEPS=$(dart pub deps --json | jq -r '.packages[] | select(.kind == "direct") | .name' | while read dep; do
+            if ! grep -r "import.*package:$dep" lib/ --include="*.dart" >/dev/null 2>&1; then
+              echo "$dep"
+            fi
+          done)
+          
+          if [ -n "$UNUSED_DEPS" ]; then
+            echo "⚠️  Potentially unused dependencies:"
+            echo "$UNUSED_DEPS"
+          else
+            echo "✅ No unused dependencies found"
+          fi
+          
+          # Check for outdated dependencies
+          echo "Checking for outdated dependencies..."
+          flutter pub outdated || echo "Some dependencies may be outdated"
+          
+          # Check for dependency conflicts
+          echo "Checking for dependency conflicts..."
+          CONFLICTS=$(dart pub deps --json | jq -r '.packages[] | select(.kind == "direct") | .name' | while read dep; do
+            VERSIONS=$(dart pub deps --json | jq -r ".packages[] | select(.name == \"$dep\") | .version" | sort -u | wc -l)
+            if [ "$VERSIONS" -gt 1 ]; then
+              echo "$dep"
+            fi
+          done)
+          
+          if [ -n "$CONFLICTS" ]; then
+            echo "⚠️  Dependency conflicts detected:"
+            echo "$CONFLICTS"
+          else
+            echo "✅ No dependency conflicts found"
+          fi
+
+  # =============================================================================
+  # PERFORMANCE ANALYSIS
+  # =============================================================================
+  performance-analysis:
+    name: Performance Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze performance patterns
+        run: |
+          echo "🔍 Analyzing performance patterns..."
+          
+          # Check for performance anti-patterns
+          echo "Checking for performance anti-patterns..."
+          
+          # Check for excessive setState calls
+          SETSTATE_COUNT=$(grep -r "setState" lib/ --include="*.dart" | wc -l)
+          echo "📊 setState calls: $SETSTATE_COUNT"
+          if [ "$SETSTATE_COUNT" -gt 50 ]; then
+            echo "⚠️  High number of setState calls detected"
+          fi
+          
+          # Check for missing const constructors
+          NON_CONST_WIDGETS=$(grep -r "Widget(" lib/ --include="*.dart" | grep -v "const " | grep -v "// TODO" | wc -l)
+          echo "📊 Non-const widgets: $NON_CONST_WIDGETS"
+          if [ "$NON_CONST_WIDGETS" -gt 20 ]; then
+            echo "⚠️  High number of non-const widgets detected"
+          fi
+          
+          # Check for heavy operations in build methods
+          HEAVY_BUILD=$(grep -r "build.*{" lib/ --include="*.dart" -A 20 | grep -E "(for.*in|while|if.*for)" | wc -l)
+          echo "📊 Heavy operations in build methods: $HEAVY_BUILD"
+          if [ "$HEAVY_BUILD" -gt 10 ]; then
+            echo "⚠️  Heavy operations detected in build methods"
+          fi
+          
+          # Check for missing keys
+          MISSING_KEYS=$(grep -r "ListView\|GridView\|Column\|Row" lib/ --include="*.dart" | grep -v "key:" | wc -l)
+          echo "📊 Widgets without keys: $MISSING_KEYS"
+          if [ "$MISSING_KEYS" -gt 15 ]; then
+            echo "⚠️  Many widgets without keys detected"
+          fi
+
+  # =============================================================================
+  # DOCUMENTATION ANALYSIS
+  # =============================================================================
+  documentation-analysis:
+    name: Documentation Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze documentation
+        run: |
+          echo "🔍 Analyzing documentation..."
+          
+          # Count public classes and methods
+          PUBLIC_CLASSES=$(grep -r "class " lib/ --include="*.dart" | grep -v "//" | grep -v "private" | wc -l)
+          DOCUMENTED_CLASSES=$(grep -r "/// " lib/ --include="*.dart" | wc -l)
+          
+          echo "📊 Public classes: $PUBLIC_CLASSES"
+          echo "📊 Documented classes: $DOCUMENTED_CLASSES"
+          
+          if [ "$PUBLIC_CLASSES" -gt 0 ]; then
+            DOC_COVERAGE=$((DOCUMENTED_CLASSES * 100 / PUBLIC_CLASSES))
+            echo "📊 Documentation coverage: $DOC_COVERAGE%"
+            
+            if [ "$DOC_COVERAGE" -lt 50 ]; then
+              echo "⚠️  Low documentation coverage"
+            else
+              echo "✅ Good documentation coverage"
+            fi
+          fi
+          
+          # Check for README files
+          if [ ! -f "README.md" ]; then
+            echo "❌ No README.md found"
+          else
+            README_SIZE=$(wc -c < README.md)
+            echo "📊 README size: $README_SIZE bytes"
+            if [ "$README_SIZE" -lt 1000 ]; then
+              echo "⚠️  README.md is quite short"
+            fi
+          fi
+
+  # =============================================================================
+  # QUALITY SUMMARY
+  # =============================================================================
+  quality-summary:
+    name: Quality Summary
+    runs-on: ubuntu-latest
+    needs: [static-analysis, complexity-analysis, dependency-analysis, performance-analysis, documentation-analysis]
+    if: always()
+    
+    steps:
+      - name: Generate quality summary
+        run: |
+          echo "## 🔍 Code Quality Analysis Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Analysis Type | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Static Analysis | ${{ needs.static-analysis.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Complexity Analysis | ${{ needs.complexity-analysis.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Dependency Analysis | ${{ needs.dependency-analysis.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Performance Analysis | ${{ needs.performance-analysis.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Documentation Analysis | ${{ needs.documentation-analysis.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ needs.static-analysis.result }}" != "success" ]]; then
+            echo "❌ Static analysis failed. Please fix the issues before proceeding." >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "✅ Code quality analysis completed successfully!" >> $GITHUB_STEP_SUMMARY
+          fi

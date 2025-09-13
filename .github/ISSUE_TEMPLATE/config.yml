@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📚 Documentation
+    url: https://github.com/MehedisGits/Pocketa/wiki
+    about: Check our documentation for answers to common questions
+  - name: 💬 Discussions
+    url: https://github.com/MehedisGits/Pocketa/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: 🐛 Bug Reports
+    url: https://github.com/MehedisGits/Pocketa/issues/new?template=bug_report.yml
+    about: Report a bug or unexpected behavior
+  - name: ✨ Feature Requests
+    url: https://github.com/MehedisGits/Pocketa/issues/new?template=feature_request.yml
+    about: Suggest a new feature or improvement
