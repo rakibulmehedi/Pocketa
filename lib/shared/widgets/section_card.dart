@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:pocketa/core/design_system/design_system.dart';
 
 class SectionCard extends StatelessWidget {
   final String? title;
   final String? subtitle;
   final Widget? trailing; // optional action button beside title
   final List<Widget> children;
-  final EdgeInsetsGeometry padding;
-  final EdgeInsetsGeometry margin;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
   final Color? backgroundColor;
   final bool showDivider;
   final bool elevated;
@@ -17,8 +18,8 @@ class SectionCard extends StatelessWidget {
     this.subtitle,
     this.trailing,
     required this.children,
-    this.padding = const EdgeInsets.all(16),
-    this.margin = const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+    this.padding,
+    this.margin,
     this.backgroundColor,
     this.showDivider = true,
     this.elevated = true,
@@ -26,42 +27,17 @@ class SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 250),
+      duration: DesignTokens.animationNormal,
       curve: Curves.easeOutCubic,
-      margin: margin,
-      padding: padding,
-      decoration: BoxDecoration(
-        // glassy gradient background
-        gradient: LinearGradient(
-          colors: [
-            (backgroundColor ?? theme.colorScheme.surface).withValues(
-              alpha: 0.98,
-            ),
-            (backgroundColor ?? theme.colorScheme.surface).withValues(
-              alpha: 0.92,
-            ),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: elevated
-            ? [
-                BoxShadow(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.06),
-                  blurRadius: 16,
-                  offset: const Offset(0, 6),
-                ),
-              ]
-            : [],
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.12),
-          width: 1,
-        ),
+      margin: margin ?? EdgeInsets.symmetric(
+        vertical: DesignTokens.spaceM,
+        horizontal: DesignTokens.spaceXs,
       ),
+      padding: padding ?? DesignTokens.getCardPadding(context),
+      decoration: elevated 
+          ? ComponentTokens.elevatedCardDecoration(context)
+          : ComponentTokens.cardDecoration(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -76,29 +52,28 @@ class SectionCard extends StatelessWidget {
                       children: [
                         Text(
                           title!,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: theme.colorScheme.onSurface,
+                          style: TypographyTokens.titleLarge(context).copyWith(
+                            fontWeight: DesignTokens.fontWeightBold,
+                            color: ColorTokens.textPrimary(context),
                           ),
                         ),
                         if (subtitle != null) ...[
-                          const SizedBox(height: 4),
+                          SizedBox(height: DesignTokens.spaceXs),
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
+                            padding: DesignTokens.getResponsivePadding(
+                              context,
+                              horizontal: DesignTokens.spaceS,
+                              vertical: DesignTokens.spaceXs,
                             ),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.primary.withValues(
-                                alpha: 0.08,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
+                              color: ColorTokens.primaryLight(context),
+                              borderRadius: BorderRadius.circular(DesignTokens.radiusM),
                             ),
                             child: Text(
                               subtitle!,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.primary,
-                                fontWeight: FontWeight.w500,
+                              style: TypographyTokens.bodySmall(context).copyWith(
+                                color: ColorTokens.primary(context),
+                                fontWeight: DesignTokens.fontWeightMedium,
                               ),
                             ),
                           ),
@@ -111,14 +86,14 @@ class SectionCard extends StatelessWidget {
             ),
             if (showDivider)
               Container(
-                margin: const EdgeInsets.symmetric(vertical: 12),
+                margin: EdgeInsets.symmetric(vertical: DesignTokens.spaceM),
                 height: 1,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      theme.colorScheme.primary.withValues(alpha: 0.25),
-                      theme.dividerColor.withValues(alpha: 0.15),
+                      ColorTokens.primaryMedium(context),
+                      ColorTokens.borderSubtle(context),
                     ],
                   ),
                 ),

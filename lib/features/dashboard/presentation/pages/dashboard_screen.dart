@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/core/analytics/analytics_service.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
+import 'package:pocketa/core/design_system/design_system.dart';
 import 'package:pocketa/features/transaction/presentation/pages/pages.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 
@@ -125,23 +126,30 @@ class _DashboardBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final device = context.device;
-    final layout = context.layout;
     
     return CustomScrollView(
       slivers: [
         SliverAppBar(
-          expandedHeight: device == DeviceSize.phone ? 120.ic(context) : 150.ic(context),
+          expandedHeight: DesignTokens.getResponsiveSpacing(
+            context,
+            phone: 120,
+            tablet: 140,
+            desktop: 160,
+          ),
           flexibleSpace: FlexibleSpaceBar(
             title: Text(
               l10n.dashboard,
-              style: TextStyle(
-                fontSize: device == DeviceSize.phone 
-                  ? 24.sp(context) 
-                  : device == DeviceSize.tablet 
-                    ? 28.sp(context) 
-                    : 32.sp(context),
-                fontWeight: FontWeight.bold,
+              style: TypographyTokens.responsive(
+                context,
+                phone: TypographyTokens.headlineLarge(context).copyWith(
+                  fontWeight: DesignTokens.fontWeightBold,
+                ),
+                tablet: TypographyTokens.displaySmall(context).copyWith(
+                  fontWeight: DesignTokens.fontWeightBold,
+                ),
+                desktop: TypographyTokens.displayMedium(context).copyWith(
+                  fontWeight: DesignTokens.fontWeightBold,
+                ),
               ),
             ),
             background: Container(
@@ -150,8 +158,8 @@ class _DashboardBody extends ConsumerWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                    Theme.of(context).primaryColor.withValues(alpha: 0.05),
+                    ColorTokens.primaryLight(context),
+                    ColorTokens.primarySubtle(context),
                   ],
                 ),
               ),
@@ -165,74 +173,86 @@ class _DashboardBody extends ConsumerWidget {
               // Welcome message
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.all(device == DeviceSize.phone ? layout.spaceL : layout.spaceXL),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(layout.radiusL),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
+                padding: DesignTokens.getCardPadding(context),
+                decoration: ComponentTokens.elevatedCardDecoration(context),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Welcome to Pocketa!',
-                      style: TextStyle(
-                        fontSize: device == DeviceSize.phone 
-                          ? 20.sp(context) 
-                          : device == DeviceSize.tablet 
-                            ? 24.sp(context) 
-                            : 28.sp(context),
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface,
+                      style: TypographyTokens.responsive(
+                        context,
+                        phone: TypographyTokens.headlineMedium(context).copyWith(
+                          fontWeight: DesignTokens.fontWeightBold,
+                          color: ColorTokens.textPrimary(context),
+                        ),
+                        tablet: TypographyTokens.headlineLarge(context).copyWith(
+                          fontWeight: DesignTokens.fontWeightBold,
+                          color: ColorTokens.textPrimary(context),
+                        ),
+                        desktop: TypographyTokens.displaySmall(context).copyWith(
+                          fontWeight: DesignTokens.fontWeightBold,
+                          color: ColorTokens.textPrimary(context),
+                        ),
                       ),
                     ),
-                    SizedBox(height: layout.spaceM),
+                    SizedBox(height: DesignTokens.spaceM),
                     Text(
                       'Track your expenses, manage your budget, and achieve your financial goals.',
-                      style: TextStyle(
-                        fontSize: device == DeviceSize.phone 
-                          ? 16.sp(context) 
-                          : 18.sp(context),
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                        height: 1.5,
+                      style: TypographyTokens.responsive(
+                        context,
+                        phone: TypographyTokens.bodyLarge(context).copyWith(
+                          color: ColorTokens.textSecondary(context),
+                          height: DesignTokens.lineHeightRelaxed,
+                        ),
+                        tablet: TypographyTokens.bodyLarge(context).copyWith(
+                          color: ColorTokens.textSecondary(context),
+                          height: DesignTokens.lineHeightRelaxed,
+                        ),
+                        desktop: TypographyTokens.bodyLarge(context).copyWith(
+                          color: ColorTokens.textSecondary(context),
+                          height: DesignTokens.lineHeightRelaxed,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: layout.spaceXL),
+              SizedBox(height: DesignTokens.spaceXl),
               // Quick actions
               Text(
                 'Quick Actions',
-                style: TextStyle(
-                  fontSize: device == DeviceSize.phone 
-                    ? 18.sp(context) 
-                    : 20.sp(context),
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).colorScheme.onSurface,
+                style: TypographyTokens.responsive(
+                  context,
+                  phone: TypographyTokens.headlineSmall(context).copyWith(
+                    fontWeight: DesignTokens.fontWeightSemiBold,
+                    color: ColorTokens.textPrimary(context),
+                  ),
+                  tablet: TypographyTokens.headlineMedium(context).copyWith(
+                    fontWeight: DesignTokens.fontWeightSemiBold,
+                    color: ColorTokens.textPrimary(context),
+                  ),
+                  desktop: TypographyTokens.headlineMedium(context).copyWith(
+                    fontWeight: DesignTokens.fontWeightSemiBold,
+                    color: ColorTokens.textPrimary(context),
+                  ),
                 ),
               ),
-              SizedBox(height: layout.spaceM),
+              SizedBox(height: DesignTokens.spaceM),
               // Action buttons grid
-              device == DeviceSize.desktop 
+              DesignTokens.isDesktop(context)
                 ? Row(
                     children: [
                       Expanded(child: _buildActionCard(context, 'Add Transaction', Icons.add, () {})),
-                      SizedBox(width: layout.spaceM),
+                      SizedBox(width: DesignTokens.spaceM),
                       Expanded(child: _buildActionCard(context, 'View Reports', Icons.analytics, () {})),
-                      SizedBox(width: layout.spaceM),
+                      SizedBox(width: DesignTokens.spaceM),
                       Expanded(child: _buildActionCard(context, 'Manage Budget', Icons.account_balance_wallet, () {})),
                     ],
                   )
                 : Wrap(
-                    spacing: layout.spaceM,
-                    runSpacing: layout.spaceM,
+                    spacing: DesignTokens.spaceM,
+                    runSpacing: DesignTokens.spaceM,
                     children: [
                       _buildActionCard(context, 'Add Transaction', Icons.add, () {}),
                       _buildActionCard(context, 'View Reports', Icons.analytics, () {}),
@@ -247,37 +267,46 @@ class _DashboardBody extends ConsumerWidget {
   }
 
   Widget _buildActionCard(BuildContext context, String title, IconData icon, VoidCallback onTap) {
-    final device = context.device;
-    final layout = context.layout;
-    
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: device == DeviceSize.desktop ? null : 150.ic(context),
-        padding: EdgeInsets.all(device == DeviceSize.phone ? layout.spaceL : layout.spaceXL),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(layout.radiusM),
-          border: Border.all(
-            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
-          ),
+        width: DesignTokens.isDesktop(context) ? null : DesignTokens.getResponsiveSpacing(
+          context,
+          phone: 150,
+          tablet: 180,
+          desktop: 200,
         ),
+        padding: DesignTokens.getCardPadding(context),
+        decoration: ComponentTokens.cardDecoration(context),
         child: Column(
           children: [
             Icon(
               icon,
-              size: device == DeviceSize.phone ? 32.ic(context) : 40.ic(context),
-              color: Theme.of(context).primaryColor,
+              size: DesignTokens.getResponsiveIconSize(
+                context,
+                phone: DesignTokens.icon2xl,
+                tablet: DesignTokens.icon2xl + 8,
+                desktop: DesignTokens.icon2xl + 16,
+              ),
+              color: ColorTokens.primary(context),
             ),
-            SizedBox(height: layout.spaceM),
+            SizedBox(height: DesignTokens.spaceM),
             Text(
               title,
-              style: TextStyle(
-                fontSize: device == DeviceSize.phone 
-                  ? 14.sp(context) 
-                  : 16.sp(context),
-                fontWeight: FontWeight.w500,
-                color: Theme.of(context).colorScheme.onSurface,
+              style: TypographyTokens.responsive(
+                context,
+                phone: TypographyTokens.titleSmall(context).copyWith(
+                  fontWeight: DesignTokens.fontWeightMedium,
+                  color: ColorTokens.textPrimary(context),
+                ),
+                tablet: TypographyTokens.titleMedium(context).copyWith(
+                  fontWeight: DesignTokens.fontWeightMedium,
+                  color: ColorTokens.textPrimary(context),
+                ),
+                desktop: TypographyTokens.titleMedium(context).copyWith(
+                  fontWeight: DesignTokens.fontWeightMedium,
+                  color: ColorTokens.textPrimary(context),
+                ),
               ),
               textAlign: TextAlign.center,
             ),
