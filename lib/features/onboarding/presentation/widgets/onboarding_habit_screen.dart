@@ -163,9 +163,10 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                 child: Column(
                   children: [
                     // Enhanced Header with Animations
-                    AnimatedBuilder(
-                      animation: Listenable.merge([_headerFadeAnimation, _headerSlideAnimation]),
-                      builder: (context, child) {
+                    RepaintBoundary(
+                      child: AnimatedBuilder(
+                        animation: Listenable.merge([_headerFadeAnimation, _headerSlideAnimation]),
+                        builder: (context, child) {
                         return Transform.translate(
                           offset: Offset(0, _headerSlideAnimation.value.dy * 50),
                           child: Opacity(
@@ -187,20 +188,20 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                                             end: Alignment.bottomRight,
                                             colors: [
                                               Theme.of(context).primaryColor,
-                                              Theme.of(context).primaryColor.withOpacity(0.8),
-                                              Theme.of(context).primaryColor.withOpacity(0.6),
+                                              Theme.of(context).primaryColor.withValues(alpha: 0.8),
+                                              Theme.of(context).primaryColor.withValues(alpha: 0.6),
                                             ],
                                             stops: const [0.0, 0.6, 1.0],
                                           ),
                                           borderRadius: BorderRadius.circular(layout.responsiveSize(phone: 60, tablet: 70, desktop: 80)),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Theme.of(context).primaryColor.withOpacity(0.4),
+                                              color: Theme.of(context).primaryColor.withValues(alpha: 0.4),
                                               blurRadius: 30,
                                               offset: const Offset(0, 12),
                                             ),
                                             BoxShadow(
-                                              color: Theme.of(context).primaryColor.withOpacity(0.2),
+                                              color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
                                               blurRadius: 60,
                                               offset: const Offset(0, 24),
                                             ),
@@ -238,19 +239,19 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                                                 phone: TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w600,
-                                                  color: AppColors.buttonTextPrimary(context).withOpacity(0.9),
+                                                  color: AppColors.buttonTextPrimary(context).withValues(alpha:0.9),
                                                   letterSpacing: 2.0,
                                                 ),
                                                 tablet: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w600,
-                                                  color: AppColors.buttonTextPrimary(context).withOpacity(0.9),
+                                                  color: AppColors.buttonTextPrimary(context).withValues(alpha:0.9),
                                                   letterSpacing: 2.0,
                                                 ),
                                                 desktop: TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.w600,
-                                                  color: AppColors.buttonTextPrimary(context).withOpacity(0.9),
+                                                  color: AppColors.buttonTextPrimary(context).withValues(alpha:0.9),
                                                   letterSpacing: 2.0,
                                                 ),
                                               ),
@@ -292,17 +293,17 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                                   l10n.onb_habit_helper,
                                   style: layout.responsiveTextStyle(
                                     phone: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha:0.7),
                                       height: 1.4,
                                       letterSpacing: 0.2,
                                     ) ?? const TextStyle(),
                                     tablet: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha:0.7),
                                       height: 1.4,
                                       letterSpacing: 0.2,
                                     ) ?? const TextStyle(),
                                     desktop: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha:0.7),
                                       height: 1.4,
                                       letterSpacing: 0.2,
                                     ) ?? const TextStyle(),
@@ -315,15 +316,17 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                         );
                       },
                     ),
+                    ),
                     
                     SizedBox(height: layout.space2xl),
                     
                     Column(
                       children: [
                         // Enhanced Streak visualization
-                        AnimatedBuilder(
-                          animation: Listenable.merge([_progressAnimation, _streakAnimation]),
-                          builder: (context, child) {
+                        RepaintBoundary(
+                          child: AnimatedBuilder(
+                            animation: Listenable.merge([_progressAnimation, _streakAnimation]),
+                            builder: (context, child) {
                             return Container(
                               width: double.infinity,
                               height: 40.ic(context),
@@ -333,17 +336,17 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                                   end: Alignment.bottomRight,
                                   colors: [
                                     Theme.of(context).colorScheme.surface,
-                                    Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                                    Theme.of(context).colorScheme.surface.withValues(alpha:0.8),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(layout.radiusL),
                                 border: Border.all(
-                                  color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                                  color: Theme.of(context).colorScheme.outline.withValues(alpha:0.2),
                                   width: 1.5,
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
+                                    color: Theme.of(context).colorScheme.shadow.withValues(alpha:0.1),
                                     blurRadius: 8,
                                     offset: const Offset(0, 4),
                                   ),
@@ -362,7 +365,7 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                                         end: Alignment.bottomRight,
                                         colors: [
                                           Theme.of(context).colorScheme.surface,
-                                          Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                                          Theme.of(context).colorScheme.surface.withValues(alpha:0.8),
                                         ],
                                       ),
                                     ),
@@ -379,14 +382,14 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                                         end: Alignment.bottomRight,
                                         colors: [
                                           Theme.of(context).primaryColor,
-                                          Theme.of(context).primaryColor.withOpacity(0.8),
-                                          Theme.of(context).primaryColor.withOpacity(0.6),
+                                          Theme.of(context).primaryColor.withValues(alpha:0.8),
+                                          Theme.of(context).primaryColor.withValues(alpha:0.6),
                                         ],
                                         stops: const [0.0, 0.6, 1.0],
                                       ),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Theme.of(context).primaryColor.withOpacity(0.3),
+                                          color: Theme.of(context).primaryColor.withValues(alpha:0.3),
                                           blurRadius: 8,
                                           offset: const Offset(0, 2),
                                         ),
@@ -411,7 +414,7 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                                                 end: Alignment.bottomRight,
                                                 colors: [
                                                   AppColors.cardBackground(context),
-                                                  AppColors.cardBackground(context).withOpacity(0.8),
+                                                  AppColors.cardBackground(context).withValues(alpha:0.8),
                                                 ],
                                               ),
                                               borderRadius: BorderRadius.circular(8.ic(context)),
@@ -453,13 +456,15 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                             );
                           },
                         ),
+                        ),
                         
                         SizedBox(height: layout.spaceXl),
                         
                         // Enhanced Daily reminder toggle
-                        AnimatedBuilder(
-                          animation: _progressAnimation,
-                          builder: (context, child) {
+                        RepaintBoundary(
+                          child: AnimatedBuilder(
+                            animation: _progressAnimation,
+                            builder: (context, child) {
                             return Transform.translate(
                               offset: Offset(0, (1 - _progressAnimation.value) * 20),
                               child: Opacity(
@@ -472,17 +477,17 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                                       end: Alignment.bottomRight,
                                       colors: [
                                         Theme.of(context).colorScheme.surface,
-                                        Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                                        Theme.of(context).colorScheme.surface.withValues(alpha:0.8),
                                       ],
                                     ),
                                     borderRadius: BorderRadius.circular(layout.radiusL),
                                     border: Border.all(
-                                      color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                                      color: Theme.of(context).colorScheme.outline.withValues(alpha:0.2),
                                       width: 1.5,
                                     ),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
+                                        color: Theme.of(context).colorScheme.shadow.withValues(alpha:0.1),
                                         blurRadius: 12,
                                         offset: const Offset(0, 4),
                                       ),
@@ -497,8 +502,8 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                                             begin: Alignment.topLeft,
                                             end: Alignment.bottomRight,
                                             colors: [
-                                              Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                                              Theme.of(context).colorScheme.primary.withOpacity(0.05),
+                                              Theme.of(context).colorScheme.primary.withValues(alpha:0.1),
+                                              Theme.of(context).colorScheme.primary.withValues(alpha:0.05),
                                             ],
                                           ),
                                           borderRadius: BorderRadius.circular(layout.radiusM),
@@ -535,7 +540,7 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                                             Text(
                                               'Get daily reminders to track your expenses',
                                               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha:0.6),
                                                 letterSpacing: 0.1,
                                               ),
                                             ),
@@ -549,9 +554,9 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                                           widget.notifier.updateDailyReminder(value);
                                         },
                                         activeColor: Theme.of(context).primaryColor,
-                                        activeTrackColor: Theme.of(context).primaryColor.withOpacity(0.3),
+                                        activeTrackColor: Theme.of(context).primaryColor.withValues(alpha:0.3),
                                         inactiveThumbColor: Theme.of(context).colorScheme.outline,
-                                        inactiveTrackColor: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                                        inactiveTrackColor: Theme.of(context).colorScheme.outline.withValues(alpha:0.2),
                                       ),
                                     ],
                                   ),
@@ -559,6 +564,7 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                               ),
                             );
                           },
+                        ),
                         ),
                       ],
                     ),
