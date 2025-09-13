@@ -157,9 +157,10 @@ class _ConfettiWidgetState extends State<ConfettiWidget>
       children: [
         widget.child,
         if (widget.isActive)
-          AnimatedBuilder(
-            animation: Listenable.merge([_animation, _scaleAnimation, _rotationAnimation]),
-            builder: (context, child) {
+          RepaintBoundary(
+            child: AnimatedBuilder(
+              animation: Listenable.merge([_animation, _scaleAnimation, _rotationAnimation]),
+              builder: (context, child) {
               return CustomPaint(
                 painter: ConfettiPainter(
                   particles: _particles,
@@ -170,6 +171,7 @@ class _ConfettiWidgetState extends State<ConfettiWidget>
                 size: Size.infinite,
               );
             },
+          ),
           ),
       ],
     );
