@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:pocketa/shared/services/snackbar_service.dart';
-import 'package:pocketa/shared/widgets/custom_snackbar.dart';
 import 'package:pocketa/shared/widgets/widgets.dart';
 
 class OnboardingWelcomeScreen extends ConsumerStatefulWidget {

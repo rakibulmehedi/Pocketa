@@ -213,7 +213,7 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
     if (mounted) {
       _fadeController.reverse();
       await Future.delayed(const Duration(milliseconds: 500));
-      if (context.mounted) {
+      if (mounted) {
         Navigator.of(context).pop();
       }
     }
@@ -236,11 +236,11 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
           children: [
             // Confetti background
             ConfettiWidget(
-              child: Container(),
               isActive: _confettiController.isAnimating,
               particleCount: 150,
               enableHapticFeedback: true,
-              enableSound: false, // Sound is handled by CelebrationService
+              enableSound: false,
+              child: Container(), // Sound is handled by CelebrationService
             ),
             // Message overlay
             Center(

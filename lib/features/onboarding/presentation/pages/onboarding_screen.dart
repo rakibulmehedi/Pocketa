@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
@@ -519,7 +518,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
     VoidCallback? onPrimaryPressed;
     String? secondaryButtonText;
     VoidCallback? onSecondaryPressed;
-    bool showBackButton = currentStep != OnboardingStep.welcome;
+    final bool showBackButton = currentStep != OnboardingStep.welcome;
     
     switch (currentStep) {
       case OnboardingStep.welcome:
