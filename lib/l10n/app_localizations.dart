@@ -2125,6 +2125,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Database error occurred'**
   String get errorDatabase;
+
+  /// Progress step indicator for onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String onb_progress_step(int current, int total);
+
+  /// Progress percentage for onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'{percentage}%'**
+  String onb_progress_percentage(int percentage);
+
+  /// Error message when onboarding completion fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to complete onboarding: {error}'**
+  String onb_error_completion(String error);
 }
 
 class _AppLocalizationsDelegate

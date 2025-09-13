@@ -480,5 +480,21 @@
   "errorGeneric": "একটি অপ্রত্যাশিত ত্রুটি ঘটেছে",
   "retry": "পুনরায় চেষ্টা করুন",
   "clearAllTags": "সব ট্যাগ মুছুন",
-  "addTag": "ট্যাগ যোগ করুন"
+  "addTag": "ট্যাগ যোগ করুন",
+
+  "onb_progress_step": "ধাপ {current} এর {total}",
+  "@onb_progress_step": {
+    "description": "অনবোর্ডিংয়ের জন্য প্রোগ্রেস স্টেপ ইন্ডিকেটর",
+    "placeholders": { "current": {"type": "int"}, "total": {"type": "int"} }
+  },
+  "onb_progress_percentage": "{percentage}%",
+  "@onb_progress_percentage": {
+    "description": "অনবোর্ডিংয়ের জন্য প্রোগ্রেস পার্সেন্টেজ",
+    "placeholders": { "percentage": {"type": "int"} }
+  },
+  "onb_error_completion": "অনবোর্ডিং সম্পূর্ণ করতে ব্যর্থ: {error}",
+  "@onb_error_completion": {
+    "description": "অনবোর্ডিং সম্পূর্ণ করতে ব্যর্থ হলে ত্রুটি বার্তা",
+    "placeholders": { "error": {"type": "String"} }
+  }
 }

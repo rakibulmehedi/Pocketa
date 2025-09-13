@@ -1105,4 +1105,19 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get errorDatabase => 'ডেটাবেস ত্রুটি ঘটেছে';
+
+  @override
+  String onb_progress_step(int current, int total) {
+    return 'ধাপ $current এর $total';
+  }
+
+  @override
+  String onb_progress_percentage(int percentage) {
+    return '$percentage%';
+  }
+
+  @override
+  String onb_error_completion(String error) {
+    return 'অনবোর্ডিং সম্পূর্ণ করতে ব্যর্থ: $error';
+  }
 }

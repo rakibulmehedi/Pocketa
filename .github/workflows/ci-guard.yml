@@ -1,0 +1,192 @@
+name: Pocketa CI Guard
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  push:
+    branches: [ main, develop ]
+
+env:
+  FLUTTER_VERSION: '3.24.0'
+
+jobs:
+  # =============================================================================
+  # CODE QUALITY ENFORCEMENT
+  # =============================================================================
+  code-guard:
+    name: Code Quality Guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Check for TODO/FIXME comments
+        run: |
+          echo "=== TODO/FIXME Check ==="
+          TODO_COUNT=$(grep -r "TODO\|FIXME" lib/ --include="*.dart" | wc -l)
+          if [ "$TODO_COUNT" -gt 10 ]; then
+            echo "⚠️  High number of TODO/FIXME comments found: $TODO_COUNT"
+            echo "Consider addressing these before merging to main branch"
+          else
+            echo "✅ Acceptable number of TODO/FIXME comments: $TODO_COUNT"
+          fi
+
+      - name: Check for debug prints
+        run: |
+          echo "=== Debug Print Check ==="
+          DEBUG_PRINTS=$(grep -r "print\|debugPrint" lib/ --include="*.dart" | grep -v "// TODO\|// FIXME\|// Debug" | wc -l)
+          if [ "$DEBUG_PRINTS" -gt 0 ]; then
+            echo "❌ Debug prints found in production code: $DEBUG_PRINTS"
+            grep -r "print\|debugPrint" lib/ --include="*.dart" | grep -v "// TODO\|// FIXME\|// Debug"
+            exit 1
+          else
+            echo "✅ No debug prints found in production code"
+          fi
+
+      - name: Check for performance anti-patterns
+        run: |
+          echo "=== Performance Anti-patterns Check ==="
+          
+          # Check for excessive setState calls
+          SETSTATE_COUNT=$(grep -r "setState" lib/ --include="*.dart" | wc -l)
+          if [ "$SETSTATE_COUNT" -gt 5 ]; then
+            echo "⚠️  High number of setState calls detected: $SETSTATE_COUNT"
+            echo "Consider using Riverpod providers instead"
+          fi
+          
+          # Check for missing const constructors
+          NEW_KEYWORD_COUNT=$(grep -r "new " lib/ --include="*.dart" | grep -v "// TODO" | wc -l)
+          if [ "$NEW_KEYWORD_COUNT" -gt 0 ]; then
+            echo "⚠️  'new' keyword usage detected: $NEW_KEYWORD_COUNT"
+            echo "Consider using const constructors instead"
+          fi
+          
+          # Check for missing const widgets
+          NON_CONST_WIDGETS=$(grep -r "Widget(" lib/ --include="*.dart" | grep -v "const " | grep -v "// TODO" | wc -l)
+          if [ "$NON_CONST_WIDGETS" -gt 10 ]; then
+            echo "⚠️  High number of non-const Widget constructors: $NON_CONST_WIDGETS"
+            echo "Consider adding const keywords for better performance"
+          fi
+
+      - name: Check for memory leaks
+        run: |
+          echo "=== Memory Leak Prevention Check ==="
+          
+          # Check for proper disposal in controllers
+          if grep -r "Timer\|StreamController\|AnimationController" lib/ --include="*.dart" | grep -v "dispose\|cancel\|close" | grep -v "// TODO"; then
+            echo "⚠️  Controllers without proper disposal found"
+            echo "Ensure all controllers are properly disposed"
+          else
+            echo "✅ Proper disposal patterns found"
+          fi
+          
+          # Check for proper Stream subscription handling
+          if grep -r "listen(" lib/ --include="*.dart" | grep -v "cancel\|dispose" | grep -v "// TODO"; then
+            echo "⚠️  Stream subscriptions without proper cancellation found"
+            echo "Ensure all subscriptions are properly cancelled"
+          else
+            echo "✅ Proper Stream subscription handling found"
+          fi
+
+      - name: Check for security patterns
+        run: |
+          echo "=== Security Pattern Check ==="
+          
+          # Check for proper input validation
+          if grep -r "TextFormField\|TextEditingController" lib/ --include="*.dart" | grep -v "validator\|inputFormatters" | grep -v "// TODO"; then
+            echo "⚠️  Text inputs without proper validation found"
+            echo "Ensure all user inputs are properly validated"
+          else
+            echo "✅ Proper input validation patterns found"
+          fi
+          
+          # Check for proper error handling
+          if grep -r "catch\|onError" lib/ --include="*.dart" | wc -l | grep -q "[1-9]"; then
+            echo "✅ Proper error handling found"
+          else
+            echo "⚠️  Consider adding proper error handling"
+          fi
+
+      - name: Check for financial app best practices
+        run: |
+          echo "=== Financial App Best Practices Check ==="
+          
+          # Check for proper decimal handling
+          if grep -r "double\|float" lib/features/transaction/ --include="*.dart" | grep -v "// TODO\|// FIXME"; then
+            echo "⚠️  Using double/float for financial calculations"
+            echo "Consider using proper decimal types for financial precision"
+          else
+            echo "✅ Proper financial calculation types found"
+          fi
+          
+          # Check for proper error handling in financial operations
+          if grep -r "try.*catch\|Result\|Either" lib/features/transaction/ --include="*.dart" | wc -l | grep -q "[1-9]"; then
+            echo "✅ Proper error handling in financial operations found"
+          else
+            echo "⚠️  Ensure proper error handling in financial operations"
+          fi
+          
+          # Check for proper state management
+          if grep -r "Consumer\|Provider\|StateNotifier" lib/features/ --include="*.dart" | wc -l | grep -q "[5-9]"; then
+            echo "✅ Good Riverpod usage patterns found"
+          else
+            echo "⚠️  Consider using more Riverpod providers for state management"
+          fi
+
+      - name: Check for proper architecture compliance
+        run: |
+          echo "=== Architecture Compliance Check ==="
+          
+          # Check for proper layer separation
+          if grep -r "import.*features.*data" lib/features/ --include="*.dart" | grep -v "// TODO\|// FIXME"; then
+            echo "❌ Presentation layer importing data layer directly"
+            exit 1
+          fi
+          
+          # Check for proper dependency direction
+          if grep -r "import.*presentation" lib/core/ --include="*.dart" | grep -v "// TODO\|// FIXME"; then
+            echo "❌ Core layer importing presentation layer"
+            exit 1
+          fi
+          
+          # Check for proper use of entities
+          if ! find lib/features/ -name "*.dart" -exec grep -l "Entity" {} \; | grep -q "entity"; then
+            echo "⚠️  No entity classes found in features"
+            echo "Consider adding proper entity classes for domain models"
+          fi
+          
+          echo "✅ Architecture compliance check passed"
+
+  # =============================================================================
+  # FINAL GUARD STATUS
+  # =============================================================================
+  guard-success:
+    name: Guard Success
+    runs-on: ubuntu-latest
+    needs: code-guard
+    if: always()
+    
+    steps:
+      - name: Check guard results
+        run: |
+          if [[ "${{ needs.code-guard.result }}" != "success" ]]; then
+            echo "❌ Code quality guard failed"
+            echo "Please address the issues before merging"
+            exit 1
+          fi
+          echo "✅ Code quality guard passed"
+          echo "🎉 Code is ready for merge!"

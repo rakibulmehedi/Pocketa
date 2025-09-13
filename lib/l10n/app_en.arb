@@ -481,6 +481,22 @@
   "errorGeneric": "An unexpected error occurred",
   "retry": "Retry",
   "clearAllTags": "Clear all tags",
-  "addTag": "Add tag"
+  "addTag": "Add tag",
+
+  "onb_progress_step": "Step {current} of {total}",
+  "@onb_progress_step": {
+    "description": "Progress step indicator for onboarding",
+    "placeholders": { "current": {"type": "int"}, "total": {"type": "int"} }
+  },
+  "onb_progress_percentage": "{percentage}%",
+  "@onb_progress_percentage": {
+    "description": "Progress percentage for onboarding",
+    "placeholders": { "percentage": {"type": "int"} }
+  },
+  "onb_error_completion": "Failed to complete onboarding: {error}",
+  "@onb_error_completion": {
+    "description": "Error message when onboarding completion fails",
+    "placeholders": { "error": {"type": "String"} }
+  }
 
 }

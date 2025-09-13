@@ -1107,4 +1107,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorDatabase => 'Database error occurred';
+
+  @override
+  String onb_progress_step(int current, int total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String onb_progress_percentage(int percentage) {
+    return '$percentage%';
+  }
+
+  @override
+  String onb_error_completion(String error) {
+    return 'Failed to complete onboarding: $error';
+  }
 }
