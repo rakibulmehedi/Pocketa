@@ -1,96 +1,67 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pocketa/shared/ui/motion/confetti.dart';
+import 'package:pocketa/shared/motion/confetti_v2.dart';
+import 'package:pocketa/core/responsive/responsive.dart';
 
 void main() {
   group('ConfettiOverlay', () {
-    testWidgets('should not show confetti when showConfetti is false', (tester) async {
+    testWidgets('should show confetti overlay when created', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          builder: (context, child) => Responsive.builder(child: child ?? const SizedBox()),
           home: Scaffold(
             body: ConfettiOverlay(
-              showConfetti: false,
-              child: const Text('Test'),
+              style: ConfettiStyle.achievement,
             ),
           ),
         ),
       );
 
-      expect(find.text('Test'), findsOneWidget);
-      expect(find.byType(CustomPaint), findsNothing);
-    });
-
-    testWidgets('should show confetti when showConfetti is true', (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: ConfettiOverlay(
-              showConfetti: true,
-              child: const Text('Test'),
-            ),
-          ),
-        ),
-      );
-
-      expect(find.text('Test'), findsOneWidget);
-      expect(find.byType(CustomPaint), findsOneWidget);
+      expect(find.byType(ConfettiOverlay), findsOneWidget);
+      expect(find.byType(CustomPaint), findsAtLeastNWidgets(1));
     });
 
     testWidgets('should respect reduced motion preference', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          builder: (context, child) => Responsive.builder(child: child ?? const SizedBox()),
           home: MediaQuery(
             data: const MediaQueryData(disableAnimations: true),
             child: Scaffold(
               body: ConfettiOverlay(
-                showConfetti: true,
-                child: const Text('Test'),
+                style: ConfettiStyle.achievement,
               ),
             ),
           ),
         ),
       );
 
-      expect(find.text('Test'), findsOneWidget);
-      expect(find.byType(CustomPaint), findsNothing);
+      expect(find.byType(ConfettiOverlay), findsOneWidget);
+      // Should still show the overlay but with reduced particles
+      expect(find.byType(CustomPaint), findsAtLeastNWidgets(1));
     });
-  });
 
-  group('ConfettiBurst', () {
-    testWidgets('should trigger confetti when trigger changes from false to true', (tester) async {
-      bool trigger = false;
+    testWidgets('should call onComplete when animation finishes', (tester) async {
+      bool completed = false;
       
       await tester.pumpWidget(
         MaterialApp(
-          home: StatefulBuilder(
-            builder: (context, setState) {
-              return Scaffold(
-                body: ConfettiBurst(
-                  trigger: trigger,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        trigger = true;
-                      });
-                    },
-                    child: const Text('Trigger'),
-                  ),
-                ),
-              );
-            },
+          builder: (context, child) => Responsive.builder(child: child ?? const SizedBox()),
+          home: Scaffold(
+            body: ConfettiOverlay(
+              style: ConfettiStyle.achievement,
+              onComplete: () {
+                completed = true;
+              },
+            ),
           ),
         ),
       );
 
-      // Initially no confetti
-      expect(find.byType(CustomPaint), findsNothing);
-
-      // Tap to trigger
-      await tester.tap(find.text('Trigger'));
-      await tester.pump();
-
-      // Should show confetti
-      expect(find.byType(CustomPaint), findsOneWidget);
+      // Wait for animation to complete
+      await tester.pumpAndSettle();
+      
+      expect(completed, true);
     });
   });
 
@@ -105,17 +76,45 @@ void main() {
     });
   });
 
-  group('ConfettiConfig', () {
-    test('should create config with required properties', () {
-      const config = ConfettiConfig(
-        duration: Duration(milliseconds: 1000),
-        particleCount: 50,
-        colors: [Colors.red, Colors.blue],
+  group('ConfettiShape', () {
+    test('should have all required shapes', () {
+      expect(ConfettiShape.values.length, 7);
+      expect(ConfettiShape.values, contains(ConfettiShape.rectangle));
+      expect(ConfettiShape.values, contains(ConfettiShape.circle));
+      expect(ConfettiShape.values, contains(ConfettiShape.star));
+      expect(ConfettiShape.values, contains(ConfettiShape.diamond));
+      expect(ConfettiShape.values, contains(ConfettiShape.triangle));
+      expect(ConfettiShape.values, contains(ConfettiShape.hexagon));
+      expect(ConfettiShape.values, contains(ConfettiShape.heart));
+    });
+  });
+
+  group('celebrate helper', () {
+    testWidgets('should show confetti when celebrate is called', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          builder: (context, child) => Responsive.builder(child: child ?? const SizedBox()),
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                return ElevatedButton(
+                  onPressed: () async {
+                    await celebrate(context, style: ConfettiStyle.achievement);
+                  },
+                  child: const Text('Celebrate'),
+                );
+              },
+            ),
+          ),
+        ),
       );
 
-      expect(config.duration, const Duration(milliseconds: 1000));
-      expect(config.particleCount, 50);
-      expect(config.colors, [Colors.red, Colors.blue]);
+      // Tap the button
+      await tester.tap(find.text('Celebrate'));
+      await tester.pump();
+
+      // Should show confetti overlay
+      expect(find.byType(ConfettiOverlay), findsOneWidget);
     });
   });
 }

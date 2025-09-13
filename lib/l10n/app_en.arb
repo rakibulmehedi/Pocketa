@@ -417,6 +417,17 @@
     "description": "Metric showing social proof count",
     "placeholders": { "count": {} }
   },
+
+  "toast_celebration_done": "Celebration complete! 🎉",
+  "toast_onboarding_complete": "Welcome to Pocketa! 🎉",
+  "toast_first_transaction": "First transaction added! 💰",
+  "toast_budget_milestone": "Budget milestone reached! 🎯",
+  "toast_streak_complete": "{days} day streak! 🔥",
+  "@toast_streak_complete": {
+    "description": "Streak completion message with day count",
+    "placeholders": { "days": {} }
+  },
+  "toast_easter_egg": "Easter egg found! 🥚",
   "onb_premium_testimonial1": "\"Saved {amount} in 3 months.\"",
   "@onb_premium_testimonial1": {
     "description": "Short premium testimonial with saved amount",

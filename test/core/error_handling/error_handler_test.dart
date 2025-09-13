@@ -15,35 +15,38 @@ void main() {
           home: Scaffold(
             body: Builder(
               builder: (context) {
-                // Test cache failure
-                ErrorHandler.handleError(
-                  context,
-                  const CacheFailure('Cache error'),
-                );
-                
-                // Test database failure
-                ErrorHandler.handleError(
-                  context,
-                  const DatabaseFailure('Database error'),
-                );
-                
-                // Test network failure
-                ErrorHandler.handleError(
-                  context,
-                  const NetworkFailure('Network error'),
-                );
-                
-                // Test validation failure
-                ErrorHandler.handleError(
-                  context,
-                  const CacheFailure('Invalid input'),
-                );
-                
-                // Test unknown failure
-                ErrorHandler.handleError(
-                  context,
-                  const DatabaseFailure('Something went wrong'),
-                );
+                // Schedule error handling after build
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  // Test cache failure
+                  ErrorHandler.handleError(
+                    context,
+                    const CacheFailure('Cache error'),
+                  );
+                  
+                  // Test database failure
+                  ErrorHandler.handleError(
+                    context,
+                    const DatabaseFailure('Database error'),
+                  );
+                  
+                  // Test network failure
+                  ErrorHandler.handleError(
+                    context,
+                    const NetworkFailure('Network error'),
+                  );
+                  
+                  // Test validation failure
+                  ErrorHandler.handleError(
+                    context,
+                    const CacheFailure('Invalid input'),
+                  );
+                  
+                  // Test unknown failure
+                  ErrorHandler.handleError(
+                    context,
+                    const DatabaseFailure('Something went wrong'),
+                  );
+                });
                 
                 return const SizedBox();
               },
@@ -157,12 +160,18 @@ class _TestWidget extends StatefulWidget {
 
 class _TestWidgetState extends State<_TestWidget> with ErrorHandlingMixin {
   @override
+  void initState() {
+    super.initState();
+    // Test error handling after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      handleError(
+        const NetworkFailure('Network error'),
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Test error handling
-    handleError(
-      const NetworkFailure('Network error'),
-    );
-    
     return const SizedBox();
   }
 }

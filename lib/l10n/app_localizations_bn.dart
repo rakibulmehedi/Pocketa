@@ -951,6 +951,26 @@ class AppLocalizationsBn extends AppLocalizations {
   }
 
   @override
+  String get toast_celebration_done => 'Celebration complete! 🎉';
+
+  @override
+  String get toast_onboarding_complete => 'Welcome to Pocketa! 🎉';
+
+  @override
+  String get toast_first_transaction => 'First transaction added! 💰';
+
+  @override
+  String get toast_budget_milestone => 'Budget milestone reached! 🎯';
+
+  @override
+  String toast_streak_complete(Object days) {
+    return '$days day streak! 🔥';
+  }
+
+  @override
+  String get toast_easter_egg => 'Easter egg found! 🥚';
+
+  @override
   String onb_premium_testimonial1(Object amount) {
     return '\"৩ মাসে $amount সেভ করেছি।\"';
   }

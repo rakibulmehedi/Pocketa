@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
+import 'package:pocketa/core/design_system/design_system.dart';
 
 /// Custom button for positive actions, such as submitting a form or proceeding to the next step
 class PositiveButton extends StatelessWidget {
@@ -16,21 +17,27 @@ class PositiveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return ElevatedButton.icon(
       onPressed: onPressed,
       icon: Icon(icon ?? Icons.arrow_forward), // Default icon if none provided
       label: Text(
         label,
-        style: theme.textTheme.titleMedium?.copyWith(
-          color: theme.colorScheme.onPrimary,
-          fontWeight: FontWeight.bold,
+        style: TypographyTokens.buttonText(context).copyWith(
+          color: ColorTokens.buttonOnPrimary(context),
         ),
       ), // <- localized string
-      style: ElevatedButton.styleFrom(
-        minimumSize: const Size(200, 50),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-        backgroundColor: theme.colorScheme.primary,
+      style: ComponentTokens.primaryButton(context).copyWith(
+        minimumSize: WidgetStateProperty.all(
+          Size(
+            DesignTokens.getResponsiveSpacing(
+              context,
+              phone: 200,
+              tablet: 220,
+              desktop: 240,
+            ),
+            DesignTokens.getButtonHeight(context),
+          ),
+        ),
       ),
     );
   }
@@ -46,11 +53,23 @@ class NegativeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
-    return ElevatedButton.icon(
+    return OutlinedButton.icon(
       onPressed: onPressed,
       icon: Icon(icon ?? Icons.cancel),
       label: Text(label ?? t.errorsTitle), // <- localized string
-      style: ElevatedButton.styleFrom(minimumSize: const Size(180, 48)),
+      style: ComponentTokens.secondaryButton(context).copyWith(
+        minimumSize: WidgetStateProperty.all(
+          Size(
+            DesignTokens.getResponsiveSpacing(
+              context,
+              phone: 180,
+              tablet: 200,
+              desktop: 220,
+            ),
+            DesignTokens.getButtonHeight(context),
+          ),
+        ),
+      ),
     );
   }
 }

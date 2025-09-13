@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
+import 'package:pocketa/core/design_system/design_system.dart';
+import 'package:pocketa/shared/widgets/glass_container.dart';
 
 /// Consolidated UI utilities for consistent design implementation
 /// Reduces code duplication and provides reusable components
@@ -13,39 +14,18 @@ class AppUIUtils {
     VoidCallback? onTap,
     double? borderRadius,
   }) {
-    final theme = Theme.of(context);
-    final layout = context.layout;
-    final isDark = theme.brightness == Brightness.dark;
-    
-    final card = Container(
-      margin: margin ?? EdgeInsets.all(layout.spaceS),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            theme.colorScheme.surface.withValues(alpha: isDark ? 0.85 : 0.95),
-            theme.colorScheme.surface.withValues(alpha: isDark ? 0.75 : 0.90),
-          ],
+    final glassCard = GlassContainer(
+      padding: padding ?? DesignTokens.getCardPadding(context),
+      margin: margin ?? EdgeInsets.all(DesignTokens.spaceS),
+      borderRadius: BorderRadius.circular(
+        borderRadius ?? DesignTokens.getResponsiveRadius(
+          context,
+          phone: DesignTokens.radiusL,
+          tablet: DesignTokens.radiusL + 2,
+          desktop: DesignTokens.radiusL + 4,
         ),
-        borderRadius: BorderRadius.circular(borderRadius ?? layout.radiusL),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: isDark ? 0.20 : 0.12),
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withValues(alpha: isDark ? 0.30 : 0.20),
-            blurRadius: layout.responsiveSize(phone: 16, tablet: 20, desktop: 24),
-            offset: const Offset(0, 8),
-            spreadRadius: 1,
-          ),
-        ],
       ),
-      child: Padding(
-        padding: padding ?? EdgeInsets.all(layout.spaceL),
-        child: child,
-      ),
+      child: child,
     );
 
     if (onTap != null) {
@@ -53,13 +33,20 @@ class AppUIUtils {
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(borderRadius ?? layout.radiusL),
-          child: card,
+          borderRadius: BorderRadius.circular(
+            borderRadius ?? DesignTokens.getResponsiveRadius(
+              context,
+              phone: DesignTokens.radiusL,
+              tablet: DesignTokens.radiusL + 2,
+              desktop: DesignTokens.radiusL + 4,
+            ),
+          ),
+          child: glassCard,
         ),
       );
     }
 
-    return card;
+    return glassCard;
   }
 
   /// Create a premium button with consistent styling and micro-interactions
@@ -72,54 +59,46 @@ class AppUIUtils {
     IconData? icon,
     bool enabled = true,
   }) {
-    final theme = Theme.of(context);
-    final layout = context.layout;
-    
-    final buttonHeight = layout.responsiveSize(phone: 48, tablet: 52, desktop: 56);
-    final borderRadius = layout.responsiveSize(phone: 14, tablet: 16, desktop: 18);
-    final horizontalPadding = layout.responsiveSize(phone: 20, tablet: 24, desktop: 28);
-    final fontSize = layout.responsiveSize(phone: 15, tablet: 16, desktop: 18);
+    final buttonHeight = DesignTokens.getButtonHeight(context);
+    final borderRadius = DesignTokens.getResponsiveRadius(
+      context,
+      phone: DesignTokens.radiusS,
+      tablet: DesignTokens.radiusM,
+      desktop: DesignTokens.radiusM,
+    );
+    final horizontalPadding = DesignTokens.getResponsiveSpacing(
+      context,
+      phone: DesignTokens.spaceL,
+      tablet: DesignTokens.spaceXl,
+      desktop: DesignTokens.space2xl,
+    );
+    final fontSize = DesignTokens.getResponsiveFontSize(
+      context,
+      phone: DesignTokens.fontSizeM,
+      tablet: DesignTokens.fontSizeL,
+      desktop: DesignTokens.fontSizeL,
+    );
 
     return Container(
       height: buttonHeight,
       decoration: BoxDecoration(
         gradient: isPrimary && enabled
-            ? LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  theme.colorScheme.primary,
-                  theme.colorScheme.primary.withValues(alpha: 0.85),
-                ],
-              )
+            ? ColorTokens.primaryGradient(context)
             : null,
-        color: enabled ? null : theme.colorScheme.surfaceContainerHighest,
+        color: enabled ? null : ColorTokens.buttonDisabled(context),
         borderRadius: BorderRadius.circular(borderRadius),
         border: isPrimary && enabled
             ? Border.all(
-                color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                color: ColorTokens.primaryMedium(context),
                 width: 1,
               )
             : Border.all(
-                color: theme.colorScheme.outline.withValues(alpha: 0.15),
+                color: ColorTokens.borderSubtle(context),
                 width: 1.5,
               ),
         boxShadow: isPrimary && enabled
-            ? [
-                BoxShadow(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.4),
-                  blurRadius: layout.responsiveSize(phone: 16, tablet: 20, desktop: 24),
-                  offset: const Offset(0, 6),
-                  spreadRadius: 2,
-                ),
-              ]
-            : [
-                BoxShadow(
-                  color: theme.colorScheme.shadow.withValues(alpha: 0.08),
-                  blurRadius: layout.responsiveSize(phone: 8, tablet: 10, desktop: 12),
-                  offset: const Offset(0, 2),
-                ),
-              ],
+            ? DesignTokens.getShadowPrimary(context)
+            : DesignTokens.getShadowLight(context),
       ),
       child: Material(
         color: Colors.transparent,
@@ -127,11 +106,11 @@ class AppUIUtils {
           onTap: enabled ? onPressed : null,
           borderRadius: BorderRadius.circular(borderRadius),
           splashColor: enabled 
-              ? (isPrimary ? theme.colorScheme.onPrimary : theme.colorScheme.primary).withValues(alpha: 0.1)
-              : theme.colorScheme.onSurface.withValues(alpha: 0.05),
+              ? (isPrimary ? ColorTokens.buttonOnPrimary(context) : ColorTokens.primary(context)).withValues(alpha: 0.1)
+              : ColorTokens.textDisabled(context).withValues(alpha: 0.05),
           highlightColor: enabled 
-              ? (isPrimary ? theme.colorScheme.onPrimary : theme.colorScheme.primary).withValues(alpha: 0.05)
-              : theme.colorScheme.onSurface.withValues(alpha: 0.02),
+              ? (isPrimary ? ColorTokens.buttonOnPrimary(context) : ColorTokens.primary(context)).withValues(alpha: 0.05)
+              : ColorTokens.textDisabled(context).withValues(alpha: 0.02),
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Row(
@@ -139,32 +118,45 @@ class AppUIUtils {
               children: [
                 if (isLoading)
                   SizedBox(
-                    width: layout.responsiveSize(phone: 18, tablet: 20, desktop: 22),
-                    height: layout.responsiveSize(phone: 18, tablet: 20, desktop: 22),
+                    width: DesignTokens.getResponsiveIconSize(
+                      context,
+                      phone: DesignTokens.iconS,
+                      tablet: DesignTokens.iconM,
+                      desktop: DesignTokens.iconM + 2,
+                    ),
+                    height: DesignTokens.getResponsiveIconSize(
+                      context,
+                      phone: DesignTokens.iconS,
+                      tablet: DesignTokens.iconM,
+                      desktop: DesignTokens.iconM + 2,
+                    ),
                     child: CircularProgressIndicator(
                       strokeWidth: 2.5,
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        enabled ? (isPrimary ? theme.colorScheme.onPrimary : theme.colorScheme.primary) : theme.colorScheme.onSurface,
+                        enabled ? (isPrimary ? ColorTokens.buttonOnPrimary(context) : ColorTokens.primary(context)) : ColorTokens.textDisabled(context),
                       ),
                     ),
                   )
                 else if (icon != null)
                   Icon(
                     icon,
-                    color: enabled ? (isPrimary ? theme.colorScheme.onPrimary : theme.colorScheme.primary) : theme.colorScheme.onSurface,
-                    size: layout.responsiveSize(phone: 18, tablet: 20, desktop: 22),
+                    color: enabled ? (isPrimary ? ColorTokens.buttonOnPrimary(context) : ColorTokens.primary(context)) : ColorTokens.textDisabled(context),
+                    size: DesignTokens.getResponsiveIconSize(
+                      context,
+                      phone: DesignTokens.iconS,
+                      tablet: DesignTokens.iconM,
+                      desktop: DesignTokens.iconM + 2,
+                    ),
                   ),
                 
                 if (isLoading || icon != null)
-                  SizedBox(width: layout.spaceM),
+                  SizedBox(width: DesignTokens.spaceM),
                 
                 Text(
                   label,
-                  style: TextStyle(
+                  style: TypographyTokens.buttonText(context).copyWith(
                     fontSize: fontSize,
-                    fontWeight: FontWeight.w700,
-                    color: enabled ? (isPrimary ? theme.colorScheme.onPrimary : theme.colorScheme.primary) : theme.colorScheme.onSurface,
-                    letterSpacing: 0.3,
+                    color: enabled ? (isPrimary ? ColorTokens.buttonOnPrimary(context) : ColorTokens.primary(context)) : ColorTokens.textDisabled(context),
                   ),
                 ),
               ],
@@ -183,44 +175,36 @@ class AppUIUtils {
     bool isSelected = false,
     VoidCallback? onTap,
   }) {
-    final theme = Theme.of(context);
-    final layout = context.layout;
-    
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: layout.spaceL,
-        vertical: layout.spaceM,
+      padding: DesignTokens.getResponsivePadding(
+        context,
+        horizontal: DesignTokens.spaceL,
+        vertical: DesignTokens.spaceM,
       ),
-      decoration: BoxDecoration(
-        color: isSelected 
-            ? theme.colorScheme.primaryContainer
-            : theme.colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(layout.radiusS),
-        border: Border.all(
-          color: isSelected 
-              ? theme.colorScheme.primary.withValues(alpha: 0.3)
-              : theme.colorScheme.outline.withValues(alpha: 0.12),
-          width: 1,
-        ),
-      ),
+      decoration: ComponentTokens.chipDecoration(context, isSelected: isSelected),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             icon,
-            size: layout.iconM,
+            size: DesignTokens.getResponsiveIconSize(
+              context,
+              phone: DesignTokens.iconM,
+              tablet: DesignTokens.iconM + 2,
+              desktop: DesignTokens.iconM + 4,
+            ),
             color: isSelected 
-                ? theme.colorScheme.primary
-                : theme.colorScheme.onSurfaceVariant,
+                ? ColorTokens.primary(context)
+                : ColorTokens.iconSecondary(context),
           ),
-          SizedBox(width: layout.spaceS),
+          SizedBox(width: DesignTokens.spaceS),
           Text(
             label,
-            style: theme.textTheme.labelMedium?.copyWith(
+            style: TypographyTokens.labelMedium(context).copyWith(
               color: isSelected 
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.onSurfaceVariant,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  ? ColorTokens.primary(context)
+                  : ColorTokens.textSecondary(context),
+              fontWeight: isSelected ? DesignTokens.fontWeightSemiBold : DesignTokens.fontWeightMedium,
             ),
           ),
         ],
@@ -234,14 +218,13 @@ class AppUIUtils {
     required int currentStep,
     required int totalSteps,
   }) {
-    final theme = Theme.of(context);
-    final layout = context.layout;
     final progress = currentStep / (totalSteps - 1);
     
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: layout.spaceL,
-        vertical: layout.spaceM,
+      padding: DesignTokens.getResponsivePadding(
+        context,
+        horizontal: DesignTokens.spaceL,
+        vertical: DesignTokens.spaceM,
       ),
       child: Column(
         children: [
@@ -250,25 +233,25 @@ class AppUIUtils {
             children: [
               Text(
                 'Step $currentStep of $totalSteps',
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+                style: TypographyTokens.labelMedium(context).copyWith(
+                  color: ColorTokens.textSecondary(context),
                 ),
               ),
               Text(
                 '${(progress * 100).round()}%',
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.primary,
-                  fontWeight: FontWeight.w600,
+                style: TypographyTokens.labelMedium(context).copyWith(
+                  color: ColorTokens.primary(context),
+                  fontWeight: DesignTokens.fontWeightSemiBold,
                 ),
               ),
             ],
           ),
-          SizedBox(height: layout.spaceS),
+          SizedBox(height: DesignTokens.spaceS),
           LinearProgressIndicator(
             value: progress,
-            backgroundColor: theme.colorScheme.surfaceContainerHighest,
-            valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
-            borderRadius: BorderRadius.circular(layout.radiusS),
+            backgroundColor: ColorTokens.surfaceElevated(context),
+            valueColor: AlwaysStoppedAnimation<Color>(ColorTokens.primary(context)),
+            borderRadius: BorderRadius.circular(DesignTokens.radiusS),
             minHeight: 4,
           ),
         ],
@@ -282,56 +265,40 @@ class AppUIUtils {
     required int currentStep,
     required int totalSteps,
   }) {
-    final theme = Theme.of(context);
-    final layout = context.layout;
-    
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(totalSteps, (index) {
         final isActive = index == currentStep;
         return Container(
-          margin: EdgeInsets.symmetric(horizontal: layout.spaceS),
-          width: isActive ? 24 : 8,
-          height: 8,
+          margin: EdgeInsets.symmetric(horizontal: DesignTokens.spaceS),
+          width: isActive 
+              ? DesignTokens.getResponsiveSpacing(
+                  context,
+                  phone: 24,
+                  tablet: 28,
+                  desktop: 32,
+                )
+              : DesignTokens.getResponsiveSpacing(
+                  context,
+                  phone: 8,
+                  tablet: 10,
+                  desktop: 12,
+                ),
+          height: DesignTokens.getResponsiveSpacing(
+            context,
+            phone: 8,
+            tablet: 10,
+            desktop: 12,
+          ),
           decoration: BoxDecoration(
             color: isActive 
-                ? theme.colorScheme.primary
-                : theme.colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(4),
+                ? ColorTokens.primary(context)
+                : ColorTokens.surfaceElevated(context),
+            borderRadius: BorderRadius.circular(DesignTokens.radiusXs),
           ),
         );
       }),
     );
   }
 
-  /// Get responsive spacing based on context
-  static EdgeInsetsGeometry responsivePadding(BuildContext context, {
-    double? all,
-    double? horizontal,
-    double? vertical,
-    double? top,
-    double? bottom,
-    double? left,
-    double? right,
-  }) {
-    return EdgeInsets.only(
-      top: top ?? vertical ?? all ?? 0,
-      bottom: bottom ?? vertical ?? all ?? 0,
-      left: left ?? horizontal ?? all ?? 0,
-      right: right ?? horizontal ?? all ?? 0,
-    );
-  }
-
-  /// Get responsive text style based on context
-  static TextStyle responsiveTextStyle(BuildContext context, {
-    required TextStyle phone,
-    TextStyle? tablet,
-    TextStyle? desktop,
-  }) {
-    final layout = context.layout;
-    
-    if (layout.isDesktop && desktop != null) return desktop;
-    if (layout.isTablet && tablet != null) return tablet;
-    return phone;
-  }
 }

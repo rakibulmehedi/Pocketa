@@ -14,9 +14,9 @@ class AppMotion {
     Curve curve = Curves.fastOutSlowIn,
   }) {
     return FadeSlide(
-      child: child,
       delay: delay,
       duration: duration,
+      child: child,
     );
   }
 
@@ -29,9 +29,9 @@ class AppMotion {
     Curve curve = Curves.easeOut,
   }) {
     return ScaleTap(
-      child: child,
       onTap: onTap,
       duration: duration,
+      child: child,
     );
   }
 
@@ -188,10 +188,10 @@ class AppMotion {
     Duration duration = const Duration(milliseconds: 1500),
   }) {
     return Shimmer(
-      child: child,
       baseColor: baseColor,
       highlightColor: highlightColor,
       duration: duration,
+      child: child,
     );
   }
 

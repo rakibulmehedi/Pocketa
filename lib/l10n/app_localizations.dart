@@ -1832,6 +1832,42 @@ abstract class AppLocalizations {
   /// **'{count}+ people building money habits'**
   String onb_premium_metric_users(Object count);
 
+  /// No description provided for @toast_celebration_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Celebration complete! 🎉'**
+  String get toast_celebration_done;
+
+  /// No description provided for @toast_onboarding_complete.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Pocketa! 🎉'**
+  String get toast_onboarding_complete;
+
+  /// No description provided for @toast_first_transaction.
+  ///
+  /// In en, this message translates to:
+  /// **'First transaction added! 💰'**
+  String get toast_first_transaction;
+
+  /// No description provided for @toast_budget_milestone.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget milestone reached! 🎯'**
+  String get toast_budget_milestone;
+
+  /// Streak completion message with day count
+  ///
+  /// In en, this message translates to:
+  /// **'{days} day streak! 🔥'**
+  String toast_streak_complete(Object days);
+
+  /// No description provided for @toast_easter_egg.
+  ///
+  /// In en, this message translates to:
+  /// **'Easter egg found! 🥚'**
+  String get toast_easter_egg;
+
   /// Short premium testimonial with saved amount
   ///
   /// In en, this message translates to:

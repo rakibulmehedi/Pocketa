@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import 'package:pocketa/core/constants/default_categories.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
+import 'package:pocketa/core/design_system/design_system.dart';
 import 'package:pocketa/core/utils/transaction_utils.dart';
 import 'package:pocketa/features/categories/presentations/viewmodels/category_providers.dart';
 import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
@@ -31,8 +32,6 @@ class TransactionTile extends ConsumerWidget {
     }
 
     final t = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
     final L = context.layout;
 
     // Select exactly what we need (narrow rebuilds)
@@ -72,18 +71,21 @@ class TransactionTile extends ConsumerWidget {
     final isCompact = L.isMobile || L.isCompact;
     final isDesktop = L.isDesktop;
     
-    // Consistent sizing for better alignment
-    final leadingSize = L.responsiveSize(
+    // Consistent sizing for better alignment using design tokens
+    final leadingSize = DesignTokens.getResponsiveSpacing(
+      context,
       phone: 5.0,
       tablet: 6.0,
       desktop: 7.0,
     );
-    final iconSize = L.responsiveIconSize(
-      phone: 20,
-      tablet: 24,
-      desktop: 28,
+    final iconSize = DesignTokens.getResponsiveIconSize(
+      context,
+      phone: DesignTokens.iconM,
+      tablet: DesignTokens.iconL,
+      desktop: DesignTokens.iconL + 4,
     );
-    final containerSize = L.responsiveSize(
+    final containerSize = DesignTokens.getResponsiveSpacing(
+      context,
       phone: 4.5,
       tablet: 5.5,
       desktop: 6.5,
@@ -92,13 +94,34 @@ class TransactionTile extends ConsumerWidget {
     return ListTile(
       key: ValueKey(transaction!.id),
       dense: isCompact,
-      contentPadding: L.insetsSymmetric(
-        h: L.responsiveSize(phone: 1.5, tablet: 2, desktop: 3), 
-        v: L.responsiveSize(phone: 0.2, tablet: 0.3, desktop: 0.4),
+      contentPadding: DesignTokens.getResponsivePadding(
+        context,
+        horizontal: DesignTokens.getResponsiveSpacing(
+          context,
+          phone: 1.5,
+          tablet: 2,
+          desktop: 3,
+        ),
+        vertical: DesignTokens.getResponsiveSpacing(
+          context,
+          phone: 0.2,
+          tablet: 0.3,
+          desktop: 0.4,
+        ),
       ),
-      horizontalTitleGap: L.responsiveSize(phone: 1.2, tablet: 1.8, desktop: 2.2),
+      horizontalTitleGap: DesignTokens.getResponsiveSpacing(
+        context,
+        phone: 1.2,
+        tablet: 1.8,
+        desktop: 2.2,
+      ),
       minLeadingWidth: leadingSize,
-      minVerticalPadding: L.responsiveSize(phone: 6, tablet: 8, desktop: 10),
+      minVerticalPadding: DesignTokens.getResponsiveSpacing(
+        context,
+        phone: 6,
+        tablet: 8,
+        desktop: 10,
+      ),
       titleAlignment: ListTileTitleAlignment.top,
       leading: SizedBox.square(
         dimension: containerSize,
@@ -120,21 +143,19 @@ class TransactionTile extends ConsumerWidget {
         title,
         maxLines: isDesktop ? 2 : 1,
         overflow: TextOverflow.ellipsis,
-        style: L.responsiveTextStyle(
-          phone: (theme.textTheme.bodyLarge ?? const TextStyle()).copyWith(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            height: 1.2,
+        style: TypographyTokens.responsive(
+          context,
+          phone: TypographyTokens.bodyLarge(context).copyWith(
+            fontWeight: DesignTokens.fontWeightSemiBold,
+            height: DesignTokens.lineHeightTight,
           ),
-          tablet: (theme.textTheme.bodyLarge ?? const TextStyle()).copyWith(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            height: 1.2,
+          tablet: TypographyTokens.bodyLarge(context).copyWith(
+            fontWeight: DesignTokens.fontWeightSemiBold,
+            height: DesignTokens.lineHeightTight,
           ),
-          desktop: (theme.textTheme.bodyLarge ?? const TextStyle()).copyWith(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            height: 1.3,
+          desktop: TypographyTokens.bodyLarge(context).copyWith(
+            fontWeight: DesignTokens.fontWeightSemiBold,
+            height: DesignTokens.lineHeightNormal,
           ),
         ),
       ),
@@ -147,39 +168,55 @@ class TransactionTile extends ConsumerWidget {
               transaction!.note!,
               maxLines: isDesktop ? 2 : 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: L.responsiveTextSize(
-                  phone: 13,
-                  tablet: 15,
-                  desktop: 16,
+              style: TypographyTokens.responsive(
+                context,
+                phone: TypographyTokens.bodySmall(context).copyWith(
+                  color: ColorTokens.textSecondary(context),
+                  height: DesignTokens.lineHeightNormal,
                 ),
-                height: 1.25,
-                color: cs.onSurfaceVariant,
-                fontWeight: FontWeight.w400,
+                tablet: TypographyTokens.bodyMedium(context).copyWith(
+                  color: ColorTokens.textSecondary(context),
+                  height: DesignTokens.lineHeightNormal,
+                ),
+                desktop: TypographyTokens.bodyMedium(context).copyWith(
+                  color: ColorTokens.textSecondary(context),
+                  height: DesignTokens.lineHeightNormal,
+                ),
               ),
             ),
-            SizedBox(height: L.responsiveSize(phone: 2, tablet: 4, desktop: 6)),
+            SizedBox(height: DesignTokens.getResponsiveSpacing(
+              context,
+              phone: 2,
+              tablet: 4,
+              desktop: 6,
+            )),
           ],
           Text(
             dateText,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: L.responsiveTextSize(
-                phone: 11,
-                tablet: 12,
-                desktop: 13,
+            style: TypographyTokens.responsive(
+              context,
+              phone: TypographyTokens.labelSmall(context).copyWith(
+                color: ColorTokens.textTertiary(context),
+                height: DesignTokens.lineHeightTight,
               ),
-              height: 1.2,
-              color: cs.onSurfaceVariant.withValues(alpha: 0.8),
-              fontWeight: FontWeight.w400,
+              tablet: TypographyTokens.labelSmall(context).copyWith(
+                color: ColorTokens.textTertiary(context),
+                height: DesignTokens.lineHeightTight,
+              ),
+              desktop: TypographyTokens.labelSmall(context).copyWith(
+                color: ColorTokens.textTertiary(context),
+                height: DesignTokens.lineHeightTight,
+              ),
             ),
           ),
         ],
       ),
       trailing: ConstrainedBox(
         constraints: BoxConstraints(
-          minWidth: L.responsiveSize(
+          minWidth: DesignTokens.getResponsiveSpacing(
+            context,
             phone: 12,
             tablet: 14,
             desktop: 18,
@@ -190,16 +227,26 @@ class TransactionTile extends ConsumerWidget {
           child: Text(
             amountText,
             textAlign: TextAlign.end,
-            style: TextStyle(
-              fontSize: L.responsiveTextSize(
-                phone: 15,
-                tablet: 17,
-                desktop: 19,
+            style: TypographyTokens.responsive(
+              context,
+              phone: TypographyTokens.titleMedium(context).copyWith(
+                fontWeight: DesignTokens.fontWeightBold,
+                color: _amountColor(transaction!.type, context),
+                height: DesignTokens.lineHeightTight,
+                letterSpacing: DesignTokens.letterSpacingTight,
               ),
-              fontWeight: FontWeight.w700,
-              color: _amountColor(transaction!.type, context),
-              height: 1.2,
-              letterSpacing: -0.2,
+              tablet: TypographyTokens.titleLarge(context).copyWith(
+                fontWeight: DesignTokens.fontWeightBold,
+                color: _amountColor(transaction!.type, context),
+                height: DesignTokens.lineHeightTight,
+                letterSpacing: DesignTokens.letterSpacingTight,
+              ),
+              desktop: TypographyTokens.titleLarge(context).copyWith(
+                fontWeight: DesignTokens.fontWeightBold,
+                color: _amountColor(transaction!.type, context),
+                height: DesignTokens.lineHeightTight,
+                letterSpacing: DesignTokens.letterSpacingTight,
+              ),
             ),
           ),
         ),

@@ -21,9 +21,8 @@ void main() {
               bottomNavigationBar: FooterCtaBar(
                 primaryLabel: 'Continue',
                 onPrimary: () => primaryPressed = true,
-                showBack: true,
-                backLabel: 'Back',
-                onBack: () => backPressed = true,
+                secondaryLabel: 'Back',
+                onSecondary: () => backPressed = true,
               ),
             ),
           ),
@@ -52,7 +51,7 @@ void main() {
               bottomNavigationBar: FooterCtaBar(
                 primaryLabel: 'Get Started',
                 onPrimary: () {},
-                showBack: false,
+                secondaryLabel: null,
               ),
             ),
           ),
@@ -110,9 +109,8 @@ void main() {
               bottomNavigationBar: FooterCtaBar(
                 primaryLabel: 'Continue',
                 onPrimary: () {},
-                showBack: true,
-                backLabel: 'Back',
-                onBack: () {},
+                secondaryLabel: 'Back',
+                onSecondary: () {},
               ),
             ),
           ),

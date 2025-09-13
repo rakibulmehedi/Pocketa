@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/theme/app_colors.dart';
+import 'package:pocketa/core/design_system/design_system.dart';
 import 'package:pocketa/features/onboarding/presentation/viewmodels/onboarding_providers.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/shared/widgets/confetti_widget.dart';
+import 'package:pocketa/shared/services/celebration_service.dart';
 
 class OnboardingHabitScreen extends ConsumerStatefulWidget {
   final OnboardingNotifier notifier;
@@ -22,17 +21,12 @@ class OnboardingHabitScreen extends ConsumerStatefulWidget {
 
 class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
     with TickerProviderStateMixin {
-  late AnimationController _confettiController;
   late AnimationController _streakController;
   late Animation<double> _streakAnimation;
 
   @override
   void initState() {
     super.initState();
-    _confettiController = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-    );
     _streakController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -50,18 +44,20 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
 
   @override
   void dispose() {
-    _confettiController.dispose();
     _streakController.dispose();
     super.dispose();
   }
 
   void startJourney() async {
-    // Haptic feedback for better UX
-    HapticFeedback.mediumImpact();
-    
-    // Start animations
-    _confettiController.forward();
+    // Start streak animation
     _streakController.forward();
+    
+    // Trigger celebration
+    await CelebrationService.safeCelebrate(
+      context,
+      CelebrationEvent.onboardingComplete,
+      ref: ref,
+    );
     
     try {
       // Complete onboarding
@@ -90,9 +86,7 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
     final layout = context.layout;
     final state = ref.watch(onboardingStateProvider);
 
-    return ConfettiWidget(
-      isActive: _confettiController.isAnimating,
-      child: Column(
+    return Column(
         children: [
           Expanded(
             child: SingleChildScrollView(
@@ -110,46 +104,48 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                     return Transform.scale(
                       scale: 0.8 + (0.2 * _streakAnimation.value),
                       child: Container(
-                        width: layout.responsiveSize(phone: 100, tablet: 120, desktop: 140),
-                        height: layout.responsiveSize(phone: 100, tablet: 120, desktop: 140),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Theme.of(context).primaryColor,
-                            Theme.of(context).primaryColor.withValues(alpha: 0.8),
-                          ],
+                        width: DesignTokens.getResponsiveSpacing(
+                          context,
+                          phone: 100,
+                          tablet: 120,
+                          desktop: 140,
                         ),
-                        borderRadius: BorderRadius.circular(layout.responsiveSize(phone: 50, tablet: 60, desktop: 70)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
-                            blurRadius: 20,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
+                        height: DesignTokens.getResponsiveSpacing(
+                          context,
+                          phone: 100,
+                          tablet: 120,
+                          desktop: 140,
+                        ),
+                        decoration: BoxDecoration(
+                          gradient: ColorTokens.primaryGradient(context),
+                          borderRadius: BorderRadius.circular(DesignTokens.getResponsiveSpacing(
+                            context,
+                            phone: 50,
+                            tablet: 60,
+                            desktop: 70,
+                          )),
+                          boxShadow: DesignTokens.getShadowPrimary(context),
+                        ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             '1',
-                            style: layout.responsiveTextStyle(
-                              phone: TextStyle(
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.buttonTextPrimary(context),
+                            style: TypographyTokens.responsive(
+                              context,
+                              phone: TypographyTokens.displayLarge(context).copyWith(
+                                fontWeight: DesignTokens.fontWeightBold,
+                                color: ColorTokens.buttonOnPrimary(context),
                               ),
-                              tablet: TextStyle(
+                              tablet: TypographyTokens.displayLarge(context).copyWith(
                                 fontSize: 48,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.buttonTextPrimary(context),
+                                fontWeight: DesignTokens.fontWeightBold,
+                                color: ColorTokens.buttonOnPrimary(context),
                               ),
-                              desktop: TextStyle(
+                              desktop: TypographyTokens.displayLarge(context).copyWith(
                                 fontSize: 56,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.buttonTextPrimary(context),
+                                fontWeight: DesignTokens.fontWeightBold,
+                                color: ColorTokens.buttonOnPrimary(context),
                               ),
                             ),
                           ),
@@ -159,17 +155,17 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                               phone: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.buttonTextPrimary(context).withValues(alpha: 0.9),
+                                color: ColorTokens.buttonOnPrimary(context).withValues(alpha: 0.9),
                               ),
                               tablet: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.buttonTextPrimary(context).withValues(alpha: 0.9),
+                                color: ColorTokens.buttonOnPrimary(context).withValues(alpha: 0.9),
                               ),
                               desktop: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.buttonTextPrimary(context).withValues(alpha: 0.9),
+                                color: ColorTokens.buttonOnPrimary(context).withValues(alpha: 0.9),
                               ),
                             ),
                           ),
@@ -277,11 +273,11 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                                 vertical: layout.spaceXs,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.cardBackground(context),
+                                color: ColorTokens.surface(context),
                                 borderRadius: BorderRadius.circular(6.ic(context)),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.shadowLight(context),
+                                    color: ColorTokens.shadowLight(context),
                                     blurRadius: 4,
                                     offset: const Offset(0, 2),
                                   ),
@@ -359,7 +355,6 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
             ),
           ),
         ],
-      ),
     );
   }
 }
