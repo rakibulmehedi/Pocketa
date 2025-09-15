@@ -1,14 +1,16 @@
 import 'package:hive/hive.dart';
+import 'package:pocketa/core/data/base_repository.dart';
 import 'package:pocketa/features/transaction/data/mappers/transaction_mapper.dart';
 import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
 import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
 import 'package:pocketa/features/transaction/domain/repositories/transaction_repository.dart';
 
-/// Hive-backed implementation.
+/// Hive-backed implementation using BaseSoftDeleteRepository.
 /// Works directly on Hive models for filtering; converts to Entity only at the edge.
-class TransactionRepoImpl implements TransactionRepository {
-  final Box<Transaction> _box; // Hive model class
-  const TransactionRepoImpl(this._box);
+class TransactionRepoImpl extends BaseSoftDeleteRepository<TransactionEntity, Transaction> implements TransactionRepository {
+  final Box<Transaction> _box;
+  const TransactionRepoImpl(this._box) : super(_box);
 
   // ------- Date helpers (UTC, [from, to)) ------- //
   DateTime _startOfMonth(int y, int m) => DateTime.utc(y, m, 1);
@@ -29,10 +31,74 @@ class TransactionRepoImpl implements TransactionRepository {
             (t.transferTo != null && t.transferTo!.trim().isNotEmpty));
   }
 
+  // ------- Base Repository Implementation ------- //
+  @override
+  Transaction entityToModel(TransactionEntity entity) {
+    return TransactionMapper.entityToModel(entity);
+  }
+
+  @override
+  TransactionEntity modelToEntity(Transaction model) {
+    return TransactionMapper.modelToEntity(model);
+  }
+
+  @override
+  String getEntityId(TransactionEntity entity) {
+    return entity.id;
+  }
+
+  @override
+  String getModelId(Transaction model) {
+    return model.id;
+  }
+
+  @override
+  bool isModelDeleted(Transaction model) {
+    return model.isDeleted;
+  }
+
+  @override
+  Transaction markModelAsDeleted(Transaction model) {
+    model.isDeleted = true;
+    model.updatedAt = DateTime.now().toUtc();
+    return model;
+  }
+
+  @override
+  Transaction markModelAsNotDeleted(Transaction model) {
+    model.isDeleted = false;
+    model.updatedAt = DateTime.now().toUtc();
+    return model;
+  }
+
+  @override
+  Future<void> upsert(TransactionEntity entity) async {
+    final now = DateTime.now().toUtc();
+    final model = entityToModel(entity);
+    model.updatedAt = now;
+    if (model.createdAt == null) {
+      model.createdAt = now;
+    }
+    await super.upsert(entity);
+  }
+
+  @override
+  Future<void> upsertMany(Iterable<TransactionEntity> entities) async {
+    final now = DateTime.now().toUtc();
+    for (final entity in entities) {
+      final model = entityToModel(entity);
+      model.updatedAt = now;
+      if (model.createdAt == null) {
+        model.createdAt = now;
+      }
+    }
+    await super.upsertMany(entities);
+  }
+
   // ------- Iter helpers ------- //
   Iterable<Transaction> _allIter({bool includeDeleted = false}) sync* {
     for (final t in _box.values) {
-      if (!includeDeleted && t.isDeleted) continue;
+      if (!includeDeleted && isModelDeleted(t)) continue;
       yield t;
     }
   }
@@ -68,47 +134,8 @@ class TransactionRepoImpl implements TransactionRepository {
   }
 
   // ---------------- Mutations ----------------
-  @override
-  Future<void> upsert(TransactionEntity e) async {
-    final now = DateTime.now().toUtc();
-    final model = e
-        .copyWith(createdAt: e.createdAt ?? now, updatedAt: now)
-        .toModel();
-    await _box.put(model.id, model);
-  }
-
-  @override
-  Future<void> upsertMany(Iterable<TransactionEntity> list) async {
-    final now = DateTime.now().toUtc();
-    final map = <String, Transaction>{};
-    for (final e in list) {
-      final m = e
-          .copyWith(createdAt: e.createdAt ?? now, updatedAt: now)
-          .toModel();
-      map[m.id] = m;
-    }
-    await _box.putAll(map);
-  }
-
-  @override
-  Future<void> deleteHard(String id) async => _box.delete(id);
-
-  @override
-  Future<void> deleteSoft(String id) async {
-    final t = _box.get(id);
-    if (t != null) await _box.put(id, t.copyWith(isDeleted: true));
-  }
 
   // ---------------- Reads ----------------
-  @override
-  TransactionEntity? getById(String id) => _box.get(id)?.toEntity();
-
-  @override
-  List<TransactionEntity> all({bool includeDeleted = false}) {
-    final list = _allIter(includeDeleted: includeDeleted).toList()
-      ..sort((a, b) => b.date.compareTo(a.date));
-    return list.map((t) => t.toEntity()).toList();
-  }
 
   @override
   List<TransactionEntity> between(
