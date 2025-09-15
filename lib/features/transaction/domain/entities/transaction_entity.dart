@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
 
 
 class TransactionEntity extends Equatable {

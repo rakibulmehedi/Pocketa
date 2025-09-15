@@ -6,6 +6,7 @@ import 'package:pocketa/core/db/hive_helpers.dart';
 // Import all models/enums once here
 import 'package:pocketa/features/categories/data/models/category_model.dart';
 import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
 import 'package:pocketa/features/wallets/data/models/wallet_model.dart';
 
 Future<void> hiveBootstrap() async {
