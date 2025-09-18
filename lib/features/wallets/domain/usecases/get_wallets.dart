@@ -4,5 +4,5 @@ import 'package:pocketa/features/wallets/domain/repositories/wallet_repository.d
 class GetWallets {
   final WalletRepository repository;
   const GetWallets(this.repository);
-  List<WalletEntity> call() => repository.all();
+  List<WalletEntity> call({bool includeDeleted = false}) => repository.all(includeDeleted: includeDeleted);
 }

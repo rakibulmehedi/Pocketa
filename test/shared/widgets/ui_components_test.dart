@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pocketa/shared/widgets/ui_components.dart';
+import 'package:pocketa/core/responsive/responsive.dart';
+import 'package:pocketa/shared/ui_components/ui_components.dart';
 
 void main() {
   group('Premium UI Components Tests', () {
     testWidgets('AppButton renders correctly', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          builder: (context, child) => Responsive.builder(child: child!),
           home: Scaffold(
             body: AppButton(
               text: 'Test Button',
@@ -23,6 +25,7 @@ void main() {
     testWidgets('AppButton with icon renders correctly', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          builder: (context, child) => Responsive.builder(child: child!),
           home: Scaffold(
             body: AppButton(
               text: 'Test Button',
@@ -37,24 +40,29 @@ void main() {
       expect(find.byIcon(Icons.add), findsOneWidget);
     });
 
-    testWidgets('AppCard renders correctly', (WidgetTester tester) async {
+    testWidgets('SectionCard renders correctly', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          builder: (context, child) => Responsive.builder(child: child!),
           home: Scaffold(
-            body: AppCard(
-              child: Text('Card Content'),
+            body: SectionCard(
+              title: 'Test Card',
+              children: [
+                Text('Card Content'),
+              ],
             ),
           ),
         ),
       );
 
       expect(find.text('Card Content'), findsOneWidget);
-      expect(find.byType(Card), findsOneWidget);
+      expect(find.text('Test Card'), findsOneWidget);
     });
 
     testWidgets('AppListTile renders correctly', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          builder: (context, child) => Responsive.builder(child: child!),
           home: Scaffold(
             body: AppListTile(
               title: Text('List Title'),
@@ -69,25 +77,27 @@ void main() {
       expect(find.byType(ListTile), findsOneWidget);
     });
 
-    testWidgets('AppSnackbar renders correctly', (WidgetTester tester) async {
+    testWidgets('AppLoadingIndicator renders correctly', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          builder: (context, child) => Responsive.builder(child: child!),
           home: Scaffold(
-            body: AppSnackbar(
-              message: 'Test Snackbar',
-              type: AppSnackbarType.success,
+            body: AppLoadingIndicator(
+              message: 'Loading...',
+              showMessage: true,
             ),
           ),
         ),
       );
 
-      expect(find.text('Test Snackbar'), findsOneWidget);
-      expect(find.byType(SnackBar), findsOneWidget);
+      expect(find.text('Loading...'), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
     testWidgets('QuickButton renders correctly', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          builder: (context, child) => Responsive.builder(child: child!),
           home: Scaffold(
             body: QuickButton(
               label: 'Quick Action',
@@ -98,12 +108,13 @@ void main() {
       );
 
       expect(find.text('Quick Action'), findsOneWidget);
-      expect(find.byType(ElevatedButton), findsOneWidget);
+      expect(find.byType(Container), findsOneWidget);
     });
 
     testWidgets('AppDialog renders correctly', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          builder: (context, child) => Responsive.builder(child: child!),
           home: Scaffold(
             body: Builder(
               builder: (context) {

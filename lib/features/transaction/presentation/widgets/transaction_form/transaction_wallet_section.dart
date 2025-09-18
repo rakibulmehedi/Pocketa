@@ -4,7 +4,7 @@ import 'package:pocketa/features/transaction/presentation/viewmodels/transaction
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_state.dart';
 import 'package:pocketa/features/wallets/presentation/widgets/wallet_picker_button.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/shared/widgets/ui_components.dart';
+import 'package:pocketa/shared/widgets.dart';
 
 class TransactionWalletSection extends ConsumerWidget {
   final TransactionFormState form;

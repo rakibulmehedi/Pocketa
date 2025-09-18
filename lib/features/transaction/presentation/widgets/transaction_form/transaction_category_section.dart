@@ -6,7 +6,7 @@ import 'package:pocketa/features/categories/presentation/widgets/category_chips_
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_notifier.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_state.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/shared/widgets/ui_components.dart';
+import 'package:pocketa/shared/widgets.dart';
 
 class TransactionCategorySection extends ConsumerWidget {
   final TransactionFormState form;

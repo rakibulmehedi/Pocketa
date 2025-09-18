@@ -5,8 +5,7 @@ import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
 import 'package:pocketa/features/wallets/presentation/viewmodels/wallet_providers.dart';
 import 'package:pocketa/features/wallets/presentation/widgets/add_wallet_sheet.dart';
-import 'package:pocketa/shared/widgets/responsive_icon_button.dart';
-
+import 'package:pocketa/shared/widgets.dart';
 class WalletPickerButton extends ConsumerWidget {
   final String? walletId;
   final ValueChanged<WalletEntity> onSelected;

@@ -9,7 +9,7 @@ import 'package:pocketa/features/onboarding/presentation/widgets/onboarding_card
 import 'package:pocketa/l10n/app_localizations.dart';
 
 class EnhancedPersonalizationScreen extends ConsumerStatefulWidget {
-  final OnboardingNotifier notifier;
+  final OnboardingFormNotifier notifier;
 
   const EnhancedPersonalizationScreen({
     super.key,
@@ -173,7 +173,7 @@ class _EnhancedPersonalizationScreenState extends ConsumerState<EnhancedPersonal
     BuildContext context, 
     AppLocalizations l10n, 
     AppSize layout, 
-    OnboardingState state,
+    OnboardingFormState state,
     Locale currentLocale,
   ) {
     return _buildSection(
@@ -210,7 +210,7 @@ class _EnhancedPersonalizationScreenState extends ConsumerState<EnhancedPersonal
     BuildContext context, 
     AppLocalizations l10n, 
     AppSize layout, 
-    OnboardingState state,
+    OnboardingFormState state,
   ) {
     return _buildSection(
       context,
@@ -247,7 +247,7 @@ class _EnhancedPersonalizationScreenState extends ConsumerState<EnhancedPersonal
     BuildContext context, 
     AppLocalizations l10n, 
     AppSize layout, 
-    OnboardingState state,
+    OnboardingFormState state,
   ) {
     return _buildSection(
       context,
@@ -284,7 +284,7 @@ class _EnhancedPersonalizationScreenState extends ConsumerState<EnhancedPersonal
   //   BuildContext context, 
   //   AppLocalizations l10n, 
   //   AppSize layout, 
-  //   OnboardingState state,
+  //   OnboardingFormState state,
   // ) {
   //   return _buildSection(
   //     context,

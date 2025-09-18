@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pocketa/shared/widgets/ui_components.dart';
 import 'package:pocketa/core/theme/app_colors.dart';
+
+/// Snackbar types for different message categories
+enum AppSnackbarType { success, error, warning, info }
 
 /// Enhanced snackbar service with premium features and better integration
 class SnackbarService {
@@ -160,22 +162,96 @@ class SnackbarService {
     // Show the new premium snackbar
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: AppSnackbar(
+        content: _buildSnackbarContent(
+          context: context,
           message: message,
           type: type,
           actionLabel: actionLabel,
           action: onAction,
-          duration: duration,
           enableHaptic: enableHaptic,
         ),
-        backgroundColor: AppColors.transparent,
+        backgroundColor: _getBackgroundColor(context, type),
         elevation: 0,
         behavior: SnackBarBehavior.floating,
         duration: duration,
-        margin: EdgeInsets.zero,
+        margin: EdgeInsets.all(16),
         padding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
     );
+  }
+
+  /// Build snackbar content widget
+  static Widget _buildSnackbarContent({
+    required BuildContext context,
+    required String message,
+    required AppSnackbarType type,
+    String? actionLabel,
+    VoidCallback? action,
+    bool enableHaptic = true,
+  }) {
+    return Row(
+      children: [
+        Icon(
+          _getIcon(type),
+          color: AppColors.white,
+          size: 20,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            message,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: AppColors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        if (action != null && actionLabel != null) ...[
+          const SizedBox(width: 8),
+          TextButton(
+            onPressed: action,
+            child: Text(
+              actionLabel,
+              style: const TextStyle(
+                color: AppColors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  /// Get icon for snackbar type
+  static IconData _getIcon(AppSnackbarType type) {
+    switch (type) {
+      case AppSnackbarType.success:
+        return Icons.check_circle_outline;
+      case AppSnackbarType.error:
+        return Icons.error_outline;
+      case AppSnackbarType.warning:
+        return Icons.warning_outlined;
+      case AppSnackbarType.info:
+        return Icons.info_outline;
+    }
+  }
+
+  /// Get background color for snackbar type
+  static Color _getBackgroundColor(BuildContext context, AppSnackbarType type) {
+    switch (type) {
+      case AppSnackbarType.success:
+        return AppColors.success(context);
+      case AppSnackbarType.error:
+        return AppColors.error(context);
+      case AppSnackbarType.warning:
+        return AppColors.warning(context);
+      case AppSnackbarType.info:
+        return Theme.of(context).colorScheme.primary;
+    }
   }
 
   /// Get appropriate haptic feedback for snackbar type

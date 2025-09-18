@@ -13,40 +13,69 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
-            body: Builder(
-              builder: (context) {
-                // Test cache failure
-                ErrorHandler.handleError(
-                  context,
-                  const CacheFailure('Cache error'),
-                );
-                
-                // Test database failure
-                ErrorHandler.handleError(
-                  context,
-                  const DatabaseFailure('Database error'),
-                );
-                
-                // Test network failure
-                ErrorHandler.handleError(
-                  context,
-                  const NetworkFailure('Network error'),
-                );
-                
-                // Test validation failure
-                ErrorHandler.handleError(
-                  context,
-                  const CacheFailure('Invalid input'),
-                );
-                
-                // Test unknown failure
-                ErrorHandler.handleError(
-                  context,
-                  const DatabaseFailure('Something went wrong'),
-                );
-                
-                return const SizedBox();
-              },
+            body: Column(
+              children: [
+                Builder(
+                  builder: (context) => ElevatedButton(
+                    onPressed: () {
+                      // Test cache failure
+                      ErrorHandler.handleError(
+                        context,
+                        const CacheFailure('Cache error'),
+                      );
+                    },
+                    child: const Text('Test Cache Error'),
+                  ),
+                ),
+                Builder(
+                  builder: (context) => ElevatedButton(
+                    onPressed: () {
+                      // Test database failure
+                      ErrorHandler.handleError(
+                        context,
+                        const DatabaseFailure('Database error'),
+                      );
+                    },
+                    child: const Text('Test Database Error'),
+                  ),
+                ),
+                Builder(
+                  builder: (context) => ElevatedButton(
+                    onPressed: () {
+                      // Test network failure
+                      ErrorHandler.handleError(
+                        context,
+                        const NetworkFailure('Network error'),
+                      );
+                    },
+                    child: const Text('Test Network Error'),
+                  ),
+                ),
+                Builder(
+                  builder: (context) => ElevatedButton(
+                    onPressed: () {
+                      // Test validation failure
+                      ErrorHandler.handleError(
+                        context,
+                        const CacheFailure('Invalid input'),
+                      );
+                    },
+                    child: const Text('Test Validation Error'),
+                  ),
+                ),
+                Builder(
+                  builder: (context) => ElevatedButton(
+                    onPressed: () {
+                      // Test unknown failure
+                      ErrorHandler.handleError(
+                        context,
+                        const DatabaseFailure('Something went wrong'),
+                      );
+                    },
+                    child: const Text('Test Unknown Error'),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -62,24 +91,35 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
-            body: Builder(
-              builder: (context) {
-                // Test error result
-                final errorResult = Err(const NetworkFailure('Network error'));
-                ErrorHandler.handleResultError(
-                  context,
-                  errorResult,
-                );
-                
-                // Test success result (should do nothing)
-                final successResult = Ok('success');
-                ErrorHandler.handleResultError(
-                  context,
-                  successResult,
-                );
-                
-                return const SizedBox();
-              },
+            body: Column(
+              children: [
+                Builder(
+                  builder: (context) => ElevatedButton(
+                    onPressed: () {
+                      // Test error result
+                      final errorResult = Err(const NetworkFailure('Network error'));
+                      ErrorHandler.handleResultError(
+                        context,
+                        errorResult,
+                      );
+                    },
+                    child: const Text('Test Error Result'),
+                  ),
+                ),
+                Builder(
+                  builder: (context) => ElevatedButton(
+                    onPressed: () {
+                      // Test success result (should do nothing)
+                      final successResult = Ok('success');
+                      ErrorHandler.handleResultError(
+                        context,
+                        successResult,
+                      );
+                    },
+                    child: const Text('Test Success Result'),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -95,22 +135,33 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
-            body: Builder(
-              builder: (context) {
-                // Test successful async operation
-                ErrorHandler.handleAsync(
-                  context,
-                  () async => 'success',
-                );
-                
-                // Test failed async operation
-                ErrorHandler.handleAsync(
-                  context,
-                  () async => throw Exception('Test error'),
-                );
-                
-                return const SizedBox();
-              },
+            body: Column(
+              children: [
+                Builder(
+                  builder: (context) => ElevatedButton(
+                    onPressed: () {
+                      // Test successful async operation
+                      ErrorHandler.handleAsync(
+                        context,
+                        () async => 'success',
+                      );
+                    },
+                    child: const Text('Test Success Async'),
+                  ),
+                ),
+                Builder(
+                  builder: (context) => ElevatedButton(
+                    onPressed: () {
+                      // Test failed async operation
+                      ErrorHandler.handleAsync(
+                        context,
+                        () async => throw Exception('Test error'),
+                      );
+                    },
+                    child: const Text('Test Failed Async'),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

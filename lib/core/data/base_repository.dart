@@ -1,146 +1,146 @@
-import 'package:hive/hive.dart';
-import 'package:flutter/foundation.dart';
+import 'package:pocketa/core/data/base_entity.dart';
 
-/// Base abstract class for repositories handling basic CRUD operations.
-/// [TEntity] is the domain entity type.
-/// [TModel] is the data model type (e.g., HiveObject).
-abstract class BaseRepository<TEntity, TModel> {
-  @protected
-  final Box<TModel> _box;
+/// Base repository interface with common CRUD operations
+abstract class BaseRepository<T> {
+  // Mutations
+  Future<void> upsert(T entity);
+  Future<void> upsertMany(Iterable<T> entities);
+  Future<void> deleteHard(String id);
+  Future<void> deleteSoft(String id);
 
-  const BaseRepository(this._box);
+  // Reads
+  T? getById(String id);
+  List<T> all({bool includeDeleted = false});
+  Stream<List<T>> watchAll({bool includeDeleted = false});
 
-  /// Converts an entity to its corresponding data model.
-  @protected
-  TModel entityToModel(TEntity entity);
+  // Common filters
+  List<T> findByField<R>(String fieldName, R value, {bool includeDeleted = false});
+  List<T> findByDateRange(
+    DateTime from,
+    DateTime to, {
+    String? fieldName,
+    bool includeDeleted = false,
+  });
+}
 
-  /// Converts a data model to its corresponding entity.
-  @protected
-  TEntity modelToEntity(TModel model);
+/// Base repository implementation with common logic
+abstract class BaseRepositoryImpl<T, M> implements BaseRepository<T> {
+  final dynamic _box; // Hive box or other storage
 
-  /// Returns the unique ID of an entity.
-  @protected
-  String getEntityId(TEntity entity);
+  const BaseRepositoryImpl(this._box);
 
-  /// Returns the unique ID of a model.
-  @protected
-  String getModelId(TModel model);
+  /// Get the storage box (accessible to derived classes)
+  dynamic get box => _box;
 
-  /// Inserts or updates an entity in the repository.
-  Future<void> upsert(TEntity entity) async {
+  // Abstract methods to be implemented by concrete repositories
+  T modelToEntity(M model);
+  M entityToModel(T entity);
+  String get entityIdField;
+  
+  // Helper methods for soft delete and field access
+  T _markAsDeleted(T entity);
+  dynamic _getFieldValue(T entity, String fieldName);
+  
+  // Helper methods to check entity properties
+  bool _isDeleted(T entity) {
+    if (entity is BaseEntity) {
+      return entity.isDeleted;
+    }
+    // For entities that don't extend BaseEntity, check if they have isDeleted property
+    try {
+      final dynamic entityDynamic = entity;
+      return entityDynamic.isDeleted as bool? ?? false;
+    } catch (e) {
+      return false;
+    }
+  }
+  
+  String _getId(T entity) {
+    if (entity is BaseEntity) {
+      return entity.id;
+    }
+    // For entities that don't extend BaseEntity, check if they have id property
+    try {
+      final dynamic entityDynamic = entity;
+      return entityDynamic.id as String;
+    } catch (e) {
+      throw StateError('Entity must have an id property');
+    }
+  }
+
+  @override
+  Future<void> upsert(T entity) async {
     final model = entityToModel(entity);
-    await _box.put(getModelId(model), model);
+    await _box.put(_getId(entity), model);
   }
 
-  /// Inserts or updates multiple entities in the repository.
-  Future<void> upsertMany(Iterable<TEntity> entities) async {
-    final Map<String, TModel> map = {
-      for (var e in entities) getEntityId(e): entityToModel(e)
-    };
-    await _box.putAll(map);
+  @override
+  Future<void> upsertMany(Iterable<T> entities) async {
+    final Map<String, M> models = {};
+    for (final entity in entities) {
+      models[_getId(entity)] = entityToModel(entity);
+    }
+    await _box.putAll(models);
   }
 
-  /// Deletes an entity by its ID.
-  Future<void> delete(String id) async {
+  @override
+  Future<void> deleteHard(String id) async {
     await _box.delete(id);
   }
 
-  /// Retrieves an entity by its ID.
-  TEntity? getById(String id) {
+  @override
+  Future<void> deleteSoft(String id) async {
+    final entity = getById(id);
+    if (entity != null) {
+      final updatedEntity = _markAsDeleted(entity);
+      await upsert(updatedEntity);
+    }
+  }
+
+  @override
+  T? getById(String id) {
     final model = _box.get(id);
     return model != null ? modelToEntity(model) : null;
   }
 
-  /// Retrieves all entities.
-  List<TEntity> all() => _box.values.map((e) => modelToEntity(e)).toList();
+  @override
+  List<T> all({bool includeDeleted = false}) {
+    return _box.values
+        .map((model) => modelToEntity(model))
+        .where((entity) => includeDeleted || !_isDeleted(entity))
+        .toList();
+  }
 
-  /// Watches all entities for changes.
-  Stream<List<TEntity>> watchAll() async* {
-    List<TEntity> snapshot() => all();
+  @override
+  Stream<List<T>> watchAll({bool includeDeleted = false}) async* {
+    List<T> snapshot() => all(includeDeleted: includeDeleted);
     yield snapshot();
     await for (final _ in _box.watch()) {
       yield snapshot();
     }
   }
-}
 
-/// Extends [BaseRepository] with sorting capabilities.
-abstract class BaseSortedRepository<TEntity, TModel> extends BaseRepository<TEntity, TModel> {
-  const BaseSortedRepository(super._box);
-
-  /// Returns the name of an entity for sorting.
-  @protected
-  String _getName(TEntity entity);
-
-  /// Returns the creation date of an entity for sorting.
-  @protected
-  DateTime? _getDate(TEntity entity);
-
-  /// Retrieves all entities sorted by name (case-insensitive).
-  List<TEntity> allSortedByName() {
-    final list = all();
-    list.sort((a, b) => _getName(a).toLowerCase().compareTo(_getName(b).toLowerCase()));
-    return list;
-  }
-
-  /// Retrieves all entities sorted by creation date (descending).
-  List<TEntity> allSortedByDate() {
-    final list = all();
-    list.sort((a, b) => (_getDate(b)?.compareTo(_getDate(a) ?? DateTime.now()) ?? 0));
-    return list;
-  }
-}
-
-/// Extends [BaseRepository] with soft delete capabilities.
-abstract class BaseSoftDeleteRepository<TEntity, TModel> extends BaseRepository<TEntity, TModel> {
-  const BaseSoftDeleteRepository(super._box);
-
-  /// Checks if a model is marked as deleted.
-  @protected
-  bool isModelDeleted(TModel model);
-
-  /// Marks a model as deleted.
-  @protected
-  TModel markModelAsDeleted(TModel model);
-
-  /// Marks a model as not deleted.
-  @protected
-  TModel markModelAsNotDeleted(TModel model);
-
-  /// Soft deletes an entity by marking it as deleted.
   @override
-  Future<void> delete(String id) async {
-    final model = _box.get(id);
-    if (model != null) {
-      await _box.put(id, markModelAsDeleted(model));
-    }
-  }
-
-  /// Hard deletes an entity by its ID.
-  Future<void> deleteHard(String id) async {
-    await super.delete(id);
-  }
-
-  /// Restores a soft-deleted entity.
-  Future<void> restore(String id) async {
-    final model = _box.get(id);
-    if (model != null && isModelDeleted(model)) {
-      await _box.put(id, markModelAsNotDeleted(model));
-    }
+  List<T> findByField<R>(String fieldName, R value, {bool includeDeleted = false}) {
+    return all(includeDeleted: includeDeleted)
+        .where((entity) => _getFieldValue(entity, fieldName) == value)
+        .toList();
   }
 
   @override
-  List<TEntity> all({bool includeDeleted = false}) {
-    final allModels = _box.values.where((model) => includeDeleted || !isModelDeleted(model));
-    return allModels.map((e) => modelToEntity(e)).toList();
+  List<T> findByDateRange(
+    DateTime from,
+    DateTime to, {
+    String? fieldName = 'createdAt',
+    bool includeDeleted = false,
+  }) {
+    return all(includeDeleted: includeDeleted)
+        .where((entity) {
+          final date = _getFieldValue(entity, fieldName ?? 'createdAt') as DateTime?;
+          if (date == null) return false;
+          return date.isAfter(from) && date.isBefore(to);
+        })
+        .toList();
   }
 
-  @override
-  Stream<List<TEntity>> watchAll({bool includeDeleted = false}) async* {
-    List<TEntity> snapshot() => all(includeDeleted: includeDeleted);
-    yield snapshot();
-    await for (final _ in _box.watch()) {
-      yield snapshot();
-    }
-  }
 }

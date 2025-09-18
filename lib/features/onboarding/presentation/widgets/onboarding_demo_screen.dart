@@ -4,10 +4,10 @@ import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/core/theme/app_colors.dart';
 import 'package:pocketa/features/onboarding/presentation/viewmodels/onboarding_providers.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/shared/widgets/confetti_widget.dart';
+import 'package:pocketa/shared/widgets.dart';
 
 class OnboardingDemoScreen extends ConsumerStatefulWidget {
-  final OnboardingNotifier notifier;
+  final OnboardingFormNotifier notifier;
 
   const OnboardingDemoScreen({
     super.key,

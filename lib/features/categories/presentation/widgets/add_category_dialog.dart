@@ -4,7 +4,7 @@ import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/features/categories/domain/entities/category_entity.dart';
 import 'package:pocketa/features/categories/presentation/viewmodels/category_providers.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/shared/widgets/ui_components.dart';
+import 'package:pocketa/shared/widgets.dart';
 
 class AddCategoryDialog extends ConsumerStatefulWidget {
   /// Which kind of category we’re creating

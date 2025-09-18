@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pocketa/shared/services/ui/ui_services.dart';
-import 'package:pocketa/shared/widgets/ui_components.dart';
 
 void main() {
   group('SnackbarService Tests', () {
@@ -240,7 +239,7 @@ void main() {
       await tester.tap(find.text('Show Success'));
       await tester.pump();
       
-      expect(find.byType(AppSnackbar), findsOneWidget);
+      expect(find.byType(SnackBar), findsOneWidget);
     });
   });
 
@@ -266,7 +265,7 @@ void main() {
       
       // Haptic feedback should be triggered
       // Note: In real tests, you might want to mock HapticFeedback
-      expect(find.text('Success'), findsOneWidget);
+      expect(find.text('Success'), findsNWidgets(2));
     });
 
     testWidgets('haptic feedback is disabled when specified', (WidgetTester tester) async {
@@ -288,7 +287,7 @@ void main() {
       await tester.tap(find.text('Success'));
       await tester.pump();
       
-      expect(find.text('Success'), findsOneWidget);
+      expect(find.text('Success'), findsNWidgets(2));
     });
   });
 
@@ -322,12 +321,12 @@ void main() {
       // Show first snackbar
       await tester.tap(find.text('First'));
       await tester.pump();
-      expect(find.text('First'), findsOneWidget);
+      expect(find.text('First'), findsNWidgets(2));
       
       // Show second snackbar (should replace first)
       await tester.tap(find.text('Second'));
       await tester.pump();
-      expect(find.text('Second'), findsOneWidget);
+      expect(find.text('Second'), findsNWidgets(2));
       expect(find.text('First'), findsNothing);
     });
 

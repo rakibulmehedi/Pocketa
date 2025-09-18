@@ -6,8 +6,7 @@ import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/core/theme/text_styles.dart';
 import 'package:pocketa/shared/services/ui/ui_services.dart';
-import 'package:pocketa/shared/widgets/responsive_icon_button.dart';
-
+import 'package:pocketa/shared/widgets.dart';
 import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
 import 'package:pocketa/features/wallets/presentation/viewmodels/wallet_providers.dart';
 

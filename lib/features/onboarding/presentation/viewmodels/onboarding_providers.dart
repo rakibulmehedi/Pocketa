@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pocketa/core/forms/base_form_notifier.dart';
+import 'package:pocketa/core/forms/base_form_state.dart';
 import 'package:pocketa/features/onboarding/data/onboarding_repo_impl.dart';
 import 'package:pocketa/features/onboarding/domain/entities/onboarding_entity.dart';
 import 'package:pocketa/features/onboarding/domain/repositories/onboarding_repository.dart';
@@ -7,25 +9,98 @@ final onboardingRepositoryProvider = Provider<OnboardingRepository>((ref) {
   return OnboardingRepositoryImpl();
 });
 
-final onboardingStateProvider = StateNotifierProvider<OnboardingNotifier, OnboardingState>((ref) {
-  final repository = ref.watch(onboardingRepositoryProvider);
-  return OnboardingNotifier(repository);
-});
+/// Onboarding form state extending BaseFormState
+class OnboardingFormState extends BaseFormState {
+  final OnboardingData data;
 
-class OnboardingNotifier extends StateNotifier<OnboardingState> {
+  const OnboardingFormState({
+    super.isLoading,
+    super.isValid,
+    super.error,
+    super.fieldErrors,
+    this.data = const OnboardingData(),
+  });
+
+  factory OnboardingFormState.initial() => const OnboardingFormState();
+
+  @override
+  OnboardingFormState copyWith({
+    bool? isLoading,
+    bool? isValid,
+    String? error,
+    Map<String, String>? fieldErrors,
+    OnboardingData? data,
+  }) {
+    return OnboardingFormState(
+      isLoading: isLoading ?? this.isLoading,
+      isValid: isValid ?? this.isValid,
+      error: error ?? this.error,
+      fieldErrors: fieldErrors ?? this.fieldErrors,
+      data: data ?? this.data,
+    );
+  }
+
+  List<Object?> get props => [isLoading, isValid, error, fieldErrors, data];
+}
+
+/// Onboarding form notifier extending BaseFormNotifier
+class OnboardingFormNotifier extends BaseFormNotifier<OnboardingFormState> {
   final OnboardingRepository _repository;
 
-  OnboardingNotifier(this._repository) : super(const OnboardingState()) {
+  OnboardingFormNotifier(this._repository) : super(OnboardingFormState.initial()) {
     _loadOnboardingData();
+  }
+
+  @override
+  OnboardingFormState updateLoadingState(OnboardingFormState state, bool loading) {
+    return state.copyWith(isLoading: loading);
+  }
+
+  @override
+  OnboardingFormState updateErrorState(OnboardingFormState state, String? error) {
+    return state.copyWith(error: error);
+  }
+
+  @override
+  OnboardingFormState updateFieldErrorState(OnboardingFormState state, String fieldName, String? error) {
+    final newFieldErrors = Map<String, String>.from(state.fieldErrors);
+    if (error == null) {
+      newFieldErrors.remove(fieldName);
+    } else {
+      newFieldErrors[fieldName] = error;
+    }
+    return state.copyWith(fieldErrors: newFieldErrors);
+  }
+
+  @override
+  OnboardingFormState clearErrorState(OnboardingFormState state) {
+    return state.copyWith(error: null, fieldErrors: {});
+  }
+
+  @override
+  OnboardingFormState clearFieldErrorState(OnboardingFormState state, String fieldName) {
+    final newFieldErrors = Map<String, String>.from(state.fieldErrors);
+    newFieldErrors.remove(fieldName);
+    return state.copyWith(fieldErrors: newFieldErrors);
+  }
+
+  @override
+  OnboardingFormState updateValidationState(OnboardingFormState state, bool isValid, Map<String, String> fieldErrors) {
+    return state.copyWith(isValid: isValid, fieldErrors: fieldErrors);
   }
 
   Future<void> _loadOnboardingData() async {
     try {
-      state = state.copyWith(isLoading: true);
+      setLoading(true);
+      clearErrors();
+      
       final data = await _repository.getOnboardingData();
-      state = state.copyWith(data: data, isLoading: false);
+      state = state.copyWith(data: data);
+      
+      setLoading(false);
     } catch (e) {
-      state = state.copyWith(error: e.toString(), isLoading: false);
+      setError('Failed to load onboarding data: ${e.toString()}');
+      setLoading(false);
     }
   }
 
@@ -33,24 +108,28 @@ class OnboardingNotifier extends StateNotifier<OnboardingState> {
     state = state.copyWith(
       data: state.data.copyWith(language: language),
     );
+    saveProgress();
   }
 
   void updateIncomeType(IncomeType incomeType) {
     state = state.copyWith(
       data: state.data.copyWith(incomeType: incomeType),
     );
+    saveProgress();
   }
 
   void updateCurrency(String currency) {
     state = state.copyWith(
       data: state.data.copyWith(currency: currency),
     );
+    saveProgress();
   }
 
   void updateDailyReminder(bool enabled) {
     state = state.copyWith(
       data: state.data.copyWith(dailyReminder: enabled),
     );
+    saveProgress();
   }
 
   void nextStep() {
@@ -60,10 +139,7 @@ class OnboardingNotifier extends StateNotifier<OnboardingState> {
       state = state.copyWith(
         data: state.data.copyWith(currentStep: nextStep),
       );
-      // Save progress without blocking UI
-      saveProgress().catchError((error) {
-        state = state.copyWith(error: 'Failed to save progress: $error');
-      });
+      saveProgress();
     }
   }
 
@@ -74,10 +150,7 @@ class OnboardingNotifier extends StateNotifier<OnboardingState> {
       state = state.copyWith(
         data: state.data.copyWith(currentStep: previousStep),
       );
-      // Save progress without blocking UI
-      saveProgress().catchError((error) {
-        state = state.copyWith(error: 'Failed to save progress: $error');
-      });
+      saveProgress();
     }
   }
 
@@ -85,28 +158,40 @@ class OnboardingNotifier extends StateNotifier<OnboardingState> {
     state = state.copyWith(
       data: state.data.copyWith(currentStep: step),
     );
+    saveProgress();
   }
 
   Future<void> saveProgress() async {
     try {
-      state = state.copyWith(isLoading: true);
       await _repository.saveOnboardingData(state.data);
-      state = state.copyWith(isLoading: false);
     } catch (e) {
-      state = state.copyWith(error: e.toString(), isLoading: false);
+      setError('Failed to save progress: ${e.toString()}');
     }
   }
 
   Future<void> completeOnboarding() async {
     try {
-      state = state.copyWith(isLoading: true);
+      setLoading(true);
+      clearErrors();
+      
       await _repository.completeOnboarding();
       state = state.copyWith(
         data: state.data.copyWith(onboardingCompleted: true),
-        isLoading: false,
       );
+      
+      setLoading(false);
     } catch (e) {
-      state = state.copyWith(error: e.toString(), isLoading: false);
+      setError('Failed to complete onboarding: ${e.toString()}');
+      setLoading(false);
     }
   }
 }
+
+/// Provider for onboarding form notifier
+final onboardingFormNotifierProvider = StateNotifierProvider<OnboardingFormNotifier, OnboardingFormState>((ref) {
+  final repository = ref.watch(onboardingRepositoryProvider);
+  return OnboardingFormNotifier(repository);
+});
+
+/// Legacy provider for backward compatibility
+final onboardingStateProvider = onboardingFormNotifierProvider;

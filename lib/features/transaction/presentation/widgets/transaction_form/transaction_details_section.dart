@@ -4,8 +4,7 @@ import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_notifier.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_state.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/shared/widgets/input/app_note_field.dart';
-import 'package:pocketa/shared/widgets/ui_components.dart';
+import 'package:pocketa/shared/widgets.dart';
 
 class TransactionDetailsSection extends ConsumerWidget {
   final TextEditingController noteController;

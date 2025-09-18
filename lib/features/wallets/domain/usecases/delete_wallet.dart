@@ -3,5 +3,5 @@ import 'package:pocketa/features/wallets/domain/repositories/wallet_repository.d
 class DeleteWallet {
   final WalletRepository repository;
   const DeleteWallet(this.repository);
-  Future<void> call(String id, {bool hard = false}) => repository.delete(id);
+  Future<void> call(String id, {bool hard = false}) => hard ? repository.deleteHard(id) : repository.deleteSoft(id);
 }
