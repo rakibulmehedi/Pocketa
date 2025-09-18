@@ -5,7 +5,7 @@ import 'package:pocketa/features/transaction/presentation/viewmodels/transaction
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_state.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:pocketa/shared/widgets/input/app_note_field.dart';
-import 'package:pocketa/shared/widgets/section_card.dart';
+import 'package:pocketa/shared/widgets/ui_components.dart';
 
 class TransactionDetailsSection extends ConsumerWidget {
   final TextEditingController noteController;

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/core/constants/default_categories.dart';
-import 'package:pocketa/features/categories/presentations/widgets/category_chips_picker.dart';
+import 'package:pocketa/features/categories/presentation/widgets/category_chips_picker.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_notifier.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_state.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/shared/widgets/section_card.dart';
+import 'package:pocketa/shared/widgets/ui_components.dart';
 
 class TransactionCategorySection extends ConsumerWidget {
   final TransactionFormState form;

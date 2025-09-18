@@ -1,0 +1,93 @@
+# Pocketa Cursor Composer Configuration
+# Advanced AI assistance for Flutter development
+
+## Project Context
+- **App**: Pocketa - Personal Finance Management
+- **Tech Stack**: Flutter 3.x + Dart 3.x, Riverpod, Hive, GoRouter
+- **Architecture**: Clean Architecture (Domain/Data/Presentation)
+- **Target**: Bengali/English markets, offline-first approach
+
+## Development Philosophy
+- **Performance First**: 60-120fps smooth UI, minimal rebuilds
+- **Clean Architecture**: Strict layer boundaries, testable code
+- **User Experience**: Intuitive, responsive, accessible
+- **Code Quality**: Comprehensive testing, linting, documentation
+- **Internationalization**: Full i18n support with ARB files
+
+## Code Generation Preferences
+- **Follow existing patterns**: Use project's established conventions
+- **Const constructors**: Prefer const wherever possible
+- **Riverpod selectors**: Use granular state subscriptions
+- **Responsive design**: Use context.layout and context.vw/vh
+- **i18n strings**: Always use S.of(context).snake_case_key
+- **Error handling**: Use Result<T> pattern with proper error mapping
+
+## Quality Standards
+- **Test coverage**: >80% for all features
+- **Performance**: 60+ fps on budget devices
+- **Memory usage**: <100MB typical
+- **Bundle size**: <50MB APK, <30MB App Bundle
+- **Cold start**: <3 seconds on budget devices
+
+## AI Assistant Behavior
+- **Be proactive**: Suggest optimizations and improvements
+- **Be specific**: Provide exact code examples and file paths
+- **Be thorough**: Consider edge cases and error scenarios
+- **Be consistent**: Follow project conventions and patterns
+- **Be helpful**: Explain reasoning behind suggestions
+
+## Specialized Agents
+- **Performance Agent**: List optimization, rebuild reduction, responsive design
+- **i18n Agent**: String extraction, ARB management, localization
+- **Quality Agent**: Architecture compliance, testing, code standards
+- **Bundle Agent**: Startup optimization, asset compression, build shrinking
+- **State Agent**: Riverpod optimization, rebuild minimization
+
+## Common Patterns
+- **Widget extraction**: Break large widgets into smaller, focused components
+- **Provider optimization**: Use selectors and listeners appropriately
+- **Error handling**: Global error handler with user-friendly messages
+- **Responsive design**: Single Responsive.builder per route subtree
+- **Testing**: Unit, widget, and integration tests for all features
+
+## File Organization
+- **Domain**: Pure business logic, entities, use cases
+- **Data**: Repository implementations, models, data sources
+- **Presentation**: UI widgets, pages, view models
+- **Core**: Shared utilities, responsive system, error handling
+- **Shared**: Reusable widgets and services
+
+## Performance Guidelines
+- **Lists**: Use ListView.builder with itemExtent/prototypeItem
+- **Images**: Cache with appropriate sizes, use WebP when possible
+- **Animations**: Smooth 60fps, use RepaintBoundary for heavy widgets
+- **State**: Minimize rebuilds with granular subscriptions
+- **Memory**: Proper disposal of controllers and animations
+
+## Security Considerations
+- **No hardcoded secrets**: Use environment variables
+- **Input validation**: Sanitize all user inputs
+- **Secure storage**: Use Flutter secure storage for sensitive data
+- **Data encryption**: Encrypt sensitive data in local storage
+
+## Testing Strategy
+- **Unit tests**: Business logic, use cases, repositories
+- **Widget tests**: UI components, user interactions
+- **Integration tests**: Complete user flows
+- **Golden tests**: Visual regression testing
+- **Performance tests**: FPS, memory usage, startup time
+
+## Documentation Standards
+- **Code comments**: Explain complex logic and business rules
+- **API documentation**: Document public interfaces
+- **README updates**: Keep project documentation current
+- **Changelog**: Track changes and new features
+
+## Commit Conventions
+- **feat**: New features
+- **fix**: Bug fixes
+- **perf**: Performance improvements
+- **refactor**: Code refactoring
+- **test**: Test additions or updates
+- **chore**: Maintenance tasks
+- **docs**: Documentation updates

@@ -1,17 +1,11 @@
 import 'package:hive/hive.dart';
 import 'package:pocketa/core/db/hive_type.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
+
+// Re-export TransactionType for convenience
+export 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
 
 part 'transaction_model.g.dart';
-
-@HiveType(typeId: kTransactionEnumTypeId)
-enum TransactionType {
-  @HiveField(0)
-  income,
-  @HiveField(1)
-  expense,
-  @HiveField(2)
-  transfer,
-}
 
 @HiveType(typeId: kTransactionModelTypeId)
 class Transaction extends HiveObject {

@@ -157,12 +157,24 @@ class _TestWidget extends StatefulWidget {
 
 class _TestWidgetState extends State<_TestWidget> with ErrorHandlingMixin {
   @override
+  void initState() {
+    super.initState();
+    // Test error handling after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      handleError(
+        const NetworkFailure('Network error'),
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Test error handling
-    handleError(
-      const NetworkFailure('Network error'),
-    );
-    
     return const SizedBox();
   }
 }
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox();
+  }
+

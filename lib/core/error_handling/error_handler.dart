@@ -4,7 +4,7 @@ import 'package:logger/logger.dart';
 import 'package:pocketa/core/errors/failure.dart';
 import 'package:pocketa/core/result/result.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/shared/services/snackbar_service.dart';
+import 'package:pocketa/shared/services/ui/ui_services.dart';
 
 /// Centralized error handling service
 class ErrorHandler {

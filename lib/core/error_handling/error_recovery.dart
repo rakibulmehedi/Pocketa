@@ -26,14 +26,14 @@ class ErrorRecovery {
 
   /// Get max retries for an operation based on error type
   static int _getMaxRetries(String operationName) {
-    // Default to 3 retries if we can't determine the error type
-    return 3;
+    // Use the configured max retries, default to 3 if not found
+    return _maxRetries.values.firstOrNull ?? 3;
   }
 
   /// Get retry delays for an operation based on error type
   static List<int> _getRetryDelays(String operationName) {
-    // Default to exponential backoff if we can't determine the error type
-    return [1000, 2000, 4000];
+    // Use the configured retry delays, default to exponential backoff if not found
+    return _retryDelays.values.firstOrNull ?? [1000, 2000, 4000];
   }
 
   /// Retry an operation with exponential backoff

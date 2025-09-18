@@ -12,7 +12,6 @@ Future<void> hiveBootstrap() async {
   await Hive.initFlutter('pocketa_db');
   Hive
     ..registerAdapter(TransactionAdapter())
-    ..registerAdapter(TransactionTypeAdapter())
     ..registerAdapter(WalletModelAdapter())
     ..registerAdapter(WalletTypeDtoAdapter())
     ..registerAdapter(CategoryModelAdapter());

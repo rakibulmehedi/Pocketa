@@ -6,9 +6,10 @@ import 'package:intl/intl.dart';
 import 'package:pocketa/core/constants/default_categories.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/core/utils/transaction_utils.dart';
-import 'package:pocketa/features/categories/presentations/viewmodels/category_providers.dart';
+import 'package:pocketa/features/categories/presentation/viewmodels/category_providers.dart';
 import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
 import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 
 class TransactionTile extends ConsumerWidget {

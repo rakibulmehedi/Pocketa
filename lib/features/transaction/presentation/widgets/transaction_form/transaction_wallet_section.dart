@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_notifier.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_state.dart';
-import 'package:pocketa/features/wallets/presentations/widgets/wallet_picker_button.dart';
+import 'package:pocketa/features/wallets/presentation/widgets/wallet_picker_button.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/shared/widgets/section_card.dart';
+import 'package:pocketa/shared/widgets/ui_components.dart';
 
 class TransactionWalletSection extends ConsumerWidget {
   final TransactionFormState form;

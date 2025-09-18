@@ -1,0 +1,37 @@
+// Core functionality exports
+export 'analytics/analytics_service.dart';
+export 'cache/advanced_cache.dart';
+export 'constants/default_categories.dart';
+export 'data/base_repository.dart';
+export 'db/hive_bootstrap.dart';
+export 'db/hive_box.dart';
+export 'db/hive_helpers.dart';
+export 'db/hive_type.dart';
+export 'error_handling/error_handler.dart';
+export 'error_handling/error_recovery.dart';
+// export 'error_handling/global_error_handler.dart'; // Commented out due to ambiguous export
+export 'errors/exception_mapper.dart';
+export 'errors/exceptions.dart';
+export 'errors/failure.dart';
+export 'locale/local_notifier.dart';
+export 'performance/performance_metrics.dart';
+export 'providers/theme_provider.dart';
+export 'responsive/responsive.dart';
+export 'result/result.dart';
+export 'routing/router.dart';
+export 'sync/supabase_stub.dart';
+export 'sync/sync_prefs.dart';
+export 'sync/sync_queue.dart';
+export 'sync/sync_remote.dart';
+export 'theme/app_colors.dart';
+export 'theme/app_theme.dart';
+export 'theme/app_typography.dart';
+// export 'theme/colors.dart'; // Commented out due to ambiguous export
+export 'theme/gradient.dart';
+export 'theme/responsive_colors.dart';
+export 'theme/text_styles.dart';
+export 'usecase/usecase.dart';
+export 'utils/currency_utils.dart';
+export 'utils/date_time_utc_converter.dart';
+export 'utils/icon_from_category_utils.dart';
+export 'utils/transaction_utils.dart';

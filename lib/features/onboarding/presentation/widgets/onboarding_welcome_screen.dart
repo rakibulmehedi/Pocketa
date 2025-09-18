@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/core/theme/app_colors.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/shared/widgets/widgets.dart';
+import 'package:pocketa/shared/widgets/chips.dart';
 
 class OnboardingWelcomeScreen extends ConsumerWidget {
   const OnboardingWelcomeScreen({super.key});
@@ -67,6 +67,17 @@ class OnboardingWelcomeScreen extends ConsumerWidget {
                       desktop: 220,
                     ),
                     fit: BoxFit.contain,
+                    // Performance optimization: cache image at target size
+                    cacheWidth: (layout.responsiveSize(
+                      phone: 120,
+                      tablet: 180,
+                      desktop: 220,
+                    ) * MediaQuery.of(context).devicePixelRatio).round(),
+                    cacheHeight: (layout.responsiveSize(
+                      phone: 120,
+                      tablet: 180,
+                      desktop: 220,
+                    ) * MediaQuery.of(context).devicePixelRatio).round(),
                   ),
                 ),
               ),

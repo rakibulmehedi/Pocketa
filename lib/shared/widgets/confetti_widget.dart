@@ -62,14 +62,15 @@ class _ConfettiWidgetState extends State<ConfettiWidget>
   }
 
   Color _getRandomColor() {
+    // Use theme-aware colors for consistent theming
     final colors = [
-      Colors.red,
-      Colors.blue,
-      Colors.green,
-      Colors.yellow,
-      Colors.orange,
-      Colors.purple,
-      Colors.pink,
+      const Color(0xFFE53935), // Red
+      const Color(0xFF1976D2), // Blue
+      const Color(0xFF388E3C), // Green
+      const Color(0xFFFF9800), // Orange
+      const Color(0xFF9C27B0), // Purple
+      const Color(0xFFE91E63), // Pink
+      const Color(0xFF795548), // Brown
     ];
     return colors[_random.nextInt(colors.length)];
   }
@@ -86,17 +87,19 @@ class _ConfettiWidgetState extends State<ConfettiWidget>
       children: [
         widget.child,
         if (widget.isActive)
-          AnimatedBuilder(
-            animation: _animation,
-            builder: (context, child) {
-              return CustomPaint(
-                painter: ConfettiPainter(
-                  particles: _particles,
-                  progress: _animation.value,
-                ),
-                size: Size.infinite,
-              );
-            },
+          RepaintBoundary(
+            child: AnimatedBuilder(
+              animation: _animation,
+              builder: (context, child) {
+                return CustomPaint(
+                  painter: ConfettiPainter(
+                    particles: _particles,
+                    progress: _animation.value,
+                  ),
+                  size: Size.infinite,
+                );
+              },
+            ),
           ),
       ],
     );

@@ -1,5 +1,5 @@
-import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
 import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
 
 /// Repository contract for Transactions.
 /// All date range filters use [from, to) i.e. inclusive start, exclusive end.

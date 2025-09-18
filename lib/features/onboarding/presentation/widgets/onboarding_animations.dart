@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pocketa/core/theme/app_colors.dart';
 
 /// Enhanced animation utilities for onboarding screens
 class OnboardingAnimations {
@@ -75,8 +76,8 @@ class OnboardingAnimations {
   /// Creates a shimmer effect for loading states
   static Widget shimmer({
     required Widget child,
-    Color baseColor = const Color(0xFFE0E0E0),
-    Color highlightColor = const Color(0xFFF5F5F5),
+    Color? baseColor,
+    Color? highlightColor,
     Duration duration = const Duration(milliseconds: 1500),
   }) {
     return _Shimmer(
@@ -333,14 +334,14 @@ class _PulseState extends State<_Pulse> with SingleTickerProviderStateMixin {
 
 class _Shimmer extends StatefulWidget {
   final Widget child;
-  final Color baseColor;
-  final Color highlightColor;
+  final Color? baseColor;
+  final Color? highlightColor;
   final Duration duration;
 
   const _Shimmer({
     required this.child,
-    required this.baseColor,
-    required this.highlightColor,
+    this.baseColor,
+    this.highlightColor,
     required this.duration,
   });
 
@@ -370,6 +371,9 @@ class _ShimmerState extends State<_Shimmer> with SingleTickerProviderStateMixin 
 
   @override
   Widget build(BuildContext context) {
+    final baseColor = widget.baseColor ?? AppColors.outline(context).withValues(alpha: 0.3);
+    final highlightColor = widget.highlightColor ?? AppColors.outline(context).withValues(alpha: 0.6);
+    
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {
@@ -379,9 +383,9 @@ class _ShimmerState extends State<_Shimmer> with SingleTickerProviderStateMixin 
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: [
-                widget.baseColor,
-                widget.highlightColor,
-                widget.baseColor,
+                baseColor,
+                highlightColor,
+                baseColor,
               ],
               stops: [
                 _animation.value - 0.3,

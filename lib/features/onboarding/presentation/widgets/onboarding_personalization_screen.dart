@@ -19,6 +19,7 @@ class OnboardingPersonalizationScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final layout = context.layout;
+    // Optimize rebuilds with select() for specific fields
     final state = ref.watch(onboardingStateProvider);
     final themeMode = ref.watch(themeProvider);
     final themeNotifier = ref.read(themeProvider.notifier);

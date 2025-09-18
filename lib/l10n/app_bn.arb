@@ -480,5 +480,172 @@
   "errorGeneric": "একটি অপ্রত্যাশিত ত্রুটি ঘটেছে",
   "retry": "পুনরায় চেষ্টা করুন",
   "clearAllTags": "সব ট্যাগ মুছুন",
-  "addTag": "ট্যাগ যোগ করুন"
+  "addTag": "ট্যাগ যোগ করুন",
+
+  "onb_welcome_chip_secure_desc": "আপনার ডেটা এনক্রিপ্টেড এবং স্থানীয়ভাবে সংরক্ষিত। কোনো ক্লাউড সিঙ্ক নেই, সর্বোচ্চ গোপনীয়তা।",
+  "@onb_welcome_chip_secure_desc": {
+    "description": "স্বাগতম স্ক্রিনে নিরাপদ ফিচার চিপের বর্ণনা"
+  },
+  "onb_welcome_chip_simple_desc": "খরচ ট্র্যাকিংয়ের জন্য সহজ, স্বজ্ঞাত ইন্টারফেস।",
+  "@onb_welcome_chip_simple_desc": {
+    "description": "স্বাগতম স্ক্রিনে সহজ ফিচার চিপের বর্ণনা"
+  },
+  "onb_welcome_chip_smart_desc": "ভালো আর্থিক ব্যবস্থাপনার জন্য এআই-চালিত অন্তর্দৃষ্টি এবং স্মার্ট ক্যাটাগরাইজেশন।",
+  "@onb_welcome_chip_smart_desc": {
+    "description": "স্বাগতম স্ক্রিনে স্মার্ট ফিচার চিপের বর্ণনা"
+  },
+  "onb_demo_error_failed": "ডেমো লেনদেন যোগ করতে ব্যর্থ: {error}",
+  "@onb_demo_error_failed": {
+    "description": "ডেমো লেনদেন যোগ করতে ব্যর্থ হলে ত্রুটি বার্তা",
+    "placeholders": { "error": {} }
+  },
+  "onb_demo_adding": "যোগ করা হচ্ছে...",
+  "@onb_demo_adding": {
+    "description": "ডেমো লেনদেন যোগ করার সময় লোডিং স্টেট টেক্সট"
+  },
+  "empty_transactions_title": "কোনো লেনদেন নেই",
+  "@empty_transactions_title": {
+    "description": "খালি লেনদেন স্টেটের শিরোনাম"
+  },
+  "empty_transactions_subtitle": "প্রথম লেনদেন যোগ করে শুরু করুন",
+  "@empty_transactions_subtitle": {
+    "description": "খালি লেনদেন স্টেটের উপশিরোনাম"
+  },
+  "empty_categories_title": "কোনো ক্যাটাগরি নেই",
+  "@empty_categories_title": {
+    "description": "খালি ক্যাটাগরি স্টেটের শিরোনাম"
+  },
+  "empty_categories_subtitle": "আপনার লেনদেন সংগঠিত করতে ক্যাটাগরি তৈরি করুন",
+  "@empty_categories_subtitle": {
+    "description": "খালি ক্যাটাগরি স্টেটের উপশিরোনাম"
+  },
+  "empty_wallets_title": "কোনো ওয়ালেট নেই",
+  "@empty_wallets_title": {
+    "description": "খালি ওয়ালেট স্টেটের শিরোনাম"
+  },
+  "empty_wallets_subtitle": "আপনার অর্থ ট্র্যাকিং শুরু করতে একটি ওয়ালেট যোগ করুন",
+  "@empty_wallets_subtitle": {
+    "description": "খালি ওয়ালেট স্টেটের উপশিরোনাম"
+  },
+  "btn_confirm": "নিশ্চিত করুন",
+  "@btn_confirm": {
+    "description": "নিশ্চিত বোতামের টেক্সট"
+  },
+  "btn_cancel": "বাতিল",
+  "@btn_cancel": {
+    "description": "বাতিল বোতামের টেক্সট"
+  },
+  "onb_habit_error_failed": "অনবোর্ডিং সম্পূর্ণ করতে ব্যর্থ: {error}",
+  "@onb_habit_error_failed": {
+    "description": "অভ্যাস অনবোর্ডিং ব্যর্থ হলে ত্রুটি বার্তা",
+    "placeholders": { "error": {} }
+  },
+  "onb_habit_day_label": "দিন",
+  "@onb_habit_day_label": {
+    "description": "অভ্যাস ট্র্যাকিংয়ের জন্য দিনের লেবেল"
+  },
+  "onb_trust_icon_label": "নিরাপত্তা এবং গোপনীয়তা আইকন",
+  "@onb_trust_icon_label": {
+    "description": "ট্রাস্ট স্ক্রিনে নিরাপত্তা আইকনের অ্যাক্সেসিবিলিটি লেবেল"
+  },
+  "currency_usd_code": "USD",
+  "@currency_usd_code": {
+    "description": "USD মুদ্রার কোড"
+  },
+  "currency_usd_name": "মার্কিন ডলার",
+  "@currency_usd_name": {
+    "description": "USD মুদ্রার নাম"
+  },
+  "currency_eur_code": "EUR",
+  "@currency_eur_code": {
+    "description": "EUR মুদ্রার কোড"
+  },
+  "currency_eur_name": "ইউরো",
+  "@currency_eur_name": {
+    "description": "EUR মুদ্রার নাম"
+  },
+  "currency_bdt_code": "BDT",
+  "@currency_bdt_code": {
+    "description": "BDT মুদ্রার কোড"
+  },
+  "currency_bdt_name": "বাংলাদেশি টাকা",
+  "@currency_bdt_name": {
+    "description": "BDT মুদ্রার নাম"
+  },
+  "language_english_name": "English",
+  "@language_english_name": {
+    "description": "ইংরেজি ভাষার নাম"
+  },
+  "language_bengali_name": "বাংলা",
+  "@language_bengali_name": {
+    "description": "বাংলা ভাষার নাম বাংলা লিপিতে"
+  },
+  "language_bengali_english_name": "Bengali",
+  "@language_bengali_english_name": {
+    "description": "বাংলা ভাষার নাম ইংরেজিতে"
+  },
+  "settings_theme_title": "থিম",
+  "@settings_theme_title": {
+    "description": "থিম সেটিংসের শিরোনাম"
+  },
+  "theme_light_name": "লাইট",
+  "@theme_light_name": {
+    "description": "লাইট থিমের নাম"
+  },
+  "theme_light_desc": "লাইট থিম",
+  "@theme_light_desc": {
+    "description": "লাইট থিমের বর্ণনা"
+  },
+  "theme_dark_name": "ডার্ক",
+  "@theme_dark_name": {
+    "description": "ডার্ক থিমের নাম"
+  },
+  "theme_dark_desc": "ডার্ক থিম",
+  "@theme_dark_desc": {
+    "description": "ডার্ক থিমের বর্ণনা"
+  },
+  "theme_system_name": "সিস্টেম",
+  "@theme_system_name": {
+    "description": "সিস্টেম থিমের নাম"
+  },
+  "theme_system_desc": "সিস্টেম ডিফল্ট",
+  "@theme_system_desc": {
+    "description": "সিস্টেম থিমের বর্ণনা"
+  },
+  "cat_salary_name": "বেতন",
+  "@cat_salary_name": {
+    "description": "বেতন ক্যাটাগরির নাম"
+  },
+  "cat_business_name": "ব্যবসা",
+  "@cat_business_name": {
+    "description": "ব্যবসা ক্যাটাগরির নাম"
+  },
+  "cat_investment_name": "বিনিয়োগ",
+  "@cat_investment_name": {
+    "description": "বিনিয়োগ ক্যাটাগরির নাম"
+  },
+  "cat_food_dining_name": "খাবার ও ডাইনিং",
+  "@cat_food_dining_name": {
+    "description": "খাবার ও ডাইনিং ক্যাটাগরির নাম"
+  },
+  "cat_transport_name": "যাতায়াত",
+  "@cat_transport_name": {
+    "description": "যাতায়াত ক্যাটাগরির নাম"
+  },
+  "cat_rent_name": "ভাড়া",
+  "@cat_rent_name": {
+    "description": "ভাড়া ক্যাটাগরির নাম"
+  },
+  "cat_shopping_name": "শপিং",
+  "@cat_shopping_name": {
+    "description": "শপিং ক্যাটাগরির নাম"
+  },
+  "cat_bank_transfer_name": "ব্যাংক ট্রান্সফার",
+  "@cat_bank_transfer_name": {
+    "description": "ব্যাংক ট্রান্সফার ক্যাটাগরির নাম"
+  },
+  "cat_mobile_wallet_name": "মোবাইল ওয়ালেট",
+  "@cat_mobile_wallet_name": {
+    "description": "মোবাইল ওয়ালেট ক্যাটাগরির নাম"
+  }
 }

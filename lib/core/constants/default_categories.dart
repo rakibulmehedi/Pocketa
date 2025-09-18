@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pocketa/features/categories/domain/entities/category_entity.dart';
-import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
 
 CategoryKind kindFromTxType(TransactionType t) {
   switch (t) {
@@ -19,7 +19,7 @@ List<CategoryEntity> defaultCategoriesByKind(CategoryKind kind) =>
 final List<CategoryEntity> defaultIncomeCategories = [
   CategoryEntity(
     id: 'inc_salary',
-    name: 'Salary',
+    name: 'cat_salary_name',
     kind: CategoryKind.income,
     iconCodePoint: Icons.payments.codePoint,
     iconFontFamily: 'MaterialIcons',
@@ -29,7 +29,7 @@ final List<CategoryEntity> defaultIncomeCategories = [
   ),
   CategoryEntity(
     id: 'inc_business',
-    name: 'Business',
+    name: 'cat_business_name',
     kind: CategoryKind.income,
     iconCodePoint: Icons.store.codePoint,
     iconFontFamily: 'MaterialIcons',
@@ -39,7 +39,7 @@ final List<CategoryEntity> defaultIncomeCategories = [
   ),
   CategoryEntity(
     id: 'inc_invest',
-    name: 'Investment',
+    name: 'cat_investment_name',
     kind: CategoryKind.income,
     iconCodePoint: Icons.trending_up.codePoint,
     iconFontFamily: 'MaterialIcons',
@@ -52,7 +52,7 @@ final List<CategoryEntity> defaultIncomeCategories = [
 final List<CategoryEntity> defaultExpenseCategories = [
   CategoryEntity(
     id: 'exp_food',
-    name: 'Food & Dining',
+    name: 'cat_food_dining_name',
     kind: CategoryKind.expense,
     iconCodePoint: Icons.restaurant.codePoint,
     iconFontFamily: 'MaterialIcons',
@@ -62,7 +62,7 @@ final List<CategoryEntity> defaultExpenseCategories = [
   ),
   CategoryEntity(
     id: 'exp_transport',
-    name: 'Transport',
+    name: 'cat_transport_name',
     kind: CategoryKind.expense,
     iconCodePoint: Icons.directions_bus.codePoint,
     iconFontFamily: 'MaterialIcons',
@@ -72,7 +72,7 @@ final List<CategoryEntity> defaultExpenseCategories = [
   ),
   CategoryEntity(
     id: 'exp_rent',
-    name: 'Rent',
+    name: 'cat_rent_name',
     kind: CategoryKind.expense,
     iconCodePoint: Icons.home.codePoint,
     iconFontFamily: 'MaterialIcons',
@@ -82,7 +82,7 @@ final List<CategoryEntity> defaultExpenseCategories = [
   ),
   CategoryEntity(
     id: 'exp_shopping',
-    name: 'Shopping',
+    name: 'cat_shopping_name',
     kind: CategoryKind.expense,
     iconCodePoint: Icons.shopping_bag.codePoint,
     iconFontFamily: 'MaterialIcons',
@@ -95,7 +95,7 @@ final List<CategoryEntity> defaultExpenseCategories = [
 final List<CategoryEntity> defaultTransferCategories = [
   CategoryEntity(
     id: 'trf_bank',
-    name: 'Bank Transfer',
+    name: 'cat_bank_transfer_name',
     kind: CategoryKind.transfer,
     iconCodePoint: Icons.account_balance.codePoint,
     iconFontFamily: 'MaterialIcons',
@@ -105,7 +105,7 @@ final List<CategoryEntity> defaultTransferCategories = [
   ),
   CategoryEntity(
     id: 'trf_mfs',
-    name: 'Mobile Wallet',
+    name: 'cat_mobile_wallet_name',
     kind: CategoryKind.transfer,
     iconCodePoint: Icons.phone_iphone.codePoint,
     iconFontFamily: 'MaterialIcons',

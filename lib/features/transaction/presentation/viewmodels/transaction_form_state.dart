@@ -1,7 +1,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pocketa/core/utils/date_time_utc_converter.dart';
-import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
+import 'package:pocketa/core/utils/transaction_type_converter.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
 
 
 part 'transaction_form_state.freezed.dart';
@@ -10,7 +11,7 @@ part 'transaction_form_state.g.dart';
 @freezed
 class TransactionFormState with _$TransactionFormState {
   const factory TransactionFormState({
-    @Default(TransactionType.expense) TransactionType type,
+    @Default(TransactionType.expense) @TransactionTypeConverter() TransactionType type,
     String? categoryId,
     @DateTimeUtcConverter() required DateTime dateUtc,
     @Default('BDT') String currency,

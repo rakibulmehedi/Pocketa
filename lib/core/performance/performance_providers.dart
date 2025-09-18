@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/performance/performance_utils.dart';
 
 /// Performance monitoring providers
 class PerformanceProviders {
@@ -52,8 +51,11 @@ class CacheNotifier extends StateNotifier<Map<String, dynamic>> {
     final newState = Map<String, dynamic>.from(state);
     
     newState.removeWhere((key, value) {
-      if (value is _CachedValue) {
-        return now.difference(value.timestamp) > ttl;
+      if (value is Map && value.containsKey('timestamp')) {
+        final timestamp = value['timestamp'] as DateTime?;
+        if (timestamp != null) {
+          return now.difference(timestamp) > ttl;
+        }
       }
       return false;
     });

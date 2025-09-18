@@ -288,7 +288,7 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                                 ],
                               ),
                               child: Text(
-                                l10n.onb_habit_day_label(1),
+                                l10n.onb_habit_day_label,
                                 style: TextStyle(
                                   fontSize: layout.tSm,
                                   fontWeight: FontWeight.bold,

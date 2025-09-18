@@ -1077,9 +1077,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get onb_habit_toggle_reminder => 'ডেইলি রিমাইন্ডার';
 
   @override
-  String onb_habit_day_label(int day) {
-    return 'Day $day';
-  }
+  String get onb_habit_day_label => 'দিন';
 
   @override
   String get onb_welcome_chip_offline => 'অফলাইন';
@@ -1105,4 +1103,133 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get errorDatabase => 'ডেটাবেস ত্রুটি ঘটেছে';
+
+  @override
+  String get onb_welcome_chip_secure_desc =>
+      'আপনার ডেটা এনক্রিপ্টেড এবং স্থানীয়ভাবে সংরক্ষিত। কোনো ক্লাউড সিঙ্ক নেই, সর্বোচ্চ গোপনীয়তা।';
+
+  @override
+  String get onb_welcome_chip_simple_desc =>
+      'খরচ ট্র্যাকিংয়ের জন্য সহজ, স্বজ্ঞাত ইন্টারফেস।';
+
+  @override
+  String get onb_welcome_chip_smart_desc =>
+      'ভালো আর্থিক ব্যবস্থাপনার জন্য এআই-চালিত অন্তর্দৃষ্টি এবং স্মার্ট ক্যাটাগরাইজেশন।';
+
+  @override
+  String onb_demo_error_failed(Object error) {
+    return 'ডেমো লেনদেন যোগ করতে ব্যর্থ: $error';
+  }
+
+  @override
+  String get onb_demo_adding => 'যোগ করা হচ্ছে...';
+
+  @override
+  String get empty_transactions_title => 'কোনো লেনদেন নেই';
+
+  @override
+  String get empty_transactions_subtitle => 'প্রথম লেনদেন যোগ করে শুরু করুন';
+
+  @override
+  String get empty_categories_title => 'কোনো ক্যাটাগরি নেই';
+
+  @override
+  String get empty_categories_subtitle =>
+      'আপনার লেনদেন সংগঠিত করতে ক্যাটাগরি তৈরি করুন';
+
+  @override
+  String get empty_wallets_title => 'কোনো ওয়ালেট নেই';
+
+  @override
+  String get empty_wallets_subtitle =>
+      'আপনার অর্থ ট্র্যাকিং শুরু করতে একটি ওয়ালেট যোগ করুন';
+
+  @override
+  String get btn_confirm => 'নিশ্চিত করুন';
+
+  @override
+  String get btn_cancel => 'বাতিল';
+
+  @override
+  String onb_habit_error_failed(Object error) {
+    return 'অনবোর্ডিং সম্পূর্ণ করতে ব্যর্থ: $error';
+  }
+
+  @override
+  String get onb_trust_icon_label => 'নিরাপত্তা এবং গোপনীয়তা আইকন';
+
+  @override
+  String get currency_usd_code => 'USD';
+
+  @override
+  String get currency_usd_name => 'মার্কিন ডলার';
+
+  @override
+  String get currency_eur_code => 'EUR';
+
+  @override
+  String get currency_eur_name => 'ইউরো';
+
+  @override
+  String get currency_bdt_code => 'BDT';
+
+  @override
+  String get currency_bdt_name => 'বাংলাদেশি টাকা';
+
+  @override
+  String get language_english_name => 'English';
+
+  @override
+  String get language_bengali_name => 'বাংলা';
+
+  @override
+  String get language_bengali_english_name => 'Bengali';
+
+  @override
+  String get settings_theme_title => 'থিম';
+
+  @override
+  String get theme_light_name => 'লাইট';
+
+  @override
+  String get theme_light_desc => 'লাইট থিম';
+
+  @override
+  String get theme_dark_name => 'ডার্ক';
+
+  @override
+  String get theme_dark_desc => 'ডার্ক থিম';
+
+  @override
+  String get theme_system_name => 'সিস্টেম';
+
+  @override
+  String get theme_system_desc => 'সিস্টেম ডিফল্ট';
+
+  @override
+  String get cat_salary_name => 'বেতন';
+
+  @override
+  String get cat_business_name => 'ব্যবসা';
+
+  @override
+  String get cat_investment_name => 'বিনিয়োগ';
+
+  @override
+  String get cat_food_dining_name => 'খাবার ও ডাইনিং';
+
+  @override
+  String get cat_transport_name => 'যাতায়াত';
+
+  @override
+  String get cat_rent_name => 'ভাড়া';
+
+  @override
+  String get cat_shopping_name => 'শপিং';
+
+  @override
+  String get cat_bank_transfer_name => 'ব্যাংক ট্রান্সফার';
+
+  @override
+  String get cat_mobile_wallet_name => 'মোবাইল ওয়ালেট';
 }

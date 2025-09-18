@@ -1,6 +1,5 @@
-import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
-
 import 'package:pocketa/features/transaction/domain/repositories/transaction_repository.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
 
 class GetMonthExpenseArgs {
   final int y, m;

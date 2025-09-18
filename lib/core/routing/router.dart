@@ -3,7 +3,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pocketa/core/db/hive_box.dart';
 import 'package:pocketa/features/dashboard/presentation/pages/dashboard_screen.dart';
 import 'package:pocketa/features/onboarding/presentation/pages/onboarding_screen.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
 import 'package:pocketa/features/transaction/presentation/pages/pages.dart';
 
 GoRouter buildRouter() => GoRouter(
@@ -25,14 +24,6 @@ GoRouter buildRouter() => GoRouter(
       path: '/onboarding',
       name: 'onboarding',
       builder: (context, state) => const OnboardingScreen(),
-    ),
-    GoRoute(
-      path: '/add_edit_transaction',
-      name: 'add_edit_tx',
-      builder: (context, state) {
-        final tx = state.extra as TransactionEntity?;
-        return AddEditTransactionScreen(initial: tx);
-      },
     ),
     GoRoute(
       path: '/transactions/add_edit',

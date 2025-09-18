@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/performance/performance_utils.dart';
 import 'package:pocketa/core/performance/performance_providers.dart';
 import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
-import 'package:pocketa/features/transaction/presentation/widgets/transaction_tile.dart';
-import 'package:pocketa/shared/widgets/empty_state_widget.dart';
+import 'package:pocketa/shared/widgets/ui_components.dart';
 
 /// Performance-optimized transaction list with lazy loading and caching
 class OptimizedTransactionList extends ConsumerStatefulWidget {
@@ -62,9 +60,10 @@ class _OptimizedTransactionListState extends ConsumerState<OptimizedTransactionL
   Widget _buildList() {
     if (widget.transactions.isEmpty) {
       return widget.emptyWidget ?? 
-             EmptyStateWidget(
-               message: widget.emptyMessage ?? 'No transactions found',
-               icon: Icons.receipt_long,
+             EmptyState(
+               icon: Icons.receipt_long_outlined,
+               title: 'No transactions yet',
+               subtitle: 'Start by adding your first transaction',
              );
     }
 
@@ -130,9 +129,9 @@ class OptimizedTransactionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
-      child: MemoizedWidget(
+      child: OptimizedWidget(
         cacheKey: 'transaction_tile_${transaction.id}',
-        builder: () => _buildTile(context),
+        child: _buildTile(context),
       ),
     );
   }
@@ -261,9 +260,9 @@ class _OptimizedTransactionGridState extends ConsumerState<OptimizedTransactionG
       return _cachedCards[cacheKey]!;
     }
 
-    final card = MemoizedWidget(
+    final card = OptimizedWidget(
       cacheKey: cacheKey,
-      builder: () => _buildCard(transaction),
+      child: _buildCard(transaction),
     );
 
     _cachedCards[cacheKey] = card;

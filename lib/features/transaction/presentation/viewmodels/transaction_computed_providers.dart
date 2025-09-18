@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
-
 import 'package:pocketa/features/transaction/domain/repositories/transaction_repository.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/month_args.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_providers.dart';
 

@@ -1078,9 +1078,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onb_habit_toggle_reminder => 'Daily reminder';
 
   @override
-  String onb_habit_day_label(int day) {
-    return 'Day $day';
-  }
+  String get onb_habit_day_label => 'DAY';
 
   @override
   String get onb_welcome_chip_offline => 'Offline';
@@ -1107,4 +1105,134 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorDatabase => 'Database error occurred';
+
+  @override
+  String get onb_welcome_chip_secure_desc =>
+      'Your data is encrypted and stored locally. No cloud sync, maximum privacy.';
+
+  @override
+  String get onb_welcome_chip_simple_desc =>
+      'Clean, intuitive interface designed for easy expense tracking.';
+
+  @override
+  String get onb_welcome_chip_smart_desc =>
+      'AI-powered insights and smart categorization for better financial management.';
+
+  @override
+  String onb_demo_error_failed(Object error) {
+    return 'Failed to add demo transaction: $error';
+  }
+
+  @override
+  String get onb_demo_adding => 'Adding...';
+
+  @override
+  String get empty_transactions_title => 'No Transactions';
+
+  @override
+  String get empty_transactions_subtitle =>
+      'Start by adding your first transaction';
+
+  @override
+  String get empty_categories_title => 'No Categories';
+
+  @override
+  String get empty_categories_subtitle =>
+      'Create categories to organize your transactions';
+
+  @override
+  String get empty_wallets_title => 'No Wallets';
+
+  @override
+  String get empty_wallets_subtitle =>
+      'Add a wallet to start tracking your finances';
+
+  @override
+  String get btn_confirm => 'Confirm';
+
+  @override
+  String get btn_cancel => 'Cancel';
+
+  @override
+  String onb_habit_error_failed(Object error) {
+    return 'Failed to complete onboarding: $error';
+  }
+
+  @override
+  String get onb_trust_icon_label => 'Security and privacy icon';
+
+  @override
+  String get currency_usd_code => 'USD';
+
+  @override
+  String get currency_usd_name => 'US Dollar';
+
+  @override
+  String get currency_eur_code => 'EUR';
+
+  @override
+  String get currency_eur_name => 'Euro';
+
+  @override
+  String get currency_bdt_code => 'BDT';
+
+  @override
+  String get currency_bdt_name => 'Bangladeshi Taka';
+
+  @override
+  String get language_english_name => 'English';
+
+  @override
+  String get language_bengali_name => 'বাংলা';
+
+  @override
+  String get language_bengali_english_name => 'Bengali';
+
+  @override
+  String get settings_theme_title => 'Theme';
+
+  @override
+  String get theme_light_name => 'Light';
+
+  @override
+  String get theme_light_desc => 'Light Theme';
+
+  @override
+  String get theme_dark_name => 'Dark';
+
+  @override
+  String get theme_dark_desc => 'Dark Theme';
+
+  @override
+  String get theme_system_name => 'System';
+
+  @override
+  String get theme_system_desc => 'System Default';
+
+  @override
+  String get cat_salary_name => 'Salary';
+
+  @override
+  String get cat_business_name => 'Business';
+
+  @override
+  String get cat_investment_name => 'Investment';
+
+  @override
+  String get cat_food_dining_name => 'Food & Dining';
+
+  @override
+  String get cat_transport_name => 'Transport';
+
+  @override
+  String get cat_rent_name => 'Rent';
+
+  @override
+  String get cat_shopping_name => 'Shopping';
+
+  @override
+  String get cat_bank_transfer_name => 'Bank Transfer';
+
+  @override
+  String get cat_mobile_wallet_name => 'Mobile Wallet';
 }

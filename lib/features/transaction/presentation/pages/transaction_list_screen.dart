@@ -6,7 +6,7 @@ import 'package:pocketa/features/transaction/presentation/viewmodels/viewmodels.
 import 'package:pocketa/features/transaction/presentation/widgets/transaction_list_view.dart';
 import 'package:pocketa/features/transaction/presentation/widgets/transaction_tile.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/shared/widgets/widgets.dart';
+import 'package:pocketa/shared/widgets/ui_components.dart';
 
 class TransactionListScreen extends ConsumerWidget {
   const TransactionListScreen({super.key});

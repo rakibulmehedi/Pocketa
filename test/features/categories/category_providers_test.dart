@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/features/categories/domain/entities/category_entity.dart';
-import 'package:pocketa/features/categories/presentations/viewmodels/category_providers.dart';
+import 'package:pocketa/features/categories/presentation/viewmodels/category_providers.dart';
 
 void main() {
   test('categoryByIdProvider selects single entity from stream', () async {

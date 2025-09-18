@@ -2072,11 +2072,11 @@ abstract class AppLocalizations {
   /// **'Daily reminder'**
   String get onb_habit_toggle_reminder;
 
-  /// Day label with day number
+  /// Day label for habit tracking
   ///
   /// In en, this message translates to:
-  /// **'Day {day}'**
-  String onb_habit_day_label(int day);
+  /// **'DAY'**
+  String get onb_habit_day_label;
 
   /// No description provided for @onb_welcome_chip_offline.
   ///
@@ -2125,6 +2125,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Database error occurred'**
   String get errorDatabase;
+
+  /// Description for secure feature chip in welcome screen
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is encrypted and stored locally. No cloud sync, maximum privacy.'**
+  String get onb_welcome_chip_secure_desc;
+
+  /// Description for simple feature chip in welcome screen
+  ///
+  /// In en, this message translates to:
+  /// **'Clean, intuitive interface designed for easy expense tracking.'**
+  String get onb_welcome_chip_simple_desc;
+
+  /// Description for smart feature chip in welcome screen
+  ///
+  /// In en, this message translates to:
+  /// **'AI-powered insights and smart categorization for better financial management.'**
+  String get onb_welcome_chip_smart_desc;
+
+  /// Error message when demo transaction fails to add
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add demo transaction: {error}'**
+  String onb_demo_error_failed(Object error);
+
+  /// Loading state text when adding demo transaction
+  ///
+  /// In en, this message translates to:
+  /// **'Adding...'**
+  String get onb_demo_adding;
+
+  /// Title for empty transactions state
+  ///
+  /// In en, this message translates to:
+  /// **'No Transactions'**
+  String get empty_transactions_title;
+
+  /// Subtitle for empty transactions state
+  ///
+  /// In en, this message translates to:
+  /// **'Start by adding your first transaction'**
+  String get empty_transactions_subtitle;
+
+  /// Title for empty categories state
+  ///
+  /// In en, this message translates to:
+  /// **'No Categories'**
+  String get empty_categories_title;
+
+  /// Subtitle for empty categories state
+  ///
+  /// In en, this message translates to:
+  /// **'Create categories to organize your transactions'**
+  String get empty_categories_subtitle;
+
+  /// Title for empty wallets state
+  ///
+  /// In en, this message translates to:
+  /// **'No Wallets'**
+  String get empty_wallets_title;
+
+  /// Subtitle for empty wallets state
+  ///
+  /// In en, this message translates to:
+  /// **'Add a wallet to start tracking your finances'**
+  String get empty_wallets_subtitle;
+
+  /// Confirm button text
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get btn_confirm;
+
+  /// Cancel button text
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get btn_cancel;
+
+  /// Error message when habit onboarding fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to complete onboarding: {error}'**
+  String onb_habit_error_failed(Object error);
+
+  /// Accessibility label for security icon in trust screen
+  ///
+  /// In en, this message translates to:
+  /// **'Security and privacy icon'**
+  String get onb_trust_icon_label;
+
+  /// USD currency code
+  ///
+  /// In en, this message translates to:
+  /// **'USD'**
+  String get currency_usd_code;
+
+  /// USD currency name
+  ///
+  /// In en, this message translates to:
+  /// **'US Dollar'**
+  String get currency_usd_name;
+
+  /// EUR currency code
+  ///
+  /// In en, this message translates to:
+  /// **'EUR'**
+  String get currency_eur_code;
+
+  /// EUR currency name
+  ///
+  /// In en, this message translates to:
+  /// **'Euro'**
+  String get currency_eur_name;
+
+  /// BDT currency code
+  ///
+  /// In en, this message translates to:
+  /// **'BDT'**
+  String get currency_bdt_code;
+
+  /// BDT currency name
+  ///
+  /// In en, this message translates to:
+  /// **'Bangladeshi Taka'**
+  String get currency_bdt_name;
+
+  /// English language name
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get language_english_name;
+
+  /// Bengali language name in Bengali script
+  ///
+  /// In en, this message translates to:
+  /// **'বাংলা'**
+  String get language_bengali_name;
+
+  /// Bengali language name in English
+  ///
+  /// In en, this message translates to:
+  /// **'Bengali'**
+  String get language_bengali_english_name;
+
+  /// Theme settings title
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get settings_theme_title;
+
+  /// Light theme name
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get theme_light_name;
+
+  /// Light theme description
+  ///
+  /// In en, this message translates to:
+  /// **'Light Theme'**
+  String get theme_light_desc;
+
+  /// Dark theme name
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get theme_dark_name;
+
+  /// Dark theme description
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Theme'**
+  String get theme_dark_desc;
+
+  /// System theme name
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get theme_system_name;
+
+  /// System theme description
+  ///
+  /// In en, this message translates to:
+  /// **'System Default'**
+  String get theme_system_desc;
+
+  /// Salary category name
+  ///
+  /// In en, this message translates to:
+  /// **'Salary'**
+  String get cat_salary_name;
+
+  /// Business category name
+  ///
+  /// In en, this message translates to:
+  /// **'Business'**
+  String get cat_business_name;
+
+  /// Investment category name
+  ///
+  /// In en, this message translates to:
+  /// **'Investment'**
+  String get cat_investment_name;
+
+  /// Food & Dining category name
+  ///
+  /// In en, this message translates to:
+  /// **'Food & Dining'**
+  String get cat_food_dining_name;
+
+  /// Transport category name
+  ///
+  /// In en, this message translates to:
+  /// **'Transport'**
+  String get cat_transport_name;
+
+  /// Rent category name
+  ///
+  /// In en, this message translates to:
+  /// **'Rent'**
+  String get cat_rent_name;
+
+  /// Shopping category name
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get cat_shopping_name;
+
+  /// Bank Transfer category name
+  ///
+  /// In en, this message translates to:
+  /// **'Bank Transfer'**
+  String get cat_bank_transfer_name;
+
+  /// Mobile Wallet category name
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile Wallet'**
+  String get cat_mobile_wallet_name;
 }
 
 class _AppLocalizationsDelegate
