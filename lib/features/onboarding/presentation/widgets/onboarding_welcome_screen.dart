@@ -4,7 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/core/theme/app_colors.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
+<<<<<<< Updated upstream
 import 'package:pocketa/shared/widgets/widgets.dart';
+=======
+import 'package:pocketa/shared/widgets.dart';
+>>>>>>> Stashed changes
 
 class OnboardingWelcomeScreen extends ConsumerWidget {
   const OnboardingWelcomeScreen({super.key});

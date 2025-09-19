@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketa/features/categories/domain/entities/category_entity.dart';
 import 'package:pocketa/features/categories/presentations/viewmodels/category_providers.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
+<<<<<<< Updated upstream:lib/features/categories/presentations/widgets/add_category_dialog.dart
+=======
+import 'package:pocketa/shared/widgets.dart';
+>>>>>>> Stashed changes:lib/features/categories/presentation/widgets/add_category_dialog.dart
 
 class AddCategoryDialog extends ConsumerStatefulWidget {
   /// Which kind of category we’re creating

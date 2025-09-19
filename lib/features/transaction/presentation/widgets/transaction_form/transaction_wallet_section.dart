@@ -4,7 +4,11 @@ import 'package:pocketa/features/transaction/presentation/viewmodels/transaction
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_state.dart';
 import 'package:pocketa/features/wallets/presentations/widgets/wallet_picker_button.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
+<<<<<<< Updated upstream
 import 'package:pocketa/shared/widgets/section_card.dart';
+=======
+import 'package:pocketa/shared/widgets.dart';
+>>>>>>> Stashed changes
 
 class TransactionWalletSection extends ConsumerWidget {
   final TransactionFormState form;

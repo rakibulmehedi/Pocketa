@@ -1,48 +1,96 @@
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pocketa/core/data/base_repository.dart';
 import 'package:pocketa/features/wallets/data/models/wallet_model.dart';
 import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
 import 'package:pocketa/features/wallets/domain/repositories/wallet_repository.dart';
 
-class WalletRepoImpl implements WalletRepository {
-  final Box<WalletModel> _box;
-  const WalletRepoImpl(this._box);
+/// Hive-backed implementation for WalletRepository.
+class WalletRepoImpl extends BaseRepositoryImpl<WalletEntity, WalletModel> implements WalletRepository {
+  const WalletRepoImpl(super.box);
 
-  // make sure only one wallet is default
   @override
-  Future<void> upsert(WalletEntity wallet) async {
-    final model = wallet.toModel();
+  WalletEntity modelToEntity(WalletModel model) => model.toEntity();
 
+  @override
+  WalletModel entityToModel(WalletEntity entity) => entity.toModel();
+
+  @override
+  String get entityIdField => 'id';
+
+  WalletEntity _markAsDeleted(WalletEntity entity) {
+    return entity.copyWith(
+      isDeleted: true,
+      updatedAt: DateTime.now().toUtc(),
+    );
+  }
+
+  dynamic _getFieldValue(WalletEntity entity, String fieldName) {
+    switch (fieldName) {
+      case 'name': return entity.name;
+      case 'type': return entity.type;
+      case 'isDefault': return entity.isDefault;
+      case 'createdAt': return entity.createdAt;
+      default: return null;
+    }
+  }
+
+  // Override upsert to handle default wallet logic
+  @override
+  Future<void> upsert(WalletEntity entity) async {
+    final now = DateTime.now().toUtc();
+    final model = entity
+        .copyWith(createdAt: entity.createdAt ?? now, updatedAt: now)
+        .toModel();
+
+    // Make sure only one wallet is default
     if (model.isDefault) {
-      for (final key in _box.keys) {
-        final m = _box.get(key);
+      for (final key in box.keys) {
+        final m = box.get(key);
         if (m != null && m.isDefault && m.id != model.id) {
-          await _box.put(key, m.copyWith(isDefault: false));
+          await box.put(key, m.copyWith(isDefault: false));
         }
       }
     }
 
-    await _box.put(model.id, model);
+    await box.put(model.id, model);
   }
 
   @override
-  Future<void> delete(String id, {bool hard = false}) async {
-    await _box.delete(id);
+  List<WalletEntity> all({bool includeDeleted = false}) {
+    final list = box.values
+        .map((e) => e.toEntity())
+        .where((entity) => includeDeleted || !entity.isDeleted)
+        .toList()
+      ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    return list;
   }
 
   @override
-  WalletEntity? get(String id) => _box.get(id)?.toEntity();
+  WalletEntity? getDefaultWallet() {
+    return all().where((wallet) => wallet.isDefault).firstOrNull;
+  }
 
   @override
-  List<WalletEntity> all() =>
-      _box.values.map((e) => e.toEntity()).toList()
-        ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-
-  @override
-  Stream<List<WalletEntity>> watchAll() async* {
-    List<WalletEntity> snapshot() => all();
-    yield snapshot();
-    await for (final _ in _box.watch()) {
-      yield snapshot();
+  Future<void> setDefaultWallet(String walletId) async {
+    // First, remove default from all wallets
+    for (final key in box.keys) {
+      final model = box.get(key);
+      if (model != null && model.isDefault) {
+        await box.put(key, model.copyWith(isDefault: false));
+      }
     }
+
+    // Then set the specified wallet as default
+    final model = box.get(walletId);
+    if (model != null) {
+      await box.put(walletId, model.copyWith(
+        isDefault: true,
+        updatedAt: DateTime.now().toUtc(),
+      ));
+    }
+  }
+
+  @override
+  List<WalletEntity> getByType(WalletType type) {
+    return all().where((wallet) => wallet.type == type).toList();
   }
 }

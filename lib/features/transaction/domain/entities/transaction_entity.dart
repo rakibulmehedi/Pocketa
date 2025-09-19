@@ -1,9 +1,12 @@
+<<<<<<< Updated upstream
 import 'package:equatable/equatable.dart';
 import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
+=======
+import 'package:pocketa/core/data/base_entity.dart';
+import 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
+>>>>>>> Stashed changes
 
-
-class TransactionEntity extends Equatable {
-  final String id;
+class TransactionEntity extends BaseEntityImpl {
   final double amount;
   final DateTime date;
   final TransactionType type;
@@ -14,16 +17,13 @@ class TransactionEntity extends Equatable {
   final String? note;
   final List<String>? tags;
   final String currency;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
   final bool isSynced;
   final String? attachmentUrl;
-  final bool isDeleted;
   final String? transferTo;
   final bool externalTransfer;
 
-  const TransactionEntity({
-    required this.id,
+  TransactionEntity({
+    required super.id,
     required this.amount,
     required this.date,
     required this.type,
@@ -33,13 +33,13 @@ class TransactionEntity extends Equatable {
     this.note,
     this.tags,
     this.currency = 'BDT',
-    this.createdAt,
-    this.updatedAt,
     this.isSynced = false,
     this.attachmentUrl,
-    this.isDeleted = false,
     this.transferTo,
     this.externalTransfer = false,
+    super.createdAt,
+    super.updatedAt,
+    super.isDeleted = false,
   });
 
   // Convenience
@@ -92,7 +92,7 @@ class TransactionEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-    id,
+    ...super.props,
     amount,
     date,
     type,
@@ -102,11 +102,8 @@ class TransactionEntity extends Equatable {
     note,
     tags?.join('\u0001'),
     currency,
-    createdAt,
-    updatedAt,
     isSynced,
     attachmentUrl,
-    isDeleted,
     transferTo,
     externalTransfer,
   ];

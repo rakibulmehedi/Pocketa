@@ -1,18 +1,14 @@
+<<<<<<< Updated upstream
 import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
+=======
+import 'package:pocketa/core/data/base_repository.dart';
+>>>>>>> Stashed changes
 import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
 
 /// Repository contract for Transactions.
 /// All date range filters use [from, to) i.e. inclusive start, exclusive end.
-abstract class TransactionRepository {
-  // Mutations
-  Future<void> upsert(TransactionEntity e);
-  Future<void> upsertMany(Iterable<TransactionEntity> list);
-  Future<void> deleteHard(String id);
-  Future<void> deleteSoft(String id);
-
-  // Reads
-  TransactionEntity? getById(String id);
-  List<TransactionEntity> all({bool includeDeleted = false});
+abstract class TransactionRepository extends BaseRepository<TransactionEntity> {
+  // Transaction-specific methods
   List<TransactionEntity> between(
     DateTime from,
     DateTime to, {

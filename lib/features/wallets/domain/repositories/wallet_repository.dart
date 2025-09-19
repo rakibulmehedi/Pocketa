@@ -1,9 +1,10 @@
+import 'package:pocketa/core/data/base_repository.dart';
 import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
 
-abstract class WalletRepository {
-  Future<void> upsert(WalletEntity wallet);
-  Future<void> delete(String id, {bool hard = false}); 
-  WalletEntity? get(String id);
-  List<WalletEntity> all();
-  Stream<List<WalletEntity>> watchAll(); 
+/// Repository contract for Wallets.
+abstract class WalletRepository extends BaseRepository<WalletEntity> {
+  // Wallet-specific methods
+  WalletEntity? getDefaultWallet();
+  Future<void> setDefaultWallet(String walletId);
+  List<WalletEntity> getByType(WalletType type);
 }

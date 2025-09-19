@@ -1,0 +1,286 @@
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
+import 'package:pocketa/l10n/app_localizations.dart';
+import 'package:pocketa/core/responsive/responsive.dart';
+import 'package:pocketa/core/theme/text_styles.dart';
+import 'package:pocketa/shared/services/ui/ui_services.dart';
+import 'package:pocketa/shared/widgets.dart';
+import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
+import 'package:pocketa/features/wallets/presentation/viewmodels/wallet_providers.dart';
+
+Future<WalletEntity?> showAddWalletSheet(
+  BuildContext context,
+  WidgetRef ref,
+) async {
+  return showModalBottomSheet<WalletEntity>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    backgroundColor: Theme.of(context).colorScheme.surface,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (_) => const _AddWalletSheet(),
+  );
+}
+
+class _AddWalletSheet extends ConsumerStatefulWidget {
+  const _AddWalletSheet();
+  @override
+  ConsumerState<_AddWalletSheet> createState() => _AddWalletSheetState();
+}
+
+class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
+  final _form = GlobalKey<FormState>();
+  final _name = TextEditingController();
+  WalletType _type = WalletType.cash;
+  bool _isDefault = false;
+  bool _saving = false;
+  String? _dupError;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // first wallet => default = true
+    final wallets = ref
+        .read(walletsStreamProvider)
+        .maybeWhen(data: (l) => l, orElse: () => const <WalletEntity>[]);
+    _isDefault = wallets.isEmpty;
+
+    // live clear duplicate error + toggle clear icon visibility
+    _name.addListener(() {
+      if (_dupError != null) {
+        setState(() => _dupError = null);
+      } else {
+        // still trigger rebuild to refresh suffix clear button
+        setState(() {});
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _name.dispose();
+    super.dispose();
+  }
+
+  void _applyPreset(String name, WalletType t) {
+    setState(() {
+      _type = t;
+      _name.text = name;
+      _dupError = null;
+    });
+  }
+
+  Future<void> _submit() async {
+    FocusScope.of(context).unfocus();
+
+    _dupError = null;
+    if (!(_form.currentState?.validate() ?? false)) {
+      setState(() {});
+      return;
+    }
+
+    // duplicate-guard (case-insensitive)
+    final list = ref
+        .read(walletsStreamProvider)
+        .maybeWhen(data: (l) => l, orElse: () => const <WalletEntity>[]);
+    final exists = list.any(
+      (w) => w.name.trim().toLowerCase() == _name.text.trim().toLowerCase(),
+    );
+    if (exists) {
+      setState(() => _dupError = AppLocalizations.of(context).errorValidation);
+      return;
+    }
+
+    setState(() => _saving = true);
+
+    final entity = WalletEntity(
+      id: const Uuid().v4(),
+      name: _name.text.trim(),
+      type: _type,
+      isDefault: _isDefault,
+      createdAt: DateTime.now().toUtc(),
+    );
+
+    try {
+      await ref.read(saveWalletProvider)(entity);
+      if (mounted) Navigator.pop(context, entity); // return created wallet
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _saving = false);
+      SnackbarService.showGenericError(context);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final L = context.layout;
+    return Padding(
+      padding: EdgeInsets.only(bottom: L.viewInsetsBottom),
+      child: Form(
+        key: _form,
+        child: ListView(
+          shrinkWrap: true,
+          padding: L.insetsOnly(l: 2, t: 2, r: 2, b: 2.5),
+          children: [
+            Row(
+              children: [
+                Text(
+                  l10n.addWallet,
+                  style: AppTextStyles.responsiveTitle(context),
+                ),
+                const Spacer(),
+                ResponsiveIconButton(
+                  icon: Icons.close,
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+            SizedBox(height: L.spaceM),
+
+            // Presets
+            Wrap(
+              spacing: L.spaceS,
+              runSpacing: -6,
+              children: [
+                _PresetChip(
+                  l10n.cash,
+                  Icons.payments_outlined,
+                  () => _applyPreset(l10n.cash, WalletType.cash),
+                ),
+                _PresetChip(
+                  l10n.wallet_bkash,
+                  Icons.account_balance_wallet_outlined,
+                  () => _applyPreset(l10n.wallet_bkash, WalletType.bkash),
+                ),
+                _PresetChip(
+                  l10n.wallet_nagad,
+                  Icons.account_balance_wallet_outlined,
+                  () => _applyPreset(l10n.wallet_nagad, WalletType.nagad),
+                ),
+                _PresetChip(
+                  l10n.wallet_upay,
+                  Icons.account_balance_wallet_outlined,
+                  () => _applyPreset(l10n.wallet_upay, WalletType.upay),
+                ),
+                _PresetChip(
+                  l10n.wallet_rocket,
+                  Icons.account_balance_wallet_outlined,
+                  () => _applyPreset(l10n.wallet_rocket, WalletType.rocket),
+                ),
+                _PresetChip(
+                  l10n.wallet_preset_bank_ac,
+                  Icons.account_balance_outlined,
+                  () => _applyPreset(l10n.wallet_preset_bank_ac, WalletType.bank),
+                ),
+              ],
+            ),
+
+            SizedBox(height: L.spaceM),
+            TextFormField(
+              controller: _name,
+              autofocus: true,
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (_) => _submit(),
+              decoration: InputDecoration(
+                labelText: l10n.walletName,
+                hintText: l10n.walletNameHint,
+                prefixIcon: const Icon(Icons.account_balance_wallet_outlined),
+                suffixIcon: _name.text.isEmpty
+                    ? null
+                    : IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () => setState(_name.clear),
+                      ),
+                errorText: _dupError,
+              ),
+              validator: (v) => (v == null || v.trim().isEmpty)
+                  ? l10n.errorRequired(l10n.walletName)
+                  : null,
+            ),
+
+            SizedBox(height: L.spaceM),
+            DropdownButtonFormField<WalletType>(
+              value: _type,
+              isExpanded: true,
+              decoration: InputDecoration(
+                labelText: l10n.walletType,
+                prefixIcon: const Icon(Icons.category_outlined),
+              ),
+              items: WalletType.values
+                  .map(
+                    (t) => DropdownMenuItem(
+                        value: t, child: Text(_prettyType(context, t))),
+                  )
+                  .toList(),
+              onChanged: (t) => setState(() => _type = t!),
+            ),
+
+            SizedBox(height: L.spaceS),
+            SwitchListTile.adaptive(
+              value: _isDefault,
+              onChanged: (v) => setState(() => _isDefault = v),
+              title: Text(l10n.systemDefault),
+              contentPadding: EdgeInsets.zero,
+            ),
+
+            SizedBox(height: L.spaceL),
+            FilledButton.icon(
+              onPressed: _saving ? null : _submit,
+              icon: _saving
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.save_outlined),
+              label: Text(l10n.save),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _prettyType(BuildContext context, WalletType t) {
+    final l10n = AppLocalizations.of(context);
+    switch (t) {
+      case WalletType.cash:
+        return l10n.cash;
+      case WalletType.bkash:
+        return l10n.wallet_bkash;
+      case WalletType.nagad:
+        return l10n.wallet_nagad;
+      case WalletType.bank:
+        return l10n.bank;
+      case WalletType.upay:
+        return l10n.wallet_upay;
+      case WalletType.rocket:
+        return l10n.wallet_rocket;
+      case WalletType.others:
+        return l10n.others;
+    }
+  }
+}
+
+class _PresetChip extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final VoidCallback onTap;
+  const _PresetChip(this.label, this.icon, this.onTap);
+
+  @override
+  Widget build(BuildContext context) {
+    return ActionChip(
+      avatar: Icon(icon, size: 18),
+      label: Text(label),
+      onPressed: onTap,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    );
+  }
+}

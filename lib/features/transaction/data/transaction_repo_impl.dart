@@ -1,4 +1,4 @@
-import 'package:hive/hive.dart';
+import 'package:pocketa/core/data/base_repository.dart';
 import 'package:pocketa/features/transaction/data/mappers/transaction_mapper.dart';
 import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
 import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
@@ -6,9 +6,36 @@ import 'package:pocketa/features/transaction/domain/repositories/transaction_rep
 
 /// Hive-backed implementation.
 /// Works directly on Hive models for filtering; converts to Entity only at the edge.
-class TransactionRepoImpl implements TransactionRepository {
-  final Box<Transaction> _box; // Hive model class
-  const TransactionRepoImpl(this._box);
+class TransactionRepoImpl extends BaseRepositoryImpl<TransactionEntity, Transaction> implements TransactionRepository {
+  const TransactionRepoImpl(super.box);
+
+  @override
+  TransactionEntity modelToEntity(Transaction model) => model.toEntity();
+
+  @override
+  Transaction entityToModel(TransactionEntity entity) => entity.toModel();
+
+  @override
+  String get entityIdField => 'id';
+
+  TransactionEntity _markAsDeleted(TransactionEntity entity) {
+    return entity.copyWith(
+      isDeleted: true,
+      updatedAt: DateTime.now().toUtc(),
+    );
+  }
+
+  dynamic _getFieldValue(TransactionEntity entity, String fieldName) {
+    switch (fieldName) {
+      case 'walletId': return entity.walletId;
+      case 'categoryId': return entity.categoryId;
+      case 'type': return entity.type;
+      case 'date': return entity.date;
+      case 'amount': return entity.amount;
+      case 'createdAt': return entity.createdAt;
+      default: return null;
+    }
+  }
 
   // ------- Date helpers (UTC, [from, to)) ------- //
   DateTime _startOfMonth(int y, int m) => DateTime.utc(y, m, 1);
@@ -31,7 +58,7 @@ class TransactionRepoImpl implements TransactionRepository {
 
   // ------- Iter helpers ------- //
   Iterable<Transaction> _allIter({bool includeDeleted = false}) sync* {
-    for (final t in _box.values) {
+    for (final t in box.values) {
       if (!includeDeleted && t.isDeleted) continue;
       yield t;
     }
@@ -67,14 +94,14 @@ class TransactionRepoImpl implements TransactionRepository {
     });
   }
 
-  // ---------------- Mutations ----------------
+  // Override upsert to add transaction-specific logic
   @override
   Future<void> upsert(TransactionEntity e) async {
     final now = DateTime.now().toUtc();
     final model = e
         .copyWith(createdAt: e.createdAt ?? now, updatedAt: now)
         .toModel();
-    await _box.put(model.id, model);
+    await box.put(model.id, model);
   }
 
   @override
@@ -87,21 +114,8 @@ class TransactionRepoImpl implements TransactionRepository {
           .toModel();
       map[m.id] = m;
     }
-    await _box.putAll(map);
+    await box.putAll(map);
   }
-
-  @override
-  Future<void> deleteHard(String id) async => _box.delete(id);
-
-  @override
-  Future<void> deleteSoft(String id) async {
-    final t = _box.get(id);
-    if (t != null) await _box.put(id, t.copyWith(isDeleted: true));
-  }
-
-  // ---------------- Reads ----------------
-  @override
-  TransactionEntity? getById(String id) => _box.get(id)?.toEntity();
 
   @override
   List<TransactionEntity> all({bool includeDeleted = false}) {

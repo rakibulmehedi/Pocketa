@@ -8,7 +8,7 @@ import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:pocketa/core/locale/local_notifier.dart';
 
 class OnboardingPersonalizationScreen extends ConsumerWidget {
-  final OnboardingNotifier notifier;
+  final OnboardingFormNotifier notifier;
 
   const OnboardingPersonalizationScreen({
     super.key,

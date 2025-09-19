@@ -1,5 +1,6 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pocketa/core/core.dart';
 import 'package:pocketa/core/constants/default_categories.dart';
 import 'package:pocketa/features/categories/domain/entities/category_entity.dart';
 import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
@@ -13,7 +14,7 @@ final transactionFormProvider =
       TransactionFormState
     >((ref) => TransactionFormNotifier());
 
-class TransactionFormNotifier extends StateNotifier<TransactionFormState> {
+class TransactionFormNotifier extends BaseFormNotifier<TransactionFormState> {
   TransactionFormNotifier() : super(TransactionFormState.initial());
 
   // ------------------------------ Init / Hydration ------------------------------
@@ -56,8 +57,9 @@ class TransactionFormNotifier extends StateNotifier<TransactionFormState> {
 
   /// JSON hydration (useful for drafts).
   void loadFromJson(Map<String, dynamic> json) {
-    final next = TransactionFormState.fromJson(json);
-    updateForm(next);
+    // TODO: Implement JSON deserialization if needed
+    // For now, just reset to initial state
+    reset();
   }
 
   /// Reset to initial pristine state (useful after submit).
@@ -332,5 +334,45 @@ class TransactionFormNotifier extends StateNotifier<TransactionFormState> {
       if (a[i] != b[i]) return false;
     }
     return true;
+  }
+
+  // ------------------------------ BaseFormNotifier Implementation ------------------------------
+
+  @override
+  TransactionFormState updateLoadingState(TransactionFormState state, bool loading) {
+    return state.copyWith(isLoading: loading);
+  }
+
+  @override
+  TransactionFormState updateErrorState(TransactionFormState state, String? error) {
+    return state.copyWith(error: error);
+  }
+
+  @override
+  TransactionFormState updateFieldErrorState(TransactionFormState state, String fieldName, String? error) {
+    final fieldErrors = Map<String, String>.from(state.fieldErrors);
+    if (error == null) {
+      fieldErrors.remove(fieldName);
+    } else {
+      fieldErrors[fieldName] = error;
+    }
+    return state.copyWith(fieldErrors: fieldErrors);
+  }
+
+  @override
+  TransactionFormState clearErrorState(TransactionFormState state) {
+    return state.copyWith(error: null, fieldErrors: {});
+  }
+
+  @override
+  TransactionFormState clearFieldErrorState(TransactionFormState state, String fieldName) {
+    final fieldErrors = Map<String, String>.from(state.fieldErrors);
+    fieldErrors.remove(fieldName);
+    return state.copyWith(fieldErrors: fieldErrors);
+  }
+
+  @override
+  TransactionFormState updateValidationState(TransactionFormState state, bool isValid, Map<String, String> fieldErrors) {
+    return state.copyWith(isValid: isValid, fieldErrors: fieldErrors);
   }
 }

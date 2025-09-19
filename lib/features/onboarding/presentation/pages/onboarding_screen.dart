@@ -42,9 +42,9 @@ class OnboardingScreen extends ConsumerWidget {
         child: Responsive.builder(
           child: Column(
             children: [
-              // Progress indicator
-              if (state.data.currentStep != OnboardingStep.welcome)
-                _buildProgressIndicator(context, state.data.currentStep, layout),
+              // // Progress indicator
+              // if (state.data.currentStep != OnboardingStep.welcome)
+              //   _buildProgressIndicator(context, state.data.currentStep, layout),
               
               // Current screen
               Expanded(
@@ -65,97 +65,97 @@ class OnboardingScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildProgressIndicator(BuildContext context, OnboardingStep currentStep, AppSize layout) {
-    final totalSteps = OnboardingStep.values.length;
-    final currentIndex = currentStep.index;
-    final progress = (currentIndex + 1) / totalSteps;
+  // Widget _buildProgressIndicator(BuildContext context, OnboardingStep currentStep, AppSize layout) {
+  //   final totalSteps = OnboardingStep.values.length;
+  //   final currentIndex = currentStep.index;
+  //   final progress = (currentIndex + 1) / totalSteps;
 
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: layout.pageGutter.horizontal,
-        vertical: layout.spaceM,
-      ),
-      child: Column(
-        children: [
-          // Progress bar with enhanced styling
-          Container(
-            height: layout.responsiveSize(phone: 6, tablet: 8, desktop: 10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(layout.responsiveSize(phone: 3, tablet: 4, desktop: 5)),
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Theme.of(context).colorScheme.surfaceContainerHighest
-                  : Theme.of(context).colorScheme.surfaceContainerHighest,
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(layout.responsiveSize(phone: 3, tablet: 4, desktop: 5)),
-              child: LinearProgressIndicator(
-                value: progress,
-                backgroundColor: Colors.transparent,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).brightness == Brightness.dark
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            ),
-          ),
+  //   return Container(
+  //     padding: EdgeInsets.symmetric(
+  //       horizontal: layout.pageGutter.horizontal,
+  //       vertical: layout.spaceM,
+  //     ),
+  //     child: Column(
+  //       children: [
+  //         // Progress bar with enhanced styling
+  //         Container(
+  //           height: layout.responsiveSize(phone: 6, tablet: 8, desktop: 10),
+  //           decoration: BoxDecoration(
+  //             borderRadius: BorderRadius.circular(layout.responsiveSize(phone: 3, tablet: 4, desktop: 5)),
+  //             color: Theme.of(context).brightness == Brightness.dark
+  //                 ? Theme.of(context).colorScheme.surfaceContainerHighest
+  //                 : Theme.of(context).colorScheme.surfaceContainerHighest,
+  //           ),
+  //           child: ClipRRect(
+  //             borderRadius: BorderRadius.circular(layout.responsiveSize(phone: 3, tablet: 4, desktop: 5)),
+  //             child: LinearProgressIndicator(
+  //               value: progress,
+  //               backgroundColor: Colors.transparent,
+  //               valueColor: AlwaysStoppedAnimation<Color>(
+  //                 Theme.of(context).brightness == Brightness.dark
+  //                     ? Theme.of(context).colorScheme.primary
+  //                     : Theme.of(context).colorScheme.primary,
+  //               ),
+  //             ),
+  //           ),
+  //         ),
           
-          SizedBox(height: layout.spaceS),
+  //         SizedBox(height: layout.spaceS),
           
-          // Step indicator with enhanced styling
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Step ${currentIndex + 1} of $totalSteps',
-                style: layout.responsiveTextStyle(
-                  phone: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                    fontWeight: FontWeight.w500,
-                  ) ?? const TextStyle(),
-                  tablet: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                    fontWeight: FontWeight.w500,
-                  ) ?? const TextStyle(),
-                  desktop: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                    fontWeight: FontWeight.w500,
-                  ) ?? const TextStyle(),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: layout.responsiveSize(phone: 8, tablet: 12, desktop: 16),
-                  vertical: layout.responsiveSize(phone: 4, tablet: 6, desktop: 8),
-                ),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(layout.responsiveSize(phone: 12, tablet: 16, desktop: 20)),
-                ),
-                child: Text(
-                  '${(progress * 100).round()}%',
-                  style: layout.responsiveTextStyle(
-                    phone: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.w600,
-                    ) ?? const TextStyle(),
-                    tablet: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.w600,
-                    ) ?? const TextStyle(),
-                    desktop: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.w600,
-                    ) ?? const TextStyle(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+  //         // Step indicator with enhanced styling
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Text(
+  //               'Step ${currentIndex + 1} of $totalSteps',
+  //               style: layout.responsiveTextStyle(
+  //                 phone: Theme.of(context).textTheme.bodySmall?.copyWith(
+  //                   color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+  //                   fontWeight: FontWeight.w500,
+  //                 ) ?? const TextStyle(),
+  //                 tablet: Theme.of(context).textTheme.bodyMedium?.copyWith(
+  //                   color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+  //                   fontWeight: FontWeight.w500,
+  //                 ) ?? const TextStyle(),
+  //                 desktop: Theme.of(context).textTheme.bodyMedium?.copyWith(
+  //                   color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+  //                   fontWeight: FontWeight.w500,
+  //                 ) ?? const TextStyle(),
+  //               ),
+  //             ),
+  //             Container(
+  //               padding: EdgeInsets.symmetric(
+  //                 horizontal: layout.responsiveSize(phone: 8, tablet: 12, desktop: 16),
+  //                 vertical: layout.responsiveSize(phone: 4, tablet: 6, desktop: 8),
+  //               ),
+  //               decoration: BoxDecoration(
+  //                 color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+  //                 borderRadius: BorderRadius.circular(layout.responsiveSize(phone: 12, tablet: 16, desktop: 20)),
+  //               ),
+  //               child: Text(
+  //                 '${(progress * 100).round()}%',
+  //                 style: layout.responsiveTextStyle(
+  //                   phone: Theme.of(context).textTheme.bodySmall?.copyWith(
+  //                     color: Theme.of(context).primaryColor,
+  //                     fontWeight: FontWeight.w600,
+  //                   ) ?? const TextStyle(),
+  //                   tablet: Theme.of(context).textTheme.bodyMedium?.copyWith(
+  //                     color: Theme.of(context).primaryColor,
+  //                     fontWeight: FontWeight.w600,
+  //                   ) ?? const TextStyle(),
+  //                   desktop: Theme.of(context).textTheme.bodyMedium?.copyWith(
+  //                     color: Theme.of(context).primaryColor,
+  //                     fontWeight: FontWeight.w600,
+  //                   ) ?? const TextStyle(),
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildDotsIndicator(BuildContext context, OnboardingStep currentStep, AppSize layout) {
     final totalSteps = OnboardingStep.values.length;
@@ -210,7 +210,7 @@ class OnboardingScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _completeOnboarding(BuildContext context, OnboardingNotifier notifier) async {
+  Future<void> _completeOnboarding(BuildContext context, OnboardingFormNotifier notifier) async {
     try {
       // Complete onboarding
       await notifier.completeOnboarding();
@@ -232,7 +232,7 @@ class OnboardingScreen extends ConsumerWidget {
     }
   }
 
-  Widget _buildCentralFooter(BuildContext context, OnboardingStep currentStep, OnboardingNotifier notifier, AppSize layout) {
+  Widget _buildCentralFooter(BuildContext context, OnboardingStep currentStep, OnboardingFormNotifier notifier, AppSize layout) {
     final l10n = AppLocalizations.of(context);
     
     // Get button text and actions based on current step
@@ -287,7 +287,7 @@ class OnboardingScreen extends ConsumerWidget {
   Widget _buildCurrentScreen(
     BuildContext context,
     OnboardingStep step,
-    OnboardingNotifier notifier,
+    OnboardingFormNotifier notifier,
   ) {
     switch (step) {
       case OnboardingStep.welcome:

@@ -6,7 +6,11 @@ import 'package:pocketa/features/categories/presentations/widgets/category_chips
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_notifier.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_state.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
+<<<<<<< Updated upstream
 import 'package:pocketa/shared/widgets/section_card.dart';
+=======
+import 'package:pocketa/shared/widgets.dart';
+>>>>>>> Stashed changes
 
 class TransactionCategorySection extends ConsumerWidget {
   final TransactionFormState form;

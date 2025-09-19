@@ -5,7 +5,7 @@ import 'package:pocketa/features/onboarding/presentation/viewmodels/onboarding_p
 import 'package:pocketa/l10n/app_localizations.dart';
 
 class OnboardingTrustScreen extends StatelessWidget {
-  final OnboardingNotifier notifier;
+  final OnboardingFormNotifier notifier;
 
   const OnboardingTrustScreen({
     super.key,
