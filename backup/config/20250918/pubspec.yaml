@@ -1,0 +1,80 @@
+name: pocketa
+description: "Clean Architecture-based Expense Management App built with Flutter, Riverpod, and Hive for offline-first personal finance tracking."
+version: "0.1.0+1"
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+environment:
+  sdk: ">=3.6.0 <4.0.0" 
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.6.1
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  shared_preferences: ^2.3.2
+  go_router: ^16.2.0
+  intl: ^0.20.2
+  uuid: ^4.5.1
+  logger: ^2.6.1
+  file_picker: ^10.3.2
+  flutter_staggered_grid_view: ^0.7.0
+
+  # Freezed + JSON (stable combo with hive_generator)
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.9.0
+
+  flutter_localizations:
+    sdk: flutter
+  equatable: ^2.0.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+  build_runner: ^2.4.11
+  hive_generator: ^2.0.1
+  freezed: ^2.4.7
+  json_serializable: ^6.7.1
+
+
+flutter:
+  assets:
+    - assets/
+    
+  uses-material-design: true
+  generate: true
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/inter/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/inter/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/inter/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/inter/Inter-Bold.ttf
+          weight: 700
+
+    - family: HindSiliguri
+      fonts:
+        - asset: assets/fonts/hind_siliguri/HindSiliguri-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/hind_siliguri/HindSiliguri-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/hind_siliguri/HindSiliguri-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/hind_siliguri/HindSiliguri-Bold.ttf
+          weight: 700
+    - family: NotoSans
+      fonts:
+      - asset: assets/fonts/noto_sans/NotoSans-Regular.ttf
+        weight: 400
+      - asset: assets/fonts/noto_sans/NotoSans-Medium.ttf
+        weight: 500
+      - asset: assets/fonts/noto_sans/NotoSans-SemiBold.ttf
+        weight: 600
+      - asset: assets/fonts/noto_sans/NotoSans-Bold.ttf
+        weight: 700
