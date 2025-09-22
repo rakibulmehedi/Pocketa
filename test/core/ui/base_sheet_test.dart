@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pocketa/core/core.dart';
-import 'package:pocketa/core/ui/base_sheet.dart';
 
 void main() {
   group('BaseSheet', () {

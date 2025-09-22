@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 import 'package:pocketa/core/theme/app_colors.dart';
-import '../performance/interactive_wrapper.dart';
+import 'package:pocketa/shared/ui_components/performance/interactive_wrapper.dart';
 
 /// Enhanced Custom App Bar with premium fintech design
 /// Features:

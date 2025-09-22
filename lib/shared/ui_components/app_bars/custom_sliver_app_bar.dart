@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/l10n/app_localizations.dart';

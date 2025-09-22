@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/core/utils/transaction_utils.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
-import '../effects/effects.dart';
+import 'package:pocketa/shared/ui_components/effects/effects.dart';
 
 /// Summary row with income, expense, and net cards
 class SummaryRow extends StatelessWidget {

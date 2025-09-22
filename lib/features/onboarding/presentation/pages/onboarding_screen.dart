@@ -43,21 +43,25 @@ class OnboardingScreen extends ConsumerWidget {
           child: Column(
             children: [
               // // Progress indicator
-              // if (state.data.currentStep != OnboardingStep.welcome)
-              //   _buildProgressIndicator(context, state.data.currentStep, layout),
-              
+              // Dots indicator above footer
+              if (state.data.currentStep != OnboardingStep.welcome)
+                _buildDotsIndicator(context, state.data.currentStep, layout),
+              // Linear progress indicator at the top
+              if (state.data.currentStep != OnboardingStep.welcome)
+                _buildProgressIndicator(
+                    context, state.data.currentStep, layout),
+
               // Current screen
               Expanded(
                 child: state.isLoading
                     ? const Center(child: CircularProgressIndicator())
-                    : _buildCurrentScreen(context, state.data.currentStep, notifier),
+                    : _buildCurrentScreen(
+                        context, state.data.currentStep, notifier),
               ),
-              
-              // Dots indicator above footer
-              _buildDotsIndicator(context, state.data.currentStep, layout),
-              
+
               // Central footer
-              _buildCentralFooter(context, state.data.currentStep, notifier, layout),
+              _buildCentralFooter(
+                  context, state.data.currentStep, notifier, layout),
             ],
           ),
         ),
@@ -65,102 +69,68 @@ class OnboardingScreen extends ConsumerWidget {
     );
   }
 
-  // Widget _buildProgressIndicator(BuildContext context, OnboardingStep currentStep, AppSize layout) {
-  //   final totalSteps = OnboardingStep.values.length;
-  //   final currentIndex = currentStep.index;
-  //   final progress = (currentIndex + 1) / totalSteps;
+  Widget _buildProgressIndicator(
+      BuildContext context, OnboardingStep currentStep, AppSize layout) {
+    final totalSteps = OnboardingStep.values.length ;
+    final currentIndex = currentStep.index ;
+    final progress = (currentIndex + 1) / totalSteps ;
 
-  //   return Container(
-  //     padding: EdgeInsets.symmetric(
-  //       horizontal: layout.pageGutter.horizontal,
-  //       vertical: layout.spaceM,
-  //     ),
-  //     child: Column(
-  //       children: [
-  //         // Progress bar with enhanced styling
-  //         Container(
-  //           height: layout.responsiveSize(phone: 6, tablet: 8, desktop: 10),
-  //           decoration: BoxDecoration(
-  //             borderRadius: BorderRadius.circular(layout.responsiveSize(phone: 3, tablet: 4, desktop: 5)),
-  //             color: Theme.of(context).brightness == Brightness.dark
-  //                 ? Theme.of(context).colorScheme.surfaceContainerHighest
-  //                 : Theme.of(context).colorScheme.surfaceContainerHighest,
-  //           ),
-  //           child: ClipRRect(
-  //             borderRadius: BorderRadius.circular(layout.responsiveSize(phone: 3, tablet: 4, desktop: 5)),
-  //             child: LinearProgressIndicator(
-  //               value: progress,
-  //               backgroundColor: Colors.transparent,
-  //               valueColor: AlwaysStoppedAnimation<Color>(
-  //                 Theme.of(context).brightness == Brightness.dark
-  //                     ? Theme.of(context).colorScheme.primary
-  //                     : Theme.of(context).colorScheme.primary,
-  //               ),
-  //             ),
-  //           ),
-  //         ),
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: layout.pageGutter.horizontal,
+        vertical: layout.spaceM,
+      ),
+      child: Column(
+        children: [
+          // Progress bar with enhanced styling
           
-  //         SizedBox(height: layout.spaceS),
-          
-  //         // Step indicator with enhanced styling
-  //         Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Text(
-  //               'Step ${currentIndex + 1} of $totalSteps',
-  //               style: layout.responsiveTextStyle(
-  //                 phone: Theme.of(context).textTheme.bodySmall?.copyWith(
-  //                   color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-  //                   fontWeight: FontWeight.w500,
-  //                 ) ?? const TextStyle(),
-  //                 tablet: Theme.of(context).textTheme.bodyMedium?.copyWith(
-  //                   color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-  //                   fontWeight: FontWeight.w500,
-  //                 ) ?? const TextStyle(),
-  //                 desktop: Theme.of(context).textTheme.bodyMedium?.copyWith(
-  //                   color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-  //                   fontWeight: FontWeight.w500,
-  //                 ) ?? const TextStyle(),
-  //               ),
-  //             ),
-  //             Container(
-  //               padding: EdgeInsets.symmetric(
-  //                 horizontal: layout.responsiveSize(phone: 8, tablet: 12, desktop: 16),
-  //                 vertical: layout.responsiveSize(phone: 4, tablet: 6, desktop: 8),
-  //               ),
-  //               decoration: BoxDecoration(
-  //                 color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-  //                 borderRadius: BorderRadius.circular(layout.responsiveSize(phone: 12, tablet: 16, desktop: 20)),
-  //               ),
-  //               child: Text(
-  //                 '${(progress * 100).round()}%',
-  //                 style: layout.responsiveTextStyle(
-  //                   phone: Theme.of(context).textTheme.bodySmall?.copyWith(
-  //                     color: Theme.of(context).primaryColor,
-  //                     fontWeight: FontWeight.w600,
-  //                   ) ?? const TextStyle(),
-  //                   tablet: Theme.of(context).textTheme.bodyMedium?.copyWith(
-  //                     color: Theme.of(context).primaryColor,
-  //                     fontWeight: FontWeight.w600,
-  //                   ) ?? const TextStyle(),
-  //                   desktop: Theme.of(context).textTheme.bodyMedium?.copyWith(
-  //                     color: Theme.of(context).primaryColor,
-  //                     fontWeight: FontWeight.w600,
-  //                   ) ?? const TextStyle(),
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
-  Widget _buildDotsIndicator(BuildContext context, OnboardingStep currentStep, AppSize layout) {
+          SizedBox(height: layout.spaceS),
+
+          // Step indicator with enhanced styling
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal:
+                  layout.responsiveSize(phone: 8, tablet: 12, desktop: 16),
+              vertical:
+                  layout.responsiveSize(phone: 4, tablet: 6, desktop: 8),
+            ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(layout.responsiveSize(
+                  phone: 12, tablet: 16, desktop: 20)),
+            ),
+            child: Text(
+              '${(progress * 100).round()}%',
+              style: layout.responsiveTextStyle(
+                phone: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w600,
+                        ) ??
+                    const TextStyle(),
+                tablet: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w600,
+                        ) ??
+                    const TextStyle(),
+                desktop: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w600,
+                        ) ??
+                    const TextStyle(),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDotsIndicator(
+      BuildContext context, OnboardingStep currentStep, AppSize layout) {
     final totalSteps = OnboardingStep.values.length;
     final currentIndex = currentStep.index;
-    
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: layout.pageGutter.horizontal,
@@ -171,10 +141,11 @@ class OnboardingScreen extends ConsumerWidget {
         children: List.generate(totalSteps, (index) {
           final isActive = index == currentIndex;
           final isCompleted = index < currentIndex;
-          
+
           return Container(
             margin: EdgeInsets.symmetric(
-              horizontal: layout.responsiveSize(phone: 4, tablet: 6, desktop: 8),
+              horizontal:
+                  layout.responsiveSize(phone: 4, tablet: 6, desktop: 8),
             ),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
@@ -193,15 +164,28 @@ class OnboardingScreen extends ConsumerWidget {
                 color: isActive
                     ? Theme.of(context).colorScheme.primary
                     : isCompleted
-                        ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.6)
-                        : Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
-                boxShadow: isActive ? [
-                  BoxShadow(
-                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
-                    blurRadius: layout.responsiveSize(phone: 4, tablet: 6, desktop: 8),
-                    spreadRadius: layout.responsiveSize(phone: 1, tablet: 2, desktop: 3),
-                  ),
-                ] : null,
+                        ? Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.6)
+                        : Theme.of(context)
+                            .colorScheme
+                            .outline
+                            .withValues(alpha: 0.3),
+                boxShadow: isActive
+                    ? [
+                        BoxShadow(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withValues(alpha: 0.3),
+                          blurRadius: layout.responsiveSize(
+                              phone: 4, tablet: 6, desktop: 8),
+                          spreadRadius: layout.responsiveSize(
+                              phone: 1, tablet: 2, desktop: 3),
+                        ),
+                      ]
+                    : null,
               ),
             ),
           );
@@ -210,11 +194,12 @@ class OnboardingScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _completeOnboarding(BuildContext context, OnboardingFormNotifier notifier) async {
+  Future<void> _completeOnboarding(
+      BuildContext context, OnboardingFormNotifier notifier) async {
     try {
       // Complete onboarding
       await notifier.completeOnboarding();
-      
+
       // Navigate to dashboard
       if (context.mounted) {
         context.goNamed('dashboard');
@@ -232,16 +217,17 @@ class OnboardingScreen extends ConsumerWidget {
     }
   }
 
-  Widget _buildCentralFooter(BuildContext context, OnboardingStep currentStep, OnboardingFormNotifier notifier, AppSize layout) {
+  Widget _buildCentralFooter(BuildContext context, OnboardingStep currentStep,
+      OnboardingFormNotifier notifier, AppSize layout) {
     final l10n = AppLocalizations.of(context);
-    
+
     // Get button text and actions based on current step
     String primaryButtonText;
     VoidCallback? onPrimaryPressed;
     String? secondaryButtonText;
     VoidCallback? onSecondaryPressed;
     final bool showBackButton = currentStep != OnboardingStep.welcome;
-    
+
     switch (currentStep) {
       case OnboardingStep.welcome:
         primaryButtonText = l10n.onb_continue;
@@ -273,7 +259,7 @@ class OnboardingScreen extends ConsumerWidget {
         };
         break;
     }
-    
+
     return OnboardingBottomFooter(
       primaryButtonText: primaryButtonText,
       onPrimaryPressed: onPrimaryPressed,

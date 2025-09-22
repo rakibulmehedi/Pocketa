@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
-import '../performance/interactive_wrapper.dart';
+import 'package:pocketa/shared/ui_components/performance/interactive_wrapper.dart';
 
 /// Responsive icon button that adapts to screen size
 class ResponsiveIconButton extends StatelessWidget {

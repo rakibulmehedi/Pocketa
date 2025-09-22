@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
-import 'interactive_card.dart';
+import 'package:pocketa/shared/ui_components/cards/interactive_card.dart';
 
 /// Types of personalization cards
 enum PersonalizationCardType {

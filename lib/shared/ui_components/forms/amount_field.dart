@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
-import 'app_text_form_field.dart';
-import 'indian_grouping_formatter.dart';
+import 'package:pocketa/shared/ui_components/forms/app_text_form_field.dart';
+import 'package:pocketa/shared/ui_components/forms/indian_grouping_formatter.dart';
 
 /// Amount input field with currency formatting
 class AmountField extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/core/theme/app_colors.dart';
-import '../performance/interactive_wrapper.dart';
+import 'package:pocketa/shared/ui_components/performance/interactive_wrapper.dart';
 
 /// Button styles for different use cases
 enum AppButtonStyle { primary, secondary, outline, text }
