@@ -1,0 +1,369 @@
+---
+alwaysApply: true
+---
+# Responsive Design System
+
+## Installation
+
+The responsive system is installed once at the app root in [app.dart](mdc:lib/app.dart):
+
+```dart
+MaterialApp(
+  builder: (context, child) => Responsive.builder(
+    child: child ?? const SizedBox(),
+  ),
+)
+```
+
+## Core Concepts
+
+### Breakpoints
+Based on shortest side for rotation safety:
+- **Compact**: < 360px (small phones)
+- **Mobile**: 360px - 699px (phones)
+- **Tablet**: 700px - 1023px (tablets)
+- **Desktop**: ≥ 1024px (desktop/large tablets)
+
+### Device Sizes
+Based on width for quick branching:
+- **Phone**: < 600px
+- **Tablet**: 600px - 1023px
+- **Desktop**: ≥ 1024px
+
+## API Usage
+
+### 1. Lean Access (Fast, Minimal)
+```dart
+// Quick device detection
+final device = context.device;    // DeviceSize.phone/tablet/desktop
+final vw = context.vw;            // viewport width
+final vh = context.vh;            // viewport height
+
+// Quick breakpoint checks
+if (context.device == DeviceSize.phone) {
+  // Phone-specific code
+}
+```
+
+### 2. Rich Access (Primary API)
+```dart
+final L = context.layout;         // AppSize with all utilities
+
+// Spacing
+Padding(
+  padding: L.pageGutter,          // Responsive page padding
+  child: child,
+)
+
+SizedBox(
+  height: L.space2xl,             // 32 * uiScale
+  width: L.spaceL,                // 16 * uiScale
+)
+```
+
+### 3. Numeric Extensions (Compatibility)
+```dart
+// Rem units (8pt baseline)
+Container(
+  padding: EdgeInsets.all(2.rem(context)),  // 16 * uiScale
+)
+
+// Text scaling
+Text(
+  'Hello',
+  style: TextStyle(fontSize: 16.sp(context)), // 16 * textScale
+)
+
+// Icon scaling
+Icon(Icons.add, size: 24.ic(context))        // 24 * uiScale
+
+// Viewport fractions
+Container(
+  width: 0.5.w(context),          // 50% of screen width
+  height: 0.3.h(context),         // 30% of screen height
+)
+```
+
+## Spacing System
+
+### Base Spacing (8pt baseline)
+```dart
+final L = context.layout;
+
+// Spacing scale
+L.spaceXs    // 4px  (0.5rem)
+L.spaceS     // 8px  (1rem)
+L.spaceM     // 12px (1.5rem)
+L.spaceL     // 16px (2rem)
+L.spaceXl    // 24px (3rem)
+L.space2xl   // 32px (4rem)
+L.space3xl   // 48px (6rem)
+
+// Custom spacing
+L.rem(2.5)   // 20px (2.5rem)
+```
+
+### Insets Helpers
+```dart
+// All sides
+L.insetsAll(2)                    // EdgeInsets.all(16 * uiScale)
+
+// Symmetric
+L.insetsSymmetric(h: 2, v: 1)     // EdgeInsets.symmetric(horizontal: 16, vertical: 8)
+
+// Specific sides
+L.insetsOnly(l: 1, t: 2, r: 1, b: 0)  // EdgeInsets.fromLTRB(8, 16, 8, 0)
+
+// Page gutter (includes safe area)
+L.pageGutter                      // EdgeInsets with safe area + responsive gutters
+```
+
+## Typography System
+
+### Text Sizes
+```dart
+Text(
+  'Title',
+  style: TextStyle(
+    fontSize: L.t2xl,             // 24 * textScale
+    fontWeight: FontWeight.bold,
+  ),
+)
+
+Text(
+  'Body',
+  style: TextStyle(
+    fontSize: L.tBase,            // 15 * textScale
+  ),
+)
+```
+
+### Responsive Text Styles
+```dart
+Text(
+  'Responsive Text',
+  style: L.responsiveTextStyle(
+    phone: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+    tablet: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+    desktop: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+  ),
+)
+```
+
+## Icon System
+
+### Icon Sizes
+```dart
+Icon(Icons.add, size: L.iconM)    // 22 * uiScale
+Icon(Icons.home, size: L.iconL)   // 28 * uiScale
+Icon(Icons.settings, size: L.iconXl) // 36 * uiScale
+```
+
+### Responsive Icon Sizes
+```dart
+Icon(
+  Icons.dashboard,
+  size: L.responsiveIconSize(
+    phone: 24,
+    tablet: 28,
+    desktop: 32,
+  ),
+)
+```
+
+## Layout Patterns
+
+### 1. Centered Content with Max Width
+```dart
+Padding(
+  padding: L.pageGutter,
+  child: Center(
+    child: ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: L.isDesktop ? 1000 : (L.isTablet ? 720 : double.infinity),
+      ),
+      child: child,
+    ),
+  ),
+)
+```
+
+### 2. Responsive Grid
+```dart
+GridView.builder(
+  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: L.columnsFor(280),  // Auto-calculate columns
+    crossAxisSpacing: L.spaceM,
+    mainAxisSpacing: L.spaceM,
+  ),
+  itemBuilder: (context, index) => GridItem(),
+)
+```
+
+### 3. Responsive AppBar
+```dart
+SliverAppBar(
+  toolbarHeight: L.isDesktop ? L.rem(9) : L.rem(7),
+  expandedHeight: (0.22.h(context)).clamp(180.0, 260.0),
+  leading: Icon(Icons.arrow_back, size: L.iconM),
+  title: Text('Dashboard'),
+)
+```
+
+### 4. Responsive Container
+```dart
+Container(
+  width: L.responsiveSize(
+    phone: 100,
+    tablet: 150,
+    desktop: 200,
+  ),
+  height: L.responsiveSize(
+    phone: 50,
+    tablet: 60,
+    desktop: 70,
+  ),
+  child: child,
+)
+```
+
+## Animation System
+
+### Responsive Durations
+```dart
+AnimatedContainer(
+  duration: L.fast,               // 90-140ms (scale-aware)
+  child: child,
+)
+
+AnimatedOpacity(
+  duration: L.normal,             // 160-240ms (scale-aware)
+  opacity: opacity,
+  child: child,
+)
+
+AnimatedPositioned(
+  duration: L.slow,               // 260-380ms (scale-aware)
+  child: child,
+)
+```
+
+## Touch Targets
+
+### Minimum Touch Target
+```dart
+Container(
+  width: L.minTapTarget,          // 44px (phone) / 48px (tablet+)
+  height: L.minTapTarget,
+  child: child,
+)
+```
+
+### Hit Slop
+```dart
+GestureDetector(
+  onTap: () {},
+  child: Container(
+    padding: L.hitSlop,           // 4px all around
+    child: child,
+  ),
+)
+```
+
+## Breakpoint Helpers
+
+### Quick Flags
+```dart
+if (L.isCompact) {
+  // Small phone layout
+} else if (L.isMobile) {
+  // Phone layout
+} else if (L.isTablet) {
+  // Tablet layout
+} else if (L.isDesktop) {
+  // Desktop layout
+}
+```
+
+### Device-Specific Code
+```dart
+switch (context.device) {
+  case DeviceSize.phone:
+    return PhoneLayout();
+  case DeviceSize.tablet:
+    return TabletLayout();
+  case DeviceSize.desktop:
+    return DesktopLayout();
+}
+```
+
+## Common Patterns
+
+### 1. Responsive Card Grid
+```dart
+GridView.builder(
+  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: L.isDesktop ? 4 : (L.isTablet ? 3 : 2),
+    crossAxisSpacing: L.spaceM,
+    mainAxisSpacing: L.spaceM,
+  ),
+  itemBuilder: (context, index) => Card(),
+)
+```
+
+### 2. Responsive List
+```dart
+ListView.builder(
+  padding: L.pageGutter,
+  itemExtent: L.isDesktop ? 80 : 60,
+  itemBuilder: (context, index) => ListTile(),
+)
+```
+
+### 3. Responsive Bottom Sheet
+```dart
+showModalBottomSheet(
+  context: context,
+  isScrollControlled: true,
+  builder: (context) => Container(
+    height: L.isDesktop ? 400 : MediaQuery.of(context).size.height * 0.7,
+    child: BottomSheetContent(),
+  ),
+)
+```
+
+## Performance Considerations
+
+### 1. Single MediaQuery Read
+The responsive system reads MediaQuery only once at the top level, making deep widget trees efficient.
+
+### 2. Inherited Widget Pattern
+Uses InheritedWidget for efficient updates - only widgets that depend on changed values rebuild.
+
+### 3. Const Constructors
+Always use const constructors where possible to prevent unnecessary rebuilds.
+
+### 4. Responsive Caching
+The system caches computed values and only recalculates when screen size changes.
+
+## Testing Responsive Design
+
+### 1. Test Different Breakpoints
+```dart
+testWidgets('should adapt to tablet layout', (tester) async {
+  await tester.binding.setSurfaceSize(Size(800, 600));
+  await tester.pumpWidget(MyWidget());
+  // Test tablet-specific behavior
+});
+```
+
+### 2. Test Orientation Changes
+```dart
+testWidgets('should handle orientation change', (tester) async {
+  await tester.binding.setSurfaceSize(Size(400, 800)); // Portrait
+  await tester.pumpWidget(MyWidget());
+  
+  await tester.binding.setSurfaceSize(Size(800, 400)); // Landscape
+  await tester.pumpWidget(MyWidget());
+});
+```

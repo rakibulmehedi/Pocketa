@@ -1,0 +1,328 @@
+---
+alwaysApply: true
+---
+# Riverpod State Management Patterns
+
+## Provider Types and Usage
+
+### 1. Provider (Simple Values)
+```dart
+// For simple values that don't change
+final themeProvider = Provider<ThemeMode>((ref) => ThemeMode.system);
+
+// For dependencies
+final repositoryProvider = Provider<Repository>((ref) {
+  final box = ref.watch(hiveBoxProvider);
+  return RepositoryImpl(box);
+});
+```
+
+### 2. StateNotifierProvider (Complex State)
+```dart
+// For state that can change over time
+final themeNotifierProvider = StateNotifierProvider<ThemeNotifier, ThemeMode>((ref) {
+  return ThemeNotifier();
+});
+
+// Always extend BaseStateNotifier
+class ThemeNotifier extends BaseStateNotifier<ThemeMode> {
+  ThemeNotifier() : super(ThemeMode.system);
+  
+  void setTheme(ThemeMode mode) {
+    updateState(mode);
+  }
+}
+```
+
+### 3. StreamProvider (Reactive Data)
+```dart
+// For streams of data
+final allTransactionsProvider = StreamProvider<List<Transaction>>((ref) {
+  final repository = ref.watch(transactionRepositoryProvider);
+  return repository.watchAll();
+});
+```
+
+### 4. Provider.family (Parameterized)
+```dart
+// For providers that depend on parameters
+final transactionByIdProvider = Provider.family<Transaction?, String>((ref, id) {
+  final repository = ref.watch(transactionRepositoryProvider);
+  return repository.getById(id);
+});
+```
+
+## Base Providers Pattern
+
+Use [BaseProviders](mdc:lib/core/providers/base_providers.dart) for common patterns:
+
+```dart
+// Repository provider
+final txRepositoryProvider = BaseProviders.repositoryProvider<TransactionRepoImpl, TransactionEntity>(
+  (ref) => TransactionRepoImpl(ref.watch(txBoxProvider)),
+);
+
+// All entities stream
+final allTransactionsProvider = BaseProviders.allEntitiesProvider<TransactionEntity>(
+  txRepositoryProvider,
+);
+
+// Entity by ID
+final transactionByIdProvider = BaseProviders.entityByIdProvider<TransactionEntity>(
+  txRepositoryProvider,
+);
+```
+
+## Form State Management
+
+### BaseFormState Pattern
+```dart
+class TransactionFormState extends BaseFormState {
+  final TransactionData data;
+  
+  const TransactionFormState({
+    super.isLoading,
+    super.isValid,
+    super.error,
+    super.fieldErrors,
+    this.data = const TransactionData(),
+  });
+  
+  @override
+  TransactionFormState copyWith({
+    bool? isLoading,
+    bool? isValid,
+    String? error,
+    Map<String, String>? fieldErrors,
+    TransactionData? data,
+  }) {
+    return TransactionFormState(
+      isLoading: isLoading ?? this.isLoading,
+      isValid: isValid ?? this.isValid,
+      error: error ?? this.error,
+      fieldErrors: fieldErrors ?? this.fieldErrors,
+      data: data ?? this.data,
+    );
+  }
+}
+```
+
+### BaseFormNotifier Pattern
+```dart
+class TransactionFormNotifier extends BaseFormNotifier<TransactionFormState> {
+  TransactionFormNotifier() : super(TransactionFormState.initial());
+  
+  void updateAmount(double amount) {
+    state = state.copyWith(
+      data: state.data.copyWith(amount: amount),
+    );
+    validateForm();
+  }
+  
+  @override
+  void validateForm() {
+    // Custom validation logic
+    final isValid = state.data.amount > 0;
+    state = state.copyWith(isValid: isValid);
+  }
+}
+```
+
+## Provider Organization
+
+### File Structure
+```
+features/[feature]/presentation/viewmodels/
+├── [feature]_providers.dart      # Main providers
+├── [feature]_form_notifier.dart  # Form state management
+└── [feature]_usecases_providers.dart # Use case providers
+```
+
+### Provider Naming
+- Repository: `[feature]RepositoryProvider`
+- State Notifier: `[feature]NotifierProvider`
+- Stream: `all[Feature]sProvider`
+- By ID: `[feature]ByIdProvider`
+- Form: `[feature]FormNotifierProvider`
+
+## State Notifier Best Practices
+
+### 1. Extend BaseStateNotifier
+```dart
+class FeatureNotifier extends BaseStateNotifier<FeatureState> {
+  FeatureNotifier() : super(FeatureState.initial());
+  
+  // Use updateState for safe state updates
+  void updateFeature(Feature feature) {
+    updateState(state.copyWith(feature: feature));
+  }
+}
+```
+
+### 2. Handle Async Operations
+```dart
+Future<void> loadData() async {
+  await handleAsyncOperation(
+    () async {
+      final data = await repository.getAll();
+      state = state.copyWith(data: data);
+    },
+    onError: (error) {
+      state = state.copyWith(error: error.toString());
+    },
+  );
+}
+```
+
+### 3. Use LoadingStateMixin
+```dart
+class FeatureNotifier extends BaseStateNotifier<FeatureState> 
+    with LoadingStateMixin<FeatureState> {
+  
+  Future<void> loadData() async {
+    setLoading(true);
+    try {
+      final data = await repository.getAll();
+      state = state.copyWith(data: data);
+    } finally {
+      setLoading(false);
+    }
+  }
+}
+```
+
+## Consumer Widgets
+
+### 1. Consumer (Basic)
+```dart
+class MyWidget extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeProvider);
+    return Container(color: theme.primaryColor);
+  }
+}
+```
+
+### 2. ConsumerStatefulWidget (Complex)
+```dart
+class MyWidget extends ConsumerStatefulWidget {
+  @override
+  ConsumerState<MyWidget> createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends ConsumerState<MyWidget> {
+  @override
+  void initState() {
+    super.initState();
+    // Initialize with ref
+    ref.read(provider.notifier).initialize();
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(provider);
+    return Container();
+  }
+}
+```
+
+### 3. Selector (Performance)
+```dart
+class MyWidget extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading = ref.watch(
+      featureProvider.select((state) => state.isLoading),
+    );
+    return isLoading ? CircularProgressIndicator() : Content();
+  }
+}
+```
+
+## Error Handling in Providers
+
+### 1. Use Result Pattern
+```dart
+final dataProvider = FutureProvider<Result<Data>>((ref) async {
+  try {
+    final data = await repository.getData();
+    return Ok(data);
+  } catch (e) {
+    return Err(DataFailure(e.toString()));
+  }
+});
+```
+
+### 2. Handle Provider Errors
+```dart
+Consumer(
+  builder: (context, ref, child) {
+    final result = ref.watch(dataProvider);
+    return result.when(
+      data: (result) => result.when(
+        ok: (data) => DataWidget(data),
+        err: (failure) => ErrorWidget(failure.message),
+      ),
+      loading: () => CircularProgressIndicator(),
+      error: (error, stack) => ErrorWidget(error.toString()),
+    );
+  },
+)
+```
+
+## Performance Optimization
+
+### 1. Use autoDispose for Temporary Providers
+```dart
+final temporaryProvider = Provider.autoDispose((ref) {
+  // This provider will be disposed when not used
+  return TemporaryData();
+});
+```
+
+### 2. Use select for Granular Rebuilds
+```dart
+// Only rebuild when specific field changes
+final isLoading = ref.watch(
+  featureProvider.select((state) => state.isLoading),
+);
+```
+
+### 3. Use Provider.family for Cached Results
+```dart
+final cachedProvider = Provider.family.autoDispose<Data, String>((ref, id) {
+  // Results are cached per id
+  return repository.getById(id);
+});
+```
+
+## Testing Providers
+
+### 1. Mock Providers
+```dart
+final mockRepositoryProvider = Provider<Repository>((ref) => MockRepository());
+
+testWidgets('should display data', (tester) async {
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [
+        repositoryProvider.overrideWithValue(mockRepositoryProvider),
+      ],
+      child: MyWidget(),
+    ),
+  );
+});
+```
+
+### 2. Test State Changes
+```dart
+test('should update state when data loads', () async {
+  final container = ProviderContainer();
+  final notifier = container.read(featureNotifierProvider.notifier);
+  
+  await notifier.loadData();
+  
+  expect(container.read(featureNotifierProvider).data, isNotNull);
+});
+```

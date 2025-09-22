@@ -1,0 +1,188 @@
+---
+alwaysApply: true
+description: Overview of all Cursor rules for Flow Personal Finance OS
+---
+
+# Flow Cursor Rules
+
+This directory contains comprehensive Cursor rules for the Flow Personal Finance OS, covering all aspects of development from architecture to testing with a focus on human-centered design and cultural intelligence.
+
+## 📋 Available Rules
+
+### 🏗️ [Architecture](mdc:architecture.mdc)
+Clean Architecture patterns, project structure, and organizational guidelines.
+- **Scope**: Always applied
+- **Covers**: Project structure, Clean Architecture principles, file organization, base classes
+
+### 🔄 [Riverpod](mdc:riverpod.mdc)
+State management patterns and best practices using Riverpod.
+- **Scope**: All Dart files
+- **Covers**: Provider types, state management, form handling, performance optimization
+
+### 🎨 [UI Components](mdc:ui_components.mdc)
+Design system and UI component usage patterns.
+- **Scope**: UI component files
+- **Covers**: Component organization, usage patterns, design guidelines, accessibility
+
+### 📱 [Responsive](mdc:responsive.mdc)
+Responsive design patterns and breakpoint usage.
+- **Scope**: Responsive and UI component files
+- **Covers**: Breakpoints, responsive API, layout patterns, animation system
+
+### 🌍 [Internationalization](mdc:i18n.mdc)
+Localization and internationalization patterns.
+- **Scope**: Localization files
+- **Covers**: Translation usage, locale management, date/number formatting
+
+### ⚠️ [Error Handling](mdc:error_handling.mdc)
+Error handling patterns and Result type usage.
+- **Scope**: Error handling files
+- **Covers**: Result pattern, failure types, error recovery, form validation
+
+### ⚡ [Performance](mdc:performance.mdc)
+Performance optimization patterns and best practices.
+- **Scope**: All Dart files
+- **Covers**: Const optimization, Riverpod performance, list optimization, memory management
+
+### 🎯 [Flutter](mdc:flutter.mdc)
+Flutter-specific patterns, conventions, and best practices.
+- **Scope**: All Dart files
+- **Covers**: Widget lifecycle, navigation, theming, animations, platform-specific code
+
+### 🧪 [Testing](mdc:testing.mdc)
+Testing patterns, conventions, and best practices.
+- **Scope**: Test files
+- **Covers**: Unit testing, widget testing, integration testing, mocking, performance testing
+
+### 💫 [Flow Brand](mdc:flow_brand.mdc)
+Flow brand identity, cultural intelligence, and human-centered design patterns.
+- **Scope**: All files
+- **Covers**: Brand consistency, cultural intelligence, empathetic messaging, speed requirements
+
+## 🚀 Quick Start
+
+### For New Features
+1. Follow [Architecture](mdc:architecture.mdc) patterns for project structure
+2. Apply [Flow Brand](mdc:flow_brand.mdc) patterns for cultural intelligence
+3. Use [Riverpod](mdc:riverpod.mdc) patterns for state management
+4. Implement [UI Components](mdc:ui_components.mdc) for consistent design
+5. Apply [Responsive](mdc:responsive.mdc) patterns for multi-device support
+6. Add [Internationalization](mdc:i18n.mdc) support for all user-facing text
+7. Implement [Error Handling](mdc:error_handling.mdc) with Result pattern
+8. Follow [Performance](mdc:performance.mdc) guidelines for optimization
+9. Write comprehensive [Tests](mdc:testing.mdc) for all functionality
+
+### For Bug Fixes
+1. Check [Error Handling](mdc:error_handling.mdc) patterns for proper error management
+2. Review [Performance](mdc:performance.mdc) guidelines for optimization opportunities
+3. Ensure [Testing](mdc:testing.mdc) coverage for the fixed functionality
+
+### For UI Changes
+1. Use [UI Components](mdc:ui_components.mdc) from the design system
+2. Apply [Responsive](mdc:responsive.mdc) patterns for multi-device support
+3. Follow [Flutter](mdc:flutter.mdc) best practices for widget implementation
+4. Test with [Testing](mdc:testing.mdc) patterns
+
+## 📚 Rule Categories
+
+### Always Applied Rules
+- **Architecture**: Project structure and Clean Architecture principles
+- **README**: This overview document
+
+### File-Specific Rules
+- **Riverpod**: Applied to all Dart files for state management
+- **UI Components**: Applied to UI component files
+- **Responsive**: Applied to responsive and UI component files
+- **Internationalization**: Applied to localization files
+- **Error Handling**: Applied to error handling files
+- **Performance**: Applied to all Dart files for optimization
+- **Flutter**: Applied to all Dart files for Flutter patterns
+- **Testing**: Applied to test files
+
+## 🔧 Development Workflow
+
+### 1. Planning Phase
+- Review [Architecture](mdc:architecture.mdc) for project structure
+- Plan feature using Clean Architecture principles
+
+### 2. Implementation Phase
+- Use [Riverpod](mdc:riverpod.mdc) for state management
+- Implement UI with [UI Components](mdc:ui_components.mdc)
+- Apply [Responsive](mdc:responsive.mdc) patterns
+- Add [Internationalization](mdc:i18n.mdc) support
+- Implement [Error Handling](mdc:error_handling.mdc)
+- Follow [Performance](mdc:performance.mdc) guidelines
+- Use [Flutter](mdc:flutter.mdc) best practices
+
+### 3. Testing Phase
+- Write tests following [Testing](mdc:testing.mdc) patterns
+- Test all functionality and edge cases
+- Verify performance requirements
+
+### 4. Review Phase
+- Ensure all rules are followed
+- Check for consistency across the codebase
+- Verify test coverage
+
+## 🎯 Key Principles
+
+### 1. Clean Architecture
+- Clear separation of concerns
+- Dependency inversion
+- Single responsibility principle
+
+### 2. Human-Centered Design
+- Speed above all (≤9s expense entry)
+- Cultural intelligence (local numerals, languages)
+- Empathetic error messages and feedback
+- No shame, no judgment in UI/UX
+
+### 3. Performance First
+- Const constructors everywhere
+- Optimized rebuilds with Riverpod
+- Responsive design patterns
+- Offline-first architecture
+
+### 4. Cultural Intelligence
+- Bengali-first interface design
+- Local payment method integration
+- Festival and cultural event awareness
+- Regional spending pattern recognition
+
+### 5. Maintainability
+- Comprehensive testing
+- Clear documentation
+- Consistent patterns
+
+### 6. Accessibility
+- Semantic labels
+- Screen reader support
+- Internationalization
+- Cultural accessibility (RTL support, local fonts)
+
+## 📖 Additional Resources
+
+- [Flutter Documentation](https://docs.flutter.dev/)
+- [Riverpod Documentation](https://riverpod.dev/)
+- [Clean Architecture Guide](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- [Material Design Guidelines](https://material.io/design)
+
+## 🤝 Contributing
+
+When contributing to this project:
+
+1. Follow all applicable rules
+2. Update rules when adding new patterns
+3. Test changes thoroughly
+4. Document new patterns
+5. Maintain consistency across the codebase
+
+## 📝 Rule Updates
+
+Rules are living documents that should be updated as the project evolves:
+
+- Add new patterns as they emerge
+- Update existing patterns when improved
+- Remove outdated patterns
+- Keep rules focused and actionable
+- Ensure rules are testable and measurable

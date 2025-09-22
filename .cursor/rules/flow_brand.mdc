@@ -1,0 +1,327 @@
+---
+alwaysApply: true
+description: Flow brand identity, cultural intelligence, and human-centered design patterns
+---
+
+# Flow Brand & Cultural Intelligence Rules
+
+## Brand Identity
+
+### Core Brand Elements
+- **Brand Name**: Flow (not Pocketa)
+- **Tagline**: "Money in Motion, Life in Balance"
+- **Bengali Tagline**: "টাকার flow, জীবনের balance"
+- **Essence**: Calm • Clear • Fast
+- **Descriptor**: Personal Finance OS
+
+### Voice & Tone
+- **Traits**: Mentor-friendly, judgment-free, concise, hopeful
+- **Language**: Bangla-first with light English sprinkles
+- **Do**: ছোট বাক্য, ক্রিয়া-কেন্দ্রিক, সাবলীল
+- **Don't**: guilt, jargon, ফাঁপা প্রতিশ্রুতি
+
+## Cultural Intelligence Patterns
+
+### Localization Requirements
+```dart
+// Always provide Bengali translations first
+String getLocalizedText(String bengali, String english, String arabic, CulturalContext context) {
+  switch (context.locale.languageCode) {
+    case 'bn': return bengali;
+    case 'hi': return english; // Hindi uses English for now
+    case 'ar': return arabic;
+    default: return english;
+  }
+}
+
+// Use cultural number formatting
+String formatAmount(double amount, CulturalContext context) {
+  switch (context.locale.languageCode) {
+    case 'bn':
+      return '৳${_convertToBengaliNumerals(amount.toStringAsFixed(2))}';
+    case 'hi':
+      return '₹${_formatIndianNumber(amount)}';
+    case 'ar':
+      return '${context.currencySymbol} ${_convertToArabicNumerals(amount.toStringAsFixed(2))}';
+    default:
+      return '${context.currencySymbol}${amount.toStringAsFixed(2)}';
+  }
+}
+```
+
+### Cultural Categories
+```dart
+// Use culturally relevant categories
+class CulturalCategories {
+  static List<Category> getBengaliCategories() => [
+    Category(id: 'tea_snacks', name: 'চা-নাশতা', icon: Icons.local_cafe),
+    Category(id: 'rickshaw_transport', name: 'রিকশা ও যাতায়াত', icon: Icons.directions),
+    Category(id: 'mobile_recharge', name: 'মোবাইল রিচার্জ', icon: Icons.phone_android),
+    Category(id: 'eid_festival', name: 'ঈদ ও উৎসব', icon: Icons.celebration),
+    Category(id: 'family_support', name: 'পারিবারিক সহায়তা', icon: Icons.family_restroom),
+  ];
+}
+```
+
+### Local Payment Methods
+```dart
+// Pre-seed local payment methods
+class LocalPaymentMethods {
+  static List<PaymentMethod> getBangladeshMethods() => [
+    PaymentMethod(id: 'cash', name: 'নগদ টাকা', icon: Icons.money),
+    PaymentMethod(id: 'bkash', name: 'bKash', icon: Icons.phone_android, color: Color(0xFFE2136E)),
+    PaymentMethod(id: 'nagad', name: 'নগদ', icon: Icons.account_balance_wallet, color: Color(0xFFFF6B35)),
+    PaymentMethod(id: 'rocket', name: 'রকেট', icon: Icons.rocket_launch, color: Color(0xFF8E44AD)),
+  ];
+}
+```
+
+## Human-Centered Design Patterns
+
+### Speed Requirements
+```dart
+// All expense entry must be ≤9 seconds
+class ExpenseEntryTimer {
+  static const int maxEntryTime = 9000; // 9 seconds in milliseconds
+  
+  static void startTimer() {
+    // Start timing when user opens expense entry
+  }
+  
+  static void validateSpeed() {
+    // Ensure entry completes within time limit
+  }
+}
+```
+
+### Empathetic Messaging
+```dart
+// Use empathetic, non-judgmental language
+class EmpatheticMessages {
+  static String getOverBudgetMessage(String category, CulturalContext context) {
+    switch (context.locale.languageCode) {
+      case 'bn':
+        return '${category} এ একটু বেশি খরচ হয়েছে। কোনো সমস্যা নেই—কখনো কখনো হয়।';
+      case 'hi':
+        return '${category} में थोड़ा ज्यादा खर्च हुआ है। कोई बात नहीं—कभी-कभी होता है।';
+      default:
+        return 'You spent a bit more on ${category} this time. No worries—it happens.';
+    }
+  }
+}
+```
+
+### Cultural Greetings
+```dart
+// Time-aware cultural greetings
+String getCulturalGreeting(CulturalContext context, DateTime time) {
+  final hour = time.hour;
+  switch (context.locale.languageCode) {
+    case 'bn':
+      if (hour < 12) return 'সুপ্রভাত';
+      if (hour < 17) return 'শুভ দুপুর';
+      if (hour < 20) return 'শুভ সন্ধ্যা';
+      return 'রাতের শুভেচ্ছা';
+    case 'hi':
+      if (hour < 12) return 'सुप्रभात';
+      if (hour < 17) return 'नमस्ते';
+      if (hour < 20) return 'शुभ संध्या';
+      return 'शुभ रात्रि';
+    case 'ar':
+      if (hour < 12) return 'صباح الخير';
+      if (hour < 17) return 'مساء الخير';
+      if (hour < 20) return 'مساء النور';
+      return 'ليلة سعيدة';
+    default:
+      if (hour < 12) return 'Good morning';
+      if (hour < 17) return 'Good afternoon';
+      if (hour < 20) return 'Good evening';
+      return 'Good night';
+  }
+}
+```
+
+## UI/UX Patterns
+
+### Color Palette
+```dart
+// Flow brand colors
+class FlowColors {
+  static const Color trustBlue = Color(0xFF0F4C81);
+  static const Color mintTeal = Color(0xFF22C3A6);
+  static const Color warmSand = Color(0xFFF5F1EB);
+  static const Color charcoal = Color(0xFF1F2937);
+  static const Color success = Color(0xFF16A34A);
+  static const Color warning = Color(0xFFF59E0B);
+  static const Color danger = Color(0xFFDC2626);
+}
+```
+
+### Typography
+```dart
+// Flow typography system
+class FlowTypography {
+  static const String latinFont = 'Inter';
+  static const String bengaliFont = 'Hind Siliguri';
+  static const String hindiFont = 'Noto Sans Devanagari';
+  static const String arabicFont = 'Noto Sans Arabic';
+  
+  static TextStyle getHeading(CulturalContext context) {
+    return TextStyle(
+      fontFamily: _getFontFamily(context),
+      fontSize: 24,
+      fontWeight: FontWeight.bold,
+    );
+  }
+  
+  static String _getFontFamily(CulturalContext context) {
+    switch (context.locale.languageCode) {
+      case 'bn': return bengaliFont;
+      case 'hi': return hindiFont;
+      case 'ar': return arabicFont;
+      default: return latinFont;
+    }
+  }
+}
+```
+
+### Animation Principles
+```dart
+// Flow animation guidelines
+class FlowAnimations {
+  static const Duration microInteraction = Duration(milliseconds: 150);
+  static const Duration standardTransition = Duration(milliseconds: 250);
+  static const Duration celebration = Duration(milliseconds: 600);
+  
+  // Flow, don't flash
+  static const Curve easing = Curves.easeInOut;
+}
+```
+
+## Performance Requirements
+
+### Speed Targets
+- **Expense Entry**: ≤9 seconds (p95 ≤ 14s)
+- **App Launch**: <3 seconds on budget devices
+- **Screen Transitions**: <250ms
+- **Data Sync**: Background only, never block UI
+
+### Offline-First
+```dart
+// All core features must work offline
+class OfflineFirstPattern {
+  static Future<void> saveTransaction(Transaction transaction) async {
+    // Always save locally first
+    await LocalDatabase.save(transaction);
+    
+    // Queue for sync when online
+    await SyncQueue.add(transaction);
+  }
+}
+```
+
+## Testing Patterns
+
+### Cultural Testing
+```dart
+// Test cultural intelligence features
+testWidgets('should display Bengali numerals correctly', (tester) async {
+  final culturalContext = CulturalContext(locale: Locale('bn'));
+  
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [culturalContextProvider.overrideWithValue(culturalContext)],
+      child: MaterialApp(home: AmountDisplay(amount: 1500.50)),
+    ),
+  );
+  
+  expect(find.text('৳১৫০০.৫০'), findsOneWidget);
+});
+```
+
+### Speed Testing
+```dart
+// Test speed requirements
+testWidgets('should complete expense entry within 9 seconds', (tester) async {
+  final stopwatch = Stopwatch()..start();
+  
+  await tester.pumpWidget(ExpenseEntryScreen());
+  await tester.enterText(find.byKey(Key('amount_field')), '50');
+  await tester.tap(find.byKey(Key('save_button')));
+  await tester.pumpAndSettle();
+  
+  stopwatch.stop();
+  expect(stopwatch.elapsedMilliseconds, lessThan(9000));
+});
+```
+
+## Brand Compliance Checklist
+
+### Before Every Commit
+- [ ] All user-facing text has Bengali translation
+- [ ] Numbers displayed in local format (১,০০,০০০ not 100,000)
+- [ ] Error messages are empathetic and non-judgmental
+- [ ] Speed requirements met (≤9s expense entry)
+- [ ] Cultural categories used instead of generic ones
+- [ ] Local payment methods integrated
+- [ ] Offline functionality preserved
+- [ ] Brand colors and typography applied
+- [ ] Animation follows "Flow, don't flash" principle
+
+### Code Review Focus
+- Does this feel human and helpful?
+- Would a Bengali speaker understand this immediately?
+- Does this respect the user's cultural context?
+- Is this fast enough for daily use?
+- Does this work without internet?
+- Does this avoid shame or judgment?
+
+## Common Anti-Patterns to Avoid
+
+### ❌ Don't Do This
+```dart
+// Generic, judgmental messaging
+Text('BUDGET EXCEEDED - REDUCE SPENDING')
+
+// English-first approach
+Text('Add Expense')
+
+// Complex, slow UI
+Column(
+  children: [
+    TextField(decoration: InputDecoration(labelText: 'Amount')),
+    TextField(decoration: InputDecoration(labelText: 'Category')),
+    TextField(decoration: InputDecoration(labelText: 'Description')),
+    TextField(decoration: InputDecoration(labelText: 'Date')),
+    TextField(decoration: InputDecoration(labelText: 'Payment Method')),
+  ],
+)
+```
+
+### ✅ Do This Instead
+```dart
+// Empathetic, cultural messaging
+Text('চা-নাশতায় একটু বেশি খরচ হয়েছে। কোনো সমস্যা নেই—কখনো কখনো হয়।')
+
+// Bengali-first approach
+Text('খরচ যোগ করুন')
+
+// Fast, simple UI
+QuickAddButton(
+  amount: 50,
+  category: 'চা-নাশতা',
+  paymentMethod: 'bKash',
+  onTap: () => addExpense(),
+)
+```
+
+## Integration with Other Rules
+
+This rule works in conjunction with:
+- [Architecture](mdc:architecture.mdc) - Clean structure for cultural features
+- [UI Components](mdc:ui_components.mdc) - Brand-consistent components
+- [i18n](mdc:i18n.mdc) - Localization implementation
+- [Performance](mdc:performance.mdc) - Speed requirements
+- [Testing](mdc:testing.mdc) - Cultural and speed testing
+
+Remember: Flow isn't just a finance app—it's a cultural companion that understands how people in Asia actually manage money. Every line of code should reflect this understanding.

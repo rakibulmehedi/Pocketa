@@ -1,0 +1,543 @@
+---
+alwaysApply: true
+---
+# Flutter Development Patterns
+
+## Widget Lifecycle and State Management
+
+### 1. StatelessWidget Best Practices
+```dart
+// ✅ Good - const constructor and const child widgets
+class MyWidget extends StatelessWidget {
+  const MyWidget({
+    super.key,
+    required this.title,
+    this.subtitle,
+  });
+  
+  final String title;
+  final String? subtitle;
+  
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(title),
+        if (subtitle != null) Text(subtitle!),
+      ],
+    );
+  }
+}
+```
+
+### 2. StatefulWidget Best Practices
+```dart
+class MyStatefulWidget extends StatefulWidget {
+  const MyStatefulWidget({super.key});
+  
+  @override
+  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+}
+
+class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  late TextEditingController _controller;
+  
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+  
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return TextField(controller: _controller);
+  }
+}
+```
+
+### 3. ConsumerWidget Pattern
+```dart
+class MyConsumerWidget extends ConsumerWidget {
+  const MyConsumerWidget({super.key});
+  
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(myProvider);
+    
+    return state.when(
+      data: (data) => DataWidget(data),
+      loading: () => CircularProgressIndicator(),
+      error: (error, stack) => ErrorWidget(error),
+    );
+  }
+}
+```
+
+## Navigation Patterns
+
+### 1. GoRouter Usage
+```dart
+// Define routes
+final router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const DashboardScreen(),
+    ),
+    GoRoute(
+      path: '/transactions',
+      builder: (context, state) => const TransactionsScreen(),
+    ),
+    GoRoute(
+      path: '/transactions/:id',
+      builder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return TransactionDetailScreen(id: id);
+      },
+    ),
+  ],
+);
+
+// Navigation
+context.go('/transactions');
+context.push('/transactions/123');
+context.pop();
+```
+
+### 2. Modal Navigation
+```dart
+// Show bottom sheet
+showModalBottomSheet(
+  context: context,
+  isScrollControlled: true,
+  builder: (context) => AddTransactionSheet(),
+);
+
+// Show dialog
+showDialog(
+  context: context,
+  builder: (context) => AppDialog(
+    title: 'Confirm',
+    content: 'Are you sure?',
+    actions: [
+      AppButton(text: 'Cancel', onPressed: () => Navigator.pop(context)),
+      AppButton(text: 'Confirm', onPressed: () => confirm()),
+    ],
+  ),
+);
+```
+
+## Theme and Styling
+
+### 1. Theme Usage
+```dart
+// Use theme colors
+Container(
+  color: Theme.of(context).colorScheme.primary,
+  child: Text(
+    'Hello',
+    style: Theme.of(context).textTheme.headlineSmall,
+  ),
+)
+
+// Custom theme extension
+final customTheme = Theme.of(context).extension<CustomTheme>();
+Container(
+  color: customTheme?.accentColor,
+)
+```
+
+### 2. Responsive Styling
+```dart
+// Use responsive system
+final L = context.layout;
+
+Container(
+  padding: L.insetsSymmetric(h: 2, v: 1),
+  margin: L.insetsAll(1),
+  child: Text(
+    'Hello',
+    style: TextStyle(fontSize: L.tBase),
+  ),
+)
+```
+
+## Form Handling
+
+### 1. Form Validation
+```dart
+class MyForm extends StatefulWidget {
+  @override
+  _MyFormState createState() => _MyFormState();
+}
+
+class _MyFormState extends State<MyForm> {
+  final _formKey = GlobalKey<FormState>();
+  final _amountController = TextEditingController();
+  
+  @override
+  void dispose() {
+    _amountController.dispose();
+    super.dispose();
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          AppTextFormField(
+            controller: _amountController,
+            label: 'Amount',
+            validator: (value) {
+              if (value?.isEmpty == true) return 'Required';
+              if (double.tryParse(value!) == null) return 'Invalid amount';
+              return null;
+            },
+          ),
+          ElevatedButton(
+            onPressed: _submitForm,
+            child: Text('Submit'),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      // Process form
+    }
+  }
+}
+```
+
+### 2. Form State with Riverpod
+```dart
+class FormNotifier extends StateNotifier<FormState> {
+  FormNotifier() : super(FormState.initial());
+  
+  void updateAmount(String value) {
+    state = state.copyWith(amount: value);
+    _validateForm();
+  }
+  
+  void _validateForm() {
+    final isValid = state.amount.isNotEmpty && 
+                   double.tryParse(state.amount) != null;
+    state = state.copyWith(isValid: isValid);
+  }
+}
+```
+
+## Animation Patterns
+
+### 1. Implicit Animations
+```dart
+// AnimatedContainer
+AnimatedContainer(
+  duration: Duration(milliseconds: 300),
+  width: isExpanded ? 200 : 100,
+  height: isExpanded ? 200 : 100,
+  color: isExpanded ? Colors.blue : Colors.red,
+  child: child,
+)
+
+// AnimatedOpacity
+AnimatedOpacity(
+  duration: Duration(milliseconds: 300),
+  opacity: isVisible ? 1.0 : 0.0,
+  child: child,
+)
+```
+
+### 2. Explicit Animations
+```dart
+class MyAnimatedWidget extends StatefulWidget {
+  @override
+  _MyAnimatedWidgetState createState() => _MyAnimatedWidgetState();
+}
+
+class _MyAnimatedWidgetState extends State<MyAnimatedWidget>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+  
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
+  }
+  
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _animation.value,
+          child: child,
+        );
+      },
+      child: child,
+    );
+  }
+}
+```
+
+## List and Grid Patterns
+
+### 1. ListView Patterns
+```dart
+// Basic ListView
+ListView.builder(
+  itemCount: items.length,
+  itemBuilder: (context, index) {
+    return ListTile(
+      title: Text(items[index].title),
+      subtitle: Text(items[index].subtitle),
+      onTap: () => handleTap(items[index]),
+    );
+  },
+)
+
+// SliverList for CustomScrollView
+CustomScrollView(
+  slivers: [
+    SliverAppBar(
+      title: Text('Title'),
+      floating: true,
+    ),
+    SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) => ListTile(
+          title: Text(items[index].title),
+        ),
+        childCount: items.length,
+      ),
+    ),
+  ],
+)
+```
+
+### 2. GridView Patterns
+```dart
+// Responsive GridView
+GridView.builder(
+  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: context.layout.isDesktop ? 4 : 
+                   context.layout.isTablet ? 3 : 2,
+    crossAxisSpacing: 16,
+    mainAxisSpacing: 16,
+  ),
+  itemCount: items.length,
+  itemBuilder: (context, index) => GridItem(items[index]),
+)
+```
+
+## Platform-Specific Code
+
+### 1. Platform Detection
+```dart
+// Check platform
+if (Platform.isAndroid) {
+  // Android-specific code
+} else if (Platform.isIOS) {
+  // iOS-specific code
+}
+
+// Use Theme.of(context).platform
+switch (Theme.of(context).platform) {
+  case TargetPlatform.android:
+    return AndroidWidget();
+  case TargetPlatform.iOS:
+    return IOSWidget();
+  default:
+    return DefaultWidget();
+}
+```
+
+### 2. Platform-Specific Widgets
+```dart
+// Adaptive widgets
+SwitchListTile(
+  title: Text('Setting'),
+  value: value,
+  onChanged: (newValue) => setState(() => value = newValue),
+)
+
+// Platform-specific styling
+AppBar(
+  title: Text('Title'),
+  elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0 : 4,
+)
+```
+
+## Testing Patterns
+
+### 1. Widget Testing
+```dart
+testWidgets('should display title', (tester) async {
+  await tester.pumpWidget(
+    MaterialApp(
+      home: MyWidget(title: 'Test Title'),
+    ),
+  );
+  
+  expect(find.text('Test Title'), findsOneWidget);
+});
+
+testWidgets('should handle tap', (tester) async {
+  bool tapped = false;
+  
+  await tester.pumpWidget(
+    MaterialApp(
+      home: GestureDetector(
+        onTap: () => tapped = true,
+        child: Text('Tap me'),
+      ),
+    ),
+  );
+  
+  await tester.tap(find.text('Tap me'));
+  expect(tapped, true);
+});
+```
+
+### 2. Provider Testing
+```dart
+testWidgets('should update state', (tester) async {
+  await tester.pumpWidget(
+    ProviderScope(
+      child: MaterialApp(
+        home: MyConsumerWidget(),
+      ),
+    ),
+  );
+  
+  // Test initial state
+  expect(find.text('Initial'), findsOneWidget);
+  
+  // Trigger state change
+  await tester.tap(find.byKey(Key('update_button')));
+  await tester.pump();
+  
+  // Test updated state
+  expect(find.text('Updated'), findsOneWidget);
+});
+```
+
+## Performance Patterns
+
+### 1. Const Optimization
+```dart
+// ✅ Good - const everywhere possible
+class MyWidget extends StatelessWidget {
+  const MyWidget({super.key});
+  
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        Text('Title'),
+        Text('Subtitle'),
+      ],
+    );
+  }
+}
+```
+
+### 2. RepaintBoundary
+```dart
+// Isolate expensive repaints
+RepaintBoundary(
+  child: ExpensiveAnimatedWidget(),
+)
+```
+
+### 3. AutomaticKeepAliveClientMixin
+```dart
+class MyPageState extends State<MyPage> 
+    with AutomaticKeepAliveClientMixin {
+  
+  @override
+  bool get wantKeepAlive => true;
+  
+  @override
+  Widget build(BuildContext context) {
+    super.build(context); // Required
+    return MyExpensiveWidget();
+  }
+}
+```
+
+## Accessibility Patterns
+
+### 1. Semantic Labels
+```dart
+// Provide semantic information
+Semantics(
+  label: 'Save button',
+  hint: 'Tap to save the transaction',
+  child: ElevatedButton(
+    onPressed: () {},
+    child: Icon(Icons.save),
+  ),
+)
+```
+
+### 2. Screen Reader Support
+```dart
+// Announce changes to screen readers
+SemanticsService.announce('Transaction saved', TextDirection.ltr);
+
+// Provide live regions
+Semantics(
+  liveRegion: true,
+  child: Text(statusMessage),
+)
+```
+
+## Best Practices Summary
+
+### 1. Widget Design
+- Use const constructors everywhere possible
+- Extract complex widgets into separate classes
+- Use meaningful widget names
+
+### 2. State Management
+- Prefer StatelessWidget when possible
+- Use Riverpod for complex state
+- Dispose resources properly
+
+### 3. Performance
+- Use RepaintBoundary for expensive widgets
+- Implement shouldRebuild for custom widgets
+- Profile regularly with DevTools
+
+### 4. Testing
+- Write widget tests for UI components
+- Test user interactions
+- Mock external dependencies
+
+### 5. Accessibility
+- Provide semantic labels
+- Support screen readers
+- Test with accessibility tools

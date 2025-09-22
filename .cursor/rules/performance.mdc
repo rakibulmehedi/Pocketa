@@ -1,0 +1,548 @@
+---
+alwaysApply: true
+---
+# Flow Performance Optimization Guide
+
+## Flow-Specific Performance Requirements
+
+### Speed Targets (Non-Negotiable)
+- **Expense Entry**: ≤9 seconds (p95 ≤ 14s)
+- **App Launch**: <3 seconds on budget devices
+- **Screen Transitions**: <250ms
+- **Data Sync**: Background only, never block UI
+- **Offline Operations**: All core features work without internet
+
+### Cultural Performance
+- **Number Formatting**: <50ms for Bengali numerals (১,০০,০০০)
+- **Language Switching**: <200ms for locale changes
+- **Cultural Calculations**: <100ms for festival budget calculations
+
+## Core Performance Principles
+
+### 1. Const Constructors
+Always use `const` constructors where possible to prevent unnecessary rebuilds:
+
+```dart
+// ✅ Good - const constructor
+class MyWidget extends StatelessWidget {
+  const MyWidget({super.key});
+  
+  @override
+  Widget build(BuildContext context) {
+    return const Text('Hello');
+  }
+}
+
+// ❌ Bad - non-const constructor
+class MyWidget extends StatelessWidget {
+  MyWidget({super.key});
+  
+  @override
+  Widget build(BuildContext context) {
+    return Text('Hello'); // This will rebuild unnecessarily
+  }
+}
+```
+
+### 2. Optimized Widgets
+Use performance-optimized widgets from [lib/shared/ui_components/performance/](mdc:lib/shared/ui_components/performance/):
+
+```dart
+// OptimizedWidget prevents unnecessary rebuilds
+OptimizedWidget(
+  child: ExpensiveWidget(),
+  shouldRebuild: (oldWidget, newWidget) {
+    return oldWidget.data != newWidget.data;
+  },
+)
+
+// MemoizedWidget caches expensive computations
+MemoizedWidget(
+  builder: (context) => ExpensiveComputation(),
+  dependencies: [data1, data2],
+)
+```
+
+## Riverpod Performance
+
+### 1. Use Selectors for Granular Rebuilds
+```dart
+// ❌ Bad - rebuilds entire widget when any state changes
+Consumer(
+  builder: (context, ref, child) {
+    final state = ref.watch(featureProvider);
+    return Text(state.title); // Rebuilds even when only description changes
+  },
+)
+
+// ✅ Good - only rebuilds when title changes
+Consumer(
+  builder: (context, ref, child) {
+    final title = ref.watch(
+      featureProvider.select((state) => state.title),
+    );
+    return Text(title);
+  },
+)
+```
+
+### 2. Use autoDispose for Temporary Providers
+```dart
+// ✅ Good - automatically disposed when not used
+final temporaryProvider = Provider.autoDispose((ref) {
+  return TemporaryData();
+});
+
+// ❌ Bad - stays in memory even when not needed
+final permanentProvider = Provider((ref) {
+  return PermanentData();
+});
+```
+
+### 3. Optimize Provider Dependencies
+```dart
+// ✅ Good - minimal dependencies
+final optimizedProvider = Provider((ref) {
+  final repository = ref.watch(repositoryProvider);
+  return ExpensiveComputation(repository);
+});
+
+// ❌ Bad - unnecessary dependencies
+final inefficientProvider = Provider((ref) {
+  final repository = ref.watch(repositoryProvider);
+  final theme = ref.watch(themeProvider); // Not needed
+  final locale = ref.watch(localeProvider); // Not needed
+  return ExpensiveComputation(repository);
+});
+```
+
+## List Performance
+
+### 1. Use OptimizedListView
+```dart
+// ✅ Good - performance optimized
+OptimizedListView(
+  itemCount: items.length,
+  itemBuilder: (context, index) {
+    return ItemWidget(item: items[index]);
+  },
+)
+
+// ❌ Bad - standard ListView for large lists
+ListView.builder(
+  itemCount: items.length,
+  itemBuilder: (context, index) {
+    return ItemWidget(item: items[index]);
+  },
+)
+```
+
+### 2. Implement Proper itemExtent
+```dart
+// ✅ Good - fixed height for better performance
+ListView.builder(
+  itemExtent: 80, // Fixed height
+  itemCount: items.length,
+  itemBuilder: (context, index) => ItemWidget(items[index]),
+)
+
+// ❌ Bad - variable height causes layout calculations
+ListView.builder(
+  itemCount: items.length,
+  itemBuilder: (context, index) => ItemWidget(items[index]), // Variable height
+)
+```
+
+### 3. Use SliverList for Complex Scrolling
+```dart
+// ✅ Good - efficient scrolling with other slivers
+CustomScrollView(
+  slivers: [
+    SliverAppBar(...),
+    SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) => ItemWidget(items[index]),
+        childCount: items.length,
+      ),
+    ),
+  ],
+)
+```
+
+## Image Performance
+
+### 1. Use Appropriate Image Widgets
+```dart
+// ✅ Good - optimized for different use cases
+Image.asset(
+  'assets/image.png',
+  cacheWidth: 200, // Limit memory usage
+  cacheHeight: 200,
+)
+
+// For network images
+Image.network(
+  url,
+  cacheWidth: 300,
+  cacheHeight: 300,
+  fit: BoxFit.cover,
+)
+```
+
+### 2. Implement Image Caching
+```dart
+// Use cached_network_image for network images
+CachedNetworkImage(
+  imageUrl: url,
+  memCacheWidth: 200,
+  memCacheHeight: 200,
+  placeholder: (context, url) => CircularProgressIndicator(),
+  errorWidget: (context, url, error) => Icon(Icons.error),
+)
+```
+
+## Animation Performance
+
+### 1. Use Responsive Animations
+```dart
+// ✅ Good - scale-aware animations
+AnimatedContainer(
+  duration: context.layout.fast, // 90-140ms based on device
+  child: child,
+)
+
+// ❌ Bad - fixed duration
+AnimatedContainer(
+  duration: Duration(milliseconds: 300), // Fixed duration
+  child: child,
+)
+```
+
+### 2. Optimize Animation Controllers
+```dart
+// ✅ Good - dispose controller properly
+class _MyWidgetState extends State<MyWidget> 
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 300),
+      vsync: this,
+    );
+  }
+  
+  @override
+  void dispose() {
+    _controller.dispose(); // Important!
+    super.dispose();
+  }
+}
+```
+
+## Memory Management
+
+### 1. Dispose Resources Properly
+```dart
+class MyWidget extends StatefulWidget {
+  @override
+  _MyWidgetState createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> {
+  late StreamSubscription _subscription;
+  late TextEditingController _controller;
+  
+  @override
+  void initState() {
+    super.initState();
+    _subscription = stream.listen((data) {});
+    _controller = TextEditingController();
+  }
+  
+  @override
+  void dispose() {
+    _subscription.cancel(); // Cancel stream subscription
+    _controller.dispose(); // Dispose controller
+    super.dispose();
+  }
+}
+```
+
+### 2. Use Weak References for Callbacks
+```dart
+// ✅ Good - weak reference prevents memory leaks
+class MyNotifier extends StateNotifier<MyState> {
+  void registerCallback(VoidCallback callback) {
+    // Use WeakReference or similar pattern
+    _callbacks.add(WeakReference(callback));
+  }
+}
+```
+
+## Database Performance
+
+### 1. Use Efficient Queries
+```dart
+// ✅ Good - specific query
+final transactions = await box.values
+    .where((t) => t.categoryId == categoryId)
+    .toList();
+
+// ❌ Bad - load all then filter
+final allTransactions = await box.values.toList();
+final transactions = allTransactions
+    .where((t) => t.categoryId == categoryId)
+    .toList();
+```
+
+### 2. Implement Pagination
+```dart
+// ✅ Good - paginated loading
+Future<List<Transaction>> getTransactions({
+  int page = 0,
+  int limit = 20,
+}) async {
+  final start = page * limit;
+  final end = start + limit;
+  return await box.values
+      .skip(start)
+      .take(limit)
+      .toList();
+}
+```
+
+## Network Performance
+
+### 1. Implement Request Caching
+```dart
+// ✅ Good - cache network requests
+class ApiService {
+  final Map<String, CachedData> _cache = {};
+  
+  Future<Data> getData(String key) async {
+    if (_cache.containsKey(key) && !_cache[key]!.isExpired) {
+      return _cache[key]!.data;
+    }
+    
+    final data = await _fetchFromNetwork(key);
+    _cache[key] = CachedData(data, DateTime.now());
+    return data;
+  }
+}
+```
+
+### 2. Use Connection Pooling
+```dart
+// ✅ Good - reuse HTTP client
+class ApiClient {
+  static final _client = http.Client();
+  
+  static Future<Response> get(String url) async {
+    return await _client.get(Uri.parse(url));
+  }
+}
+```
+
+## Build Performance
+
+### 1. Optimize Build Methods
+```dart
+// ✅ Good - extract expensive widgets
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _buildHeader(), // Extract to separate method
+        _buildContent(), // Extract to separate method
+        _buildFooter(), // Extract to separate method
+      ],
+    );
+  }
+  
+  Widget _buildHeader() {
+    return const HeaderWidget(); // Can be const
+  }
+}
+```
+
+### 2. Use RepaintBoundary
+```dart
+// ✅ Good - isolate repaints
+RepaintBoundary(
+  child: ExpensiveAnimatedWidget(),
+)
+```
+
+## Testing Performance
+
+### 1. Performance Tests
+```dart
+testWidgets('should render within performance budget', (tester) async {
+  final stopwatch = Stopwatch()..start();
+  
+  await tester.pumpWidget(MyWidget());
+  await tester.pumpAndSettle();
+  
+  stopwatch.stop();
+  expect(stopwatch.elapsedMilliseconds, lessThan(100)); // 100ms budget
+});
+```
+
+### 2. Memory Tests
+```dart
+test('should not leak memory', () async {
+  final initialMemory = ProcessInfo.currentRss;
+  
+  // Perform operations
+  for (int i = 0; i < 1000; i++) {
+    await performOperation();
+  }
+  
+  // Force garbage collection
+  await Future.delayed(Duration(seconds: 1));
+  
+  final finalMemory = ProcessInfo.currentRss;
+  expect(finalMemory - initialMemory, lessThan(10 * 1024 * 1024)); // 10MB limit
+});
+```
+
+## Monitoring Performance
+
+### 1. Use Performance Overlay
+```dart
+// Enable in debug mode
+MaterialApp(
+  showPerformanceOverlay: kDebugMode,
+  child: MyApp(),
+)
+```
+
+### 2. Profile Mode Testing
+```bash
+# Test in profile mode for accurate performance metrics
+flutter run --profile
+```
+
+### 3. Use DevTools
+```dart
+// Enable DevTools integration
+import 'package:flutter/foundation.dart';
+
+void main() {
+  if (kDebugMode) {
+    // Enable DevTools
+  }
+  runApp(MyApp());
+}
+```
+
+## Flow-Specific Performance Patterns
+
+### 1. Speed-First Architecture
+```dart
+// Pre-calculate cultural formatting
+class CulturalFormatter {
+  static final Map<String, String> _bengaliNumerals = {
+    '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪',
+    '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯'
+  };
+  
+  static String formatAmount(double amount, CulturalContext context) {
+    // Use cached formatters for speed
+    return context.isBengali 
+      ? _formatBengaliAmount(amount)
+      : _formatEnglishAmount(amount);
+  }
+}
+```
+
+### 2. Offline-First Performance
+```dart
+// All operations must work offline
+class OfflineFirstService {
+  static Future<void> saveTransaction(Transaction transaction) async {
+    // Save locally first (fast)
+    await LocalDatabase.save(transaction);
+    
+    // Queue for background sync (non-blocking)
+    SyncQueue.add(transaction);
+  }
+  
+  static Future<List<Transaction>> getTransactions() async {
+    // Always return local data immediately
+    return await LocalDatabase.getAll();
+  }
+}
+```
+
+### 3. Cultural Intelligence Caching
+```dart
+// Cache cultural calculations
+class CulturalCache {
+  static final Map<String, String> _greetingCache = {};
+  static final Map<String, List<String>> _categoryCache = {};
+  
+  static String getGreeting(Locale locale, DateTime time) {
+    final key = '${locale.languageCode}_${time.hour}';
+    return _greetingCache.putIfAbsent(key, () => _calculateGreeting(locale, time));
+  }
+}
+```
+
+## Best Practices Summary
+
+### 1. Always Use Const
+- Use `const` constructors everywhere possible
+- Extract widgets to separate methods for const optimization
+
+### 2. Optimize Rebuilds
+- Use selectors for granular Riverpod subscriptions
+- Implement `shouldRebuild` for custom widgets
+- Use `RepaintBoundary` for expensive animations
+
+### 3. Manage Memory
+- Dispose controllers and subscriptions properly
+- Use weak references for callbacks
+- Implement proper pagination for large datasets
+
+### 4. Test Performance
+- Write performance tests for speed targets
+- Test cultural formatting performance
+- Monitor memory usage on budget devices
+
+### 5. Profile Regularly
+- Use Flutter DevTools
+- Test in profile mode
+- Monitor frame rates and memory usage
+- Test offline performance scenarios
+
+### 6. Flow-Specific Testing
+```dart
+// Test speed requirements
+testWidgets('should complete expense entry within 9 seconds', (tester) async {
+  final stopwatch = Stopwatch()..start();
+  
+  await tester.pumpWidget(ExpenseEntryScreen());
+  await tester.enterText(find.byKey(Key('amount_field')), '50');
+  await tester.tap(find.byKey(Key('save_button')));
+  await tester.pumpAndSettle();
+  
+  stopwatch.stop();
+  expect(stopwatch.elapsedMilliseconds, lessThan(9000));
+});
+
+// Test cultural performance
+testWidgets('should format Bengali numerals within 50ms', (tester) async {
+  final stopwatch = Stopwatch()..start();
+  
+  final formatted = CulturalFormatter.formatAmount(1500.50, bengaliContext);
+  
+  stopwatch.stop();
+  expect(stopwatch.elapsedMilliseconds, lessThan(50));
+  expect(formatted, equals('৳১৫০০.৫০'));
+});
+```

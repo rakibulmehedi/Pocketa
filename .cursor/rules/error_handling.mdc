@@ -1,0 +1,457 @@
+---
+globs: lib/core/error_handling/**/*.dart,lib/core/result/**/*.dart,lib/core/errors/**/*.dart
+description: Error handling patterns and Result type usage
+---
+
+# Error Handling System
+
+## Result Pattern
+
+Pocketa uses a `Result<T>` pattern for operations that can fail, providing type-safe error handling.
+
+### Result Type Definition
+```dart
+sealed class Result<T> {
+  const Result();
+  R when<R>({required R Function(T) ok, required R Function(Failure) err});
+}
+
+class Ok<T> extends Result<T> {
+  final T value;
+  const Ok(this.value);
+}
+
+class Err<T> extends Result<T> {
+  final Failure failure;
+  const Err(this.failure);
+}
+```
+
+### Usage Patterns
+
+#### 1. Basic Result Usage
+```dart
+// Function that returns Result
+Future<Result<List<Transaction>>> getTransactions() async {
+  try {
+    final transactions = await repository.getAll();
+    return Ok(transactions);
+  } catch (e) {
+    return Err(DatabaseFailure(e.toString()));
+  }
+}
+
+// Handling Result
+final result = await getTransactions();
+result.when(
+  ok: (transactions) => displayTransactions(transactions),
+  err: (failure) => showError(failure.message),
+);
+```
+
+#### 2. Result in Providers
+```dart
+final transactionsProvider = FutureProvider<Result<List<Transaction>>>((ref) async {
+  final repository = ref.watch(transactionRepositoryProvider);
+  return await repository.getAll();
+});
+
+// In widget
+Consumer(
+  builder: (context, ref, child) {
+    final result = ref.watch(transactionsProvider);
+    return result.when(
+      data: (result) => result.when(
+        ok: (transactions) => TransactionList(transactions),
+        err: (failure) => ErrorWidget(failure.message),
+      ),
+      loading: () => CircularProgressIndicator(),
+      error: (error, stack) => ErrorWidget(error.toString()),
+    );
+  },
+)
+```
+
+## Failure Types
+
+### Base Failure Class
+```dart
+abstract class Failure {
+  final String message;
+  final String? code;
+  final Map<String, dynamic>? details;
+  
+  const Failure(this.message, {this.code, this.details});
+}
+```
+
+### Specific Failure Types
+```dart
+// Database failures
+class DatabaseFailure extends Failure {
+  const DatabaseFailure(super.message, {super.code, super.details});
+}
+
+// Network failures
+class NetworkFailure extends Failure {
+  const NetworkFailure(super.message, {super.code, super.details});
+}
+
+// Cache failures
+class CacheFailure extends Failure {
+  const CacheFailure(super.message, {super.code, super.details});
+}
+
+// Validation failures
+class ValidationFailure extends Failure {
+  const ValidationFailure(super.message, {super.code, super.details});
+}
+```
+
+## Error Handler
+
+### Centralized Error Handling
+```dart
+class ErrorHandler {
+  static void handleError(
+    BuildContext context,
+    Object error, {
+    String? message,
+    VoidCallback? onRetry,
+    bool showSnackbar = true,
+  }) {
+    // Log error
+    _logger.e('Error occurred: $error', error: error);
+    
+    if (!showSnackbar) return;
+    
+    final l10n = AppLocalizations.of(context);
+    final String errorMessage = message ?? _getErrorMessage(error, l10n);
+    
+    // Show error snackbar
+    SnackbarService.showError(
+      context,
+      message: errorMessage,
+      actionLabel: onRetry != null ? l10n.retry : null,
+      onAction: onRetry,
+    );
+  }
+}
+```
+
+### Usage in Widgets
+```dart
+// Handle errors in async operations
+Future<void> loadData() async {
+  try {
+    final data = await repository.getData();
+    setState(() => this.data = data);
+  } catch (error) {
+    ErrorHandler.handleError(
+      context,
+      error,
+      message: 'Failed to load data',
+      onRetry: loadData,
+    );
+  }
+}
+
+// Handle Result errors
+void handleResult(Result<Data> result) {
+  result.when(
+    ok: (data) => setState(() => this.data = data),
+    err: (failure) => ErrorHandler.handleError(
+      context,
+      failure,
+      onRetry: () => loadData(),
+    ),
+  );
+}
+```
+
+## Global Error Handling
+
+### Global Error Handler Setup
+```dart
+class GlobalErrorHandler {
+  static void initialize() {
+    // Handle Flutter framework errors
+    FlutterError.onError = (FlutterErrorDetails details) {
+      _handleFlutterError(details);
+    };
+
+    // Handle async errors
+    PlatformDispatcher.instance.onError = (error, stack) {
+      _handleAsyncError(error, stack);
+      return true;
+    };
+  }
+}
+
+// Initialize in main.dart
+void main() {
+  GlobalErrorHandler.initialize();
+  runApp(MyApp());
+}
+```
+
+### Error Recovery
+```dart
+class ErrorRecovery {
+  static Future<T?> handleAsync<T>(
+    BuildContext context,
+    Future<T> Function() operation, {
+    String? errorMessage,
+    VoidCallback? onRetry,
+    bool showLoading = true,
+  }) async {
+    if (showLoading) {
+      showDialog(context: context, builder: (_) => LoadingDialog());
+    }
+    
+    try {
+      final result = await operation();
+      if (showLoading && context.mounted) {
+        Navigator.of(context).pop();
+      }
+      return result;
+    } catch (error) {
+      if (showLoading && context.mounted) {
+        Navigator.of(context).pop();
+      }
+      
+      if (context.mounted) {
+        ErrorHandler.handleError(
+          context,
+          error,
+          message: errorMessage,
+          onRetry: onRetry,
+        );
+      }
+      return null;
+    }
+  }
+}
+```
+
+## Form Error Handling
+
+### Form Validation Errors
+```dart
+class FormNotifier extends BaseFormNotifier<FormState> {
+  void validateField(String fieldName, String value) {
+    final error = _validateField(fieldName, value);
+    state = state.copyWith(
+      fieldErrors: {
+        ...state.fieldErrors,
+        if (error != null) fieldName: error,
+      },
+    );
+  }
+  
+  String? _validateField(String fieldName, String value) {
+    switch (fieldName) {
+      case 'amount':
+        if (value.isEmpty) return 'Amount is required';
+        if (double.tryParse(value) == null) return 'Invalid amount';
+        return null;
+      case 'category':
+        if (value.isEmpty) return 'Category is required';
+        return null;
+      default:
+        return null;
+    }
+  }
+}
+```
+
+### Displaying Form Errors
+```dart
+AppTextFormField(
+  controller: amountController,
+  label: 'Amount',
+  errorText: state.fieldErrors['amount'],
+  onChanged: (value) => notifier.validateField('amount', value),
+)
+```
+
+## Provider Error Handling
+
+### Error Handling in Providers
+```dart
+final dataProvider = FutureProvider<Data>((ref) async {
+  try {
+    return await repository.getData();
+  } catch (error) {
+    // Log error
+    ref.read(loggerProvider).e('Failed to load data: $error');
+    rethrow; // Let AsyncValue handle the error
+  }
+});
+
+// In widget
+Consumer(
+  builder: (context, ref, child) {
+    final data = ref.watch(dataProvider);
+    return data.when(
+      data: (data) => DataWidget(data),
+      loading: () => CircularProgressIndicator(),
+      error: (error, stack) {
+        // Handle error with retry
+        return ErrorWidget(
+          error: error,
+          onRetry: () => ref.refresh(dataProvider),
+        );
+      },
+    );
+  },
+)
+```
+
+### Error Widget with Retry
+```dart
+class ErrorWidget extends StatelessWidget {
+  final Object error;
+  final VoidCallback? onRetry;
+  
+  const ErrorWidget({required this.error, this.onRetry});
+  
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.error, size: 64, color: Colors.red),
+          SizedBox(height: 16),
+          Text('Something went wrong'),
+          SizedBox(height: 8),
+          Text(error.toString()),
+          if (onRetry != null) ...[
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: onRetry,
+              child: Text('Retry'),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+```
+
+## Testing Error Handling
+
+### Test Error Scenarios
+```dart
+testWidgets('should show error when data loading fails', (tester) async {
+  // Mock repository to throw error
+  final mockRepository = MockRepository();
+  when(mockRepository.getData()).thenThrow(Exception('Network error'));
+  
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [
+        repositoryProvider.overrideWithValue(mockRepository),
+      ],
+      child: MyWidget(),
+    ),
+  );
+  
+  await tester.pump();
+  
+  expect(find.text('Something went wrong'), findsOneWidget);
+  expect(find.text('Network error'), findsOneWidget);
+});
+```
+
+### Test Result Pattern
+```dart
+test('should return Err when operation fails', () async {
+  final result = await repository.getData();
+  
+  expect(result, isA<Err<Data>>());
+  result.when(
+    ok: (data) => fail('Should not succeed'),
+    err: (failure) => expect(failure.message, contains('error')),
+  );
+});
+```
+
+## Best Practices
+
+### 1. Always Use Result for Operations That Can Fail
+```dart
+// ❌ Don't throw exceptions in business logic
+Future<List<Transaction>> getTransactions() async {
+  if (isOffline) throw Exception('No internet');
+  return await repository.getAll();
+}
+
+// ✅ Use Result pattern
+Future<Result<List<Transaction>>> getTransactions() async {
+  if (isOffline) return Err(NetworkFailure('No internet connection'));
+  try {
+    final transactions = await repository.getAll();
+    return Ok(transactions);
+  } catch (e) {
+    return Err(DatabaseFailure(e.toString()));
+  }
+}
+```
+
+### 2. Handle Errors at the Right Level
+```dart
+// ❌ Don't handle errors too early
+Future<void> loadData() async {
+  try {
+    final result = await repository.getData();
+    if (result is Ok) {
+      setState(() => data = result.value);
+    }
+  } catch (e) {
+    // Error handling here is too early
+  }
+}
+
+// ✅ Handle errors at the UI level
+Future<void> loadData() async {
+  final result = await repository.getData();
+  result.when(
+    ok: (data) => setState(() => this.data = data),
+    err: (failure) => ErrorHandler.handleError(context, failure),
+  );
+}
+```
+
+### 3. Provide Meaningful Error Messages
+```dart
+// ❌ Generic error messages
+return Err(Failure('Error'));
+
+// ✅ Specific, actionable error messages
+return Err(ValidationFailure('Amount must be greater than 0'));
+return Err(NetworkFailure('Please check your internet connection'));
+```
+
+### 4. Always Provide Retry Options
+```dart
+ErrorHandler.handleError(
+  context,
+  error,
+  message: 'Failed to load data',
+  onRetry: () => loadData(), // Always provide retry option
+);
+```
+
+### 5. Log Errors for Debugging
+```dart
+try {
+  final result = await operation();
+  return Ok(result);
+} catch (error, stackTrace) {
+  _logger.e('Operation failed', error: error, stackTrace: stackTrace);
+  return Err(OperationFailure(error.toString()));
+}
+```

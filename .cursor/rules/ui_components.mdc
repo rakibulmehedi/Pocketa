@@ -1,0 +1,589 @@
+---
+alwaysApply: true
+---
+# Flow UI Components Design System
+
+## Flow Brand Integration
+
+All UI components must follow Flow's brand identity and cultural intelligence principles:
+
+- **Brand Essence**: Calm • Clear • Fast
+- **Primary Colors**: Trust Blue (#0F4C81), Mint Teal (#22C3A6)
+- **Typography**: Inter (Latin), Hind Siliguri (Bengali)
+- **Cultural Intelligence**: Bengali-first, local payment methods, empathetic messaging
+- **Speed Requirements**: All interactions ≤9 seconds
+
+## Component Organization
+
+UI components are organized by category in [lib/shared/ui_components/](mdc:lib/shared/ui_components/):
+
+```
+ui_components/
+├── app_bars/           # App bar components
+├── buttons/            # Button components  
+├── cards/              # Card components
+├── dialogs/            # Dialog components
+├── forms/              # Form components
+├── lists/              # List components
+├── performance/        # Performance utilities
+├── indicators/         # Loading and state indicators
+└── ui_components.dart  # Main export file
+```
+
+## Import Patterns
+
+### Import All Components
+```dart
+import 'package:flow/shared/ui_components/ui_components.dart';
+```
+
+### Import Specific Categories
+```dart
+// Import only buttons
+import 'package:flow/shared/ui_components/buttons/buttons.dart';
+
+// Import only forms
+import 'package:flow/shared/ui_components/forms/forms.dart';
+```
+
+## Button Components
+
+### AppButton
+Primary button component with multiple styles and sizes:
+
+```dart
+AppButton(
+  onPressed: () {},
+  text: 'Save',
+  style: AppButtonStyle.primary,
+  size: AppButtonSize.large,
+  isLoading: false,
+  icon: Icons.save,
+)
+```
+
+**Available Styles:**
+- `AppButtonStyle.primary` - Primary action button
+- `AppButtonStyle.secondary` - Secondary action button
+- `AppButtonStyle.outline` - Outline button
+- `AppButtonStyle.ghost` - Ghost button
+- `AppButtonStyle.danger` - Danger/destructive action
+
+**Available Sizes:**
+- `AppButtonSize.small` - Small button
+- `AppButtonSize.medium` - Medium button (default)
+- `AppButtonSize.large` - Large button
+
+### QuickButton
+Quick action buttons for common tasks:
+
+```dart
+QuickButton(
+  icon: Icons.add,
+  label: 'Add Transaction',
+  onPressed: () {},
+)
+```
+
+## Form Components
+
+### AppTextFormField
+Enhanced text form field with validation:
+
+```dart
+AppTextFormField(
+  controller: controller,
+  label: 'Amount',
+  hintText: 'Enter amount',
+  validator: (value) => value?.isEmpty == true ? 'Required' : null,
+  keyboardType: TextInputType.number,
+  prefixIcon: Icons.attach_money,
+)
+```
+
+### AmountField
+Specialized field for monetary amounts:
+
+```dart
+AmountField(
+  controller: amountController,
+  onChanged: (value) => updateAmount(value),
+  currency: 'BDT',
+)
+```
+
+### AppDateTimeField
+Date and time picker field:
+
+```dart
+AppDateTimeField(
+  label: 'Date',
+  initialDate: DateTime.now(),
+  onChanged: (date) => updateDate(date),
+  firstDate: DateTime(2020),
+  lastDate: DateTime.now(),
+)
+```
+
+### NoteField
+Multi-line text input for notes:
+
+```dart
+NoteField(
+  controller: noteController,
+  hintText: 'Add a note...',
+  maxLines: 3,
+)
+```
+
+## Card Components
+
+### SectionCard
+Consistent card with header for content sections:
+
+```dart
+SectionCard(
+  title: 'Recent Transactions',
+  subtitle: 'Your latest activity',
+  children: [
+    TransactionTile(transaction: transaction),
+    // ... more children
+  ],
+)
+```
+
+### PersonalizationCard
+Specialized card for personalization options:
+
+```dart
+PersonalizationCard(
+  title: 'Theme',
+  subtitle: 'Choose your preferred theme',
+  icon: Icons.palette,
+  onTap: () => showThemeDialog(),
+)
+```
+
+## Dialog Components
+
+### AppDialog
+Premium interactive dialog component:
+
+```dart
+AppDialog(
+  title: 'Delete Transaction',
+  content: 'Are you sure you want to delete this transaction?',
+  actions: [
+    AppButton(
+      text: 'Cancel',
+      style: AppButtonStyle.outline,
+      onPressed: () => Navigator.pop(context),
+    ),
+    AppButton(
+      text: 'Delete',
+      style: AppButtonStyle.danger,
+      onPressed: () => deleteTransaction(),
+    ),
+  ],
+)
+```
+
+### AppConfirmationDialog
+Standard confirmation dialog:
+
+```dart
+AppConfirmationDialog(
+  title: 'Confirm Action',
+  message: 'This action cannot be undone.',
+  confirmText: 'Yes, Delete',
+  cancelText: 'Cancel',
+  onConfirm: () => performAction(),
+)
+```
+
+## List Components
+
+### AppListTile
+Premium interactive list tile:
+
+```dart
+AppListTile(
+  leading: Icon(Icons.receipt),
+  title: 'Transaction',
+  subtitle: 'Amount: \$50.00',
+  trailing: Icon(Icons.chevron_right),
+  onTap: () => navigateToDetails(),
+)
+```
+
+### OptimizedListView
+Performance-optimized list view:
+
+```dart
+OptimizedListView(
+  itemCount: transactions.length,
+  itemBuilder: (context, index) {
+    return TransactionTile(transaction: transactions[index]);
+  },
+)
+```
+
+## App Bar Components
+
+### CustomAppBar
+Enhanced app bar with premium fintech design:
+
+```dart
+CustomAppBar(
+  title: 'Dashboard',
+  subtitle: 'Welcome back',
+  actions: [
+    IconButton(
+      icon: Icon(Icons.notifications),
+      onPressed: () {},
+    ),
+  ],
+)
+```
+
+### CustomSliverAppBar
+Collapsible sliver app bar:
+
+```dart
+CustomSliverAppBar(
+  title: 'Transactions',
+  expandedHeight: 200,
+  flexibleSpace: FlexibleSpaceBar(
+    background: Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.blue, Colors.purple],
+        ),
+      ),
+    ),
+  ),
+)
+```
+
+## Performance Components
+
+### OptimizedWidget
+Prevents unnecessary rebuilds:
+
+```dart
+OptimizedWidget(
+  child: ExpensiveWidget(),
+  shouldRebuild: (oldWidget, newWidget) {
+    return oldWidget.data != newWidget.data;
+  },
+)
+```
+
+### MemoizedWidget
+Caches expensive computations:
+
+```dart
+MemoizedWidget(
+  builder: (context) => ExpensiveComputation(),
+  dependencies: [data1, data2],
+)
+```
+
+### InteractiveWrapper
+Haptic feedback and animations:
+
+```dart
+InteractiveWrapper(
+  onTap: () => handleTap(),
+  child: Container(
+    child: Text('Tap me'),
+  ),
+)
+```
+
+## Indicator Components
+
+### AppLoadingIndicator
+Premium loading indicator:
+
+```dart
+AppLoadingIndicator(
+  message: 'Loading transactions...',
+  size: LoadingSize.medium,
+)
+```
+
+### EmptyState
+Enhanced empty state component:
+
+```dart
+EmptyState(
+  icon: Icons.receipt_long,
+  title: 'No Transactions',
+  subtitle: 'Start by adding your first transaction',
+  action: AppButton(
+    text: 'Add Transaction',
+    onPressed: () => addTransaction(),
+  ),
+)
+```
+
+## Flow-Specific Component Patterns
+
+### 1. Cultural Intelligence Components
+```dart
+// Bengali-first text components
+class FlowText extends StatelessWidget {
+  final String bengali;
+  final String english;
+  final String? arabic;
+  final TextStyle? style;
+  
+  const FlowText({
+    super.key,
+    required this.bengali,
+    required this.english,
+    this.arabic,
+    this.style,
+  });
+  
+  @override
+  Widget build(BuildContext context) {
+    final culturalContext = context.watch(culturalContextProvider);
+    final text = _getLocalizedText(culturalContext);
+    
+    return Text(
+      text,
+      style: style ?? _getCulturalStyle(culturalContext),
+    );
+  }
+  
+  String _getLocalizedText(CulturalContext context) {
+    switch (context.locale.languageCode) {
+      case 'bn': return bengali;
+      case 'hi': return english; // Hindi uses English for now
+      case 'ar': return arabic ?? english;
+      default: return english;
+    }
+  }
+  
+  TextStyle _getCulturalStyle(CulturalContext context) {
+    return TextStyle(
+      fontFamily: context.isBengali ? 'Hind Siliguri' : 'Inter',
+      fontSize: 16,
+    );
+  }
+}
+```
+
+### 2. Speed-Optimized Components
+```dart
+// Quick-add components for fast expense entry
+class QuickAddButton extends StatelessWidget {
+  final double amount;
+  final String category;
+  final String paymentMethod;
+  final VoidCallback onTap;
+  
+  const QuickAddButton({
+    super.key,
+    required this.amount,
+    required this.category,
+    required this.paymentMethod,
+    required this.onTap,
+  });
+  
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // Start timer for speed tracking
+        ExpenseTimer.start();
+        onTap();
+      },
+      child: Container(
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: FlowColors.mintTeal,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          children: [
+            Text(
+              '৳${_formatAmount(amount)}',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              category,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.white70,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  String _formatAmount(double amount) {
+    // Use Bengali numerals for speed
+    return _convertToBengaliNumerals(amount.toStringAsFixed(0));
+  }
+}
+```
+
+### 3. Empathetic Messaging Components
+```dart
+// Non-judgmental error and feedback components
+class FlowMessage extends StatelessWidget {
+  final String bengali;
+  final String english;
+  final MessageType type;
+  
+  const FlowMessage({
+    super.key,
+    required this.bengali,
+    required this.english,
+    required this.type,
+  });
+  
+  @override
+  Widget build(BuildContext context) {
+    final culturalContext = context.watch(culturalContextProvider);
+    final text = _getLocalizedText(culturalContext);
+    final color = _getMessageColor();
+    
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          Icon(_getMessageIcon(), color: color),
+          SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(color: color),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  String _getLocalizedText(CulturalContext context) {
+    switch (context.locale.languageCode) {
+      case 'bn': return bengali;
+      default: return english;
+    }
+  }
+  
+  Color _getMessageColor() {
+    switch (type) {
+      case MessageType.success: return FlowColors.success;
+      case MessageType.warning: return FlowColors.warning;
+      case MessageType.error: return FlowColors.danger;
+      case MessageType.info: return FlowColors.trustBlue;
+    }
+  }
+  
+  IconData _getMessageIcon() {
+    switch (type) {
+      case MessageType.success: return Icons.check_circle;
+      case MessageType.warning: return Icons.warning;
+      case MessageType.error: return Icons.error;
+      case MessageType.info: return Icons.info;
+    }
+  }
+}
+
+enum MessageType { success, warning, error, info }
+```
+
+## Design System Guidelines
+
+### 1. Consistent Spacing
+Use the responsive spacing system:
+
+```dart
+Padding(
+  padding: context.layout.insetsSymmetric(h: 2, v: 1),
+  child: child,
+)
+```
+
+### 2. Responsive Sizing
+Use responsive sizing for different devices:
+
+```dart
+Container(
+  width: context.layout.responsiveSize(
+    phone: 100,
+    tablet: 150,
+    desktop: 200,
+  ),
+)
+```
+
+### 3. Theme Integration
+Always use theme colors and styles:
+
+```dart
+Container(
+  color: Theme.of(context).colorScheme.primary,
+  child: Text(
+    'Hello',
+    style: Theme.of(context).textTheme.headlineSmall,
+  ),
+)
+```
+
+### 4. Accessibility
+Ensure components are accessible:
+
+```dart
+Semantics(
+  label: 'Save button',
+  hint: 'Tap to save the transaction',
+  child: AppButton(
+    text: 'Save',
+    onPressed: () {},
+  ),
+)
+```
+
+## Component Development Guidelines
+
+### 1. File Organization
+- Keep related components in the same file
+- Use descriptive file names: `app_bars.dart`, `buttons.dart`
+- Export components in category files
+
+### 2. Naming Conventions
+- Use `App` prefix for main components: `AppButton`, `AppDialog`
+- Use descriptive names: `CustomAppBar`, `OptimizedListView`
+- Use enums for component variants: `AppButtonStyle`, `AppButtonSize`
+
+### 3. Props and Parameters
+- Use required parameters for essential props
+- Provide sensible defaults for optional parameters
+- Use named parameters for clarity
+
+### 4. Documentation
+- Document all public components
+- Include usage examples
+- Document available variants and options
+
+### 5. Testing
+- Test all component variants
+- Test responsive behavior
+- Test accessibility features

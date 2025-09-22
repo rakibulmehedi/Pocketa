@@ -1,0 +1,163 @@
+---
+alwaysApply: true
+description: Clean Architecture patterns and project structure for Pocketa
+---
+
+# Pocketa Clean Architecture Guide
+
+## Project Structure
+
+Pocketa follows Clean Architecture with clear separation of concerns:
+
+```
+lib/
+├── core/                    # Core functionality
+│   ├── constants/          # App constants
+│   ├── errors/             # Error handling
+│   ├── forms/              # Form management
+│   ├── providers/          # Base Riverpod providers
+│   ├── responsive/         # Responsive utilities
+│   ├── theme/              # App theming
+│   └── utils/              # Core utilities
+├── features/               # Feature modules
+│   ├── onboarding/         # Onboarding feature
+│   ├── dashboard/          # Dashboard feature
+│   ├── transaction/        # Transaction feature
+│   ├── categories/         # Categories feature
+│   └── wallets/            # Wallet feature
+├── shared/                 # Shared functionality
+│   ├── services/           # Business services
+│   ├── ui_components/      # Reusable UI components
+│   └── widgets.dart        # Widget exports
+└── main.dart              # App entry point
+```
+
+## Feature Module Structure
+
+Each feature follows the same Clean Architecture structure:
+
+```
+features/[feature_name]/
+├── data/                   # Data layer
+│   ├── models/             # Data models (Hive + JSON)
+│   └── repositories/       # Repository implementations
+├── domain/                 # Domain layer
+│   ├── entities/           # Business entities
+│   ├── repositories/       # Repository interfaces
+│   └── usecases/           # Business use cases
+└── presentation/           # Presentation layer
+    ├── pages/              # Screen pages
+    ├── widgets/            # Feature widgets
+    └── viewmodels/         # State management (Riverpod)
+```
+
+## Key Principles
+
+### 1. Dependency Inversion
+- High-level modules don't depend on low-level modules
+- Both depend on abstractions (interfaces)
+- Use dependency injection with Riverpod providers
+
+### 2. Single Responsibility
+- Each class has one reason to change
+- Clear, focused responsibilities
+- Easy to test and maintain
+
+### 3. Separation of Concerns
+- **Data Layer**: Handles data sources and repositories
+- **Domain Layer**: Contains business logic and entities
+- **Presentation Layer**: Manages UI and user interactions
+
+## File Naming Conventions
+
+- **Entities**: `[name]_entity.dart` (e.g., `transaction_entity.dart`)
+- **Models**: `[name]_model.dart` (e.g., `transaction_model.dart`)
+- **Repositories**: `[name]_repository.dart` (interface), `[name]_repo_impl.dart` (implementation)
+- **Use Cases**: `[action]_[entity].dart` (e.g., `get_transactions.dart`)
+- **Providers**: `[feature]_providers.dart` (e.g., `transaction_providers.dart`)
+- **Pages**: `[name]_screen.dart` (e.g., `dashboard_screen.dart`)
+- **Widgets**: `[name]_widget.dart` (e.g., `transaction_card.dart`)
+
+## Import Organization
+
+```dart
+// 1. Dart/Flutter imports
+import 'dart:async';
+import 'package:flutter/material.dart';
+
+// 2. Third-party packages
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
+
+// 3. Core imports
+import 'package:pocketa/core/core.dart';
+
+// 4. Feature imports
+import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
+
+// 5. Shared imports
+import 'package:pocketa/shared/ui_components/ui_components.dart';
+```
+
+## Base Classes and Patterns
+
+### BaseEntity
+All entities extend [BaseEntity](mdc:lib/core/data/base_entity.dart):
+```dart
+abstract class BaseEntity {
+  String get id;
+  DateTime get createdAt;
+  DateTime get updatedAt;
+  bool get isDeleted;
+}
+```
+
+### BaseRepository
+All repositories implement [BaseRepository](mdc:lib/core/data/base_repository.dart):
+```dart
+abstract class BaseRepository<T extends BaseEntity> {
+  List<T> all({bool includeDeleted = false});
+  T? getById(String id);
+  Stream<List<T>> watchAll();
+  // ... other methods
+}
+```
+
+### BaseProviders
+Use [BaseProviders](mdc:lib/core/providers/base_providers.dart) for common provider patterns:
+```dart
+final repositoryProvider = BaseProviders.repositoryProvider<Repo, Entity>(
+  (ref) => RepoImpl(ref.watch(boxProvider)),
+);
+```
+
+## State Management with Riverpod
+
+- Use `StateNotifierProvider` for complex state
+- Use `Provider` for simple values
+- Use `StreamProvider` for reactive data
+- Use `Provider.family` for parameterized providers
+- Always extend `BaseStateNotifier` for state notifiers
+
+## Error Handling
+
+- Use [Result<T>](mdc:lib/core/result/result.dart) pattern for operations that can fail
+- Handle errors with [ErrorHandler](mdc:lib/core/error_handling/error_handler.dart)
+- Use specific failure types from [core/errors/](mdc:lib/core/errors/)
+
+## Testing Structure
+
+```
+test/
+├── core/                   # Core functionality tests
+├── features/               # Feature tests
+├── shared/                 # Shared functionality tests
+└── widget_test.dart       # Widget tests
+```
+
+## Performance Guidelines
+
+- Use `const` constructors wherever possible
+- Implement `OptimizedWidget` for expensive widgets
+- Use `MemoizedWidget` for expensive computations
+- Follow responsive design patterns from [core/responsive/](mdc:lib/core/responsive/)

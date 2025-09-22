@@ -1,0 +1,439 @@
+---
+alwaysApply: true
+---
+# Internationalization (i18n) System
+
+## Supported Languages
+
+- **Bengali (bn)**: Primary language (Flow is Bengali-first)
+- **English (en)**: Secondary language
+- **Hindi (hi)**: Tertiary language (future expansion)
+- **Arabic (ar)**: Tertiary language (future expansion)
+
+## File Structure
+
+```
+lib/l10n/
+├── app_bn.arb                    # Bengali translations (primary)
+├── app_en.arb                    # English translations
+├── app_hi.arb                    # Hindi translations (future)
+├── app_ar.arb                    # Arabic translations (future)
+├── app_localizations.dart        # Main localization class
+├── app_localizations_bn.dart     # Bengali implementation
+├── app_localizations_en.dart     # English implementation
+├── app_localizations_hi.dart     # Hindi implementation (future)
+└── app_localizations_ar.dart     # Arabic implementation (future)
+```
+
+## Usage Patterns
+
+### 1. Basic String Access
+```dart
+// Get localized strings
+final l10n = AppLocalizations.of(context);
+Text(l10n.welcomeTitle)           // "Welcome to Flow" / "Flow-এ স্বাগতম"
+Text(l10n.appTitle)               // "Flow"
+Text(l10n.tagline)                // "Money in Motion, Life in Balance" / "টাকার flow, জীবনের balance"
+```
+
+### 2. Common UI Strings
+```dart
+// Action buttons
+AppButton(
+  text: l10n.save,
+  onPressed: () {},
+)
+
+AppButton(
+  text: l10n.cancel,
+  style: AppButtonStyle.outline,
+  onPressed: () {},
+)
+
+// Dialog text
+AppDialog(
+  title: l10n.confirm,
+  content: l10n.deleteConfirmation,
+  actions: [
+    AppButton(text: l10n.yes, onPressed: () {}),
+    AppButton(text: l10n.no, onPressed: () {}),
+  ],
+)
+```
+
+### 3. Form Labels and Hints
+```dart
+AppTextFormField(
+  label: l10n.amount,
+  hintText: l10n.enterAmount,
+  validator: (value) => value?.isEmpty == true ? l10n.required : null,
+)
+
+AppTextFormField(
+  label: l10n.note,
+  hintText: l10n.addNote,
+)
+```
+
+### 4. Navigation and Headers
+```dart
+CustomAppBar(
+  title: l10n.dashboard,
+  subtitle: l10n.welcomeBack,
+)
+
+AppListTile(
+  title: l10n.transactions,
+  subtitle: l10n.viewAllTransactions,
+)
+```
+
+## Locale Management
+
+### 1. Locale Provider
+```dart
+// Watch current locale
+final locale = ref.watch(localeProvider);
+
+// Change locale
+ref.read(localeProvider.notifier).setLocale(Locale('bn'));
+
+// Toggle between languages
+ref.read(localeProvider.notifier).toggle();
+```
+
+### 2. Locale Notifier Usage
+```dart
+class MyWidget extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(localeProvider);
+    final l10n = AppLocalizations.of(context);
+    
+    return Column(
+      children: [
+        Text(l10n.currentLanguage),
+        ElevatedButton(
+          onPressed: () {
+            ref.read(localeProvider.notifier).toggle();
+          },
+          child: Text(l10n.changeLanguage),
+        ),
+      ],
+    );
+  }
+}
+```
+
+## Cultural Intelligence Patterns
+
+### 1. Bengali-First Approach
+```dart
+// Always provide Bengali translation first
+class CulturalLocalizations {
+  static String getGreeting(Locale locale, DateTime time) {
+    final hour = time.hour;
+    switch (locale.languageCode) {
+      case 'bn':
+        if (hour < 12) return 'সুপ্রভাত';
+        if (hour < 17) return 'শুভ দুপুর';
+        if (hour < 20) return 'শুভ সন্ধ্যা';
+        return 'রাতের শুভেচ্ছা';
+      case 'hi':
+        if (hour < 12) return 'सुप्रभात';
+        if (hour < 17) return 'नमस्ते';
+        if (hour < 20) return 'शुभ संध्या';
+        return 'शुभ रात्रि';
+      case 'ar':
+        if (hour < 12) return 'صباح الخير';
+        if (hour < 17) return 'مساء الخير';
+        if (hour < 20) return 'مساء النور';
+        return 'ليلة سعيدة';
+      default:
+        if (hour < 12) return 'Good morning';
+        if (hour < 17) return 'Good afternoon';
+        if (hour < 20) return 'Good evening';
+        return 'Good night';
+    }
+  }
+}
+```
+
+### 2. Cultural Categories
+```dart
+// Use culturally relevant category names
+class CulturalCategories {
+  static Map<String, String> getCategoryNames(Locale locale) {
+    switch (locale.languageCode) {
+      case 'bn':
+        return {
+          'tea_snacks': 'চা-নাশতা',
+          'rickshaw_transport': 'রিকশা ও যাতায়াত',
+          'mobile_recharge': 'মোবাইল রিচার্জ',
+          'eid_festival': 'ঈদ ও উৎসব',
+          'family_support': 'পারিবারিক সহায়তা',
+        };
+      case 'hi':
+        return {
+          'tea_snacks': 'चाय-नाश्ता',
+          'rickshaw_transport': 'रिक्शा और यातायात',
+          'mobile_recharge': 'मोबाइल रिचार्ज',
+          'eid_festival': 'ईद और त्योहार',
+          'family_support': 'पारिवारिक सहायता',
+        };
+      default:
+        return {
+          'tea_snacks': 'Tea & Snacks',
+          'rickshaw_transport': 'Transport',
+          'mobile_recharge': 'Mobile Recharge',
+          'eid_festival': 'Festivals',
+          'family_support': 'Family Support',
+        };
+    }
+  }
+}
+```
+
+### 3. Empathetic Messaging
+```dart
+// Use empathetic, non-judgmental language
+class EmpatheticMessages {
+  static String getOverBudgetMessage(String category, Locale locale) {
+    switch (locale.languageCode) {
+      case 'bn':
+        return '${category} এ একটু বেশি খরচ হয়েছে। কোনো সমস্যা নেই—কখনো কখনো হয়।';
+      case 'hi':
+        return '${category} में थोड़ा ज्यादा खर्च हुआ है। कोई बात नहीं—कभी-कभी होता है।';
+      case 'ar':
+        return 'أنفقت أكثر قليلاً على ${category}. لا بأس—يحدث أحياناً.';
+      default:
+        return 'You spent a bit more on ${category} this time. No worries—it happens.';
+    }
+  }
+}
+```
+
+## Translation Key Patterns
+
+### 1. Naming Conventions
+- Use snake_case for keys: `welcome_title`, `add_transaction`
+- Group related keys with prefixes: `cat_`, `btn_`, `msg_`
+- Use descriptive names: `welcomeTitle`, `deleteConfirmation`
+
+### 2. Common Key Patterns
+```dart
+// UI Actions
+l10n.save, l10n.cancel, l10n.delete, l10n.edit
+l10n.back, l10n.next, l10n.skip, l10n.finish
+l10n.continuee, l10n.retry, l10n.confirm
+
+// Navigation
+l10n.dashboard, l10n.transactions, l10n.wallets, l10n.categories
+
+// Forms
+l10n.amount, l10n.note, l10n.date, l10n.category
+l10n.enterAmount, l10n.addNote, l10n.selectCategory
+
+// Messages
+l10n.success, l10n.error, l10n.warning, l10n.info
+l10n.loading, l10n.noData, l10n.tryAgain
+
+// Categories
+l10n.cat_food_dining_name, l10n.cat_transport_name
+l10n.cat_shopping_name, l10n.cat_rent_name
+```
+
+## App Setup
+
+### 1. MaterialApp Configuration
+```dart
+MaterialApp.router(
+  // Localized app title
+  onGenerateTitle: (ctx) => AppLocalizations.of(ctx).appTitle,
+  
+  // Locale configuration
+  locale: locale,
+  supportedLocales: AppLocalizations.supportedLocales,
+  localizationsDelegates: const [
+    AppLocalizations.delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+  ],
+)
+```
+
+### 2. Locale Provider Setup
+```dart
+// In main.dart
+runApp(
+  ProviderScope(
+    child: PocketaApp(),
+  ),
+)
+```
+
+## Date and Number Formatting
+
+### 1. Locale-Aware Formatting
+```dart
+// Date formatting
+final dateFormat = DateFormat.yMMMd(locale.languageCode);
+final formattedDate = dateFormat.format(DateTime.now());
+
+// Number formatting
+final numberFormat = NumberFormat.currency(
+  locale: locale.languageCode,
+  symbol: locale.languageCode == 'bn' ? '৳' : '\$',
+);
+final formattedAmount = numberFormat.format(amount);
+```
+
+### 2. Currency Formatting
+```dart
+// Bengali currency
+if (locale.languageCode == 'bn') {
+  return '৳${amount.toStringAsFixed(2)}';
+} else {
+  return '\$${amount.toStringAsFixed(2)}';
+}
+```
+
+## Error Messages
+
+### 1. Localized Error Messages
+```dart
+// Use ErrorHandler with localized messages
+ErrorHandler.handleError(
+  context,
+  error,
+  message: l10n.errorGeneric,
+  onRetry: () => retry(),
+)
+```
+
+### 2. Form Validation Messages
+```dart
+String? validateAmount(String? value) {
+  if (value?.isEmpty == true) {
+    return l10n.required;
+  }
+  final amount = double.tryParse(value!);
+  if (amount == null || amount <= 0) {
+    return l10n.invalidAmount;
+  }
+  return null;
+}
+```
+
+## Testing Localization
+
+### 1. Test Different Locales
+```dart
+testWidgets('should display Bengali text', (tester) async {
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [
+        localeProvider.overrideWith((ref) => Locale('bn')),
+      ],
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: MyWidget(),
+      ),
+    ),
+  );
+  
+  expect(find.text('বাংলা'), findsOneWidget);
+});
+```
+
+### 2. Test Locale Switching
+```dart
+testWidgets('should switch locale on button tap', (tester) async {
+  await tester.pumpWidget(MyApp());
+  
+  // Initially English
+  expect(find.text('English'), findsOneWidget);
+  
+  // Tap language toggle
+  await tester.tap(find.byKey(Key('language_toggle')));
+  await tester.pump();
+  
+  // Should switch to Bengali
+  expect(find.text('বাংলা'), findsOneWidget);
+});
+```
+
+## Adding New Translations
+
+### 1. Add to ARB Files
+```json
+// app_en.arb
+{
+  "newFeature": "New Feature",
+  "newFeatureDescription": "Description of the new feature"
+}
+
+// app_bn.arb
+{
+  "newFeature": "নতুন ফিচার",
+  "newFeatureDescription": "নতুন ফিচারের বর্ণনা"
+}
+```
+
+### 2. Regenerate Localizations
+```bash
+flutter gen-l10n
+```
+
+### 3. Use in Code
+```dart
+Text(l10n.newFeature)
+Text(l10n.newFeatureDescription)
+```
+
+## Best Practices
+
+### 1. Always Use Localized Strings
+```dart
+// ❌ Don't hardcode strings
+Text('Welcome to Pocketa')
+
+// ✅ Use localized strings
+Text(l10n.welcomeTitle)
+```
+
+### 2. Handle Missing Translations
+```dart
+// The system will fallback to English if Bengali translation is missing
+Text(l10n.someKey) // Will show English if Bengali not available
+```
+
+### 3. Use Context for Locale Access
+```dart
+// ❌ Don't access locale directly
+final l10n = AppLocalizations.of(context);
+
+// ✅ Use in build method
+@override
+Widget build(BuildContext context) {
+  final l10n = AppLocalizations.of(context);
+  return Text(l10n.welcomeTitle);
+}
+```
+
+### 4. Test Both Languages
+Always test your app in both English and Bengali to ensure:
+- All strings are translated
+- UI layout works with longer/shorter text
+- RTL support if needed (for future languages)
+
+### 5. Use Meaningful Key Names
+```dart
+// ❌ Unclear keys
+l10n.msg1, l10n.btn1, l10n.text1
+
+// ✅ Clear, descriptive keys
+l10n.welcomeMessage, l10n.saveButton, l10n.errorTitle
+```
