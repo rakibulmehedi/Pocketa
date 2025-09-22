@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pocketa/core/errors/exception_mapper.dart';
-import 'package:pocketa/core/errors/exceptions.dart';
-import 'package:pocketa/core/errors/failure.dart';
+import 'package:flow/core/errors/exception_mapper.dart';
+import 'package:flow/core/errors/exceptions.dart';
+import 'package:flow/core/errors/failure.dart';
 
 void main() {
   group('mapExceptionToFailure', () {

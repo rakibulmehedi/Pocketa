@@ -1,4 +1,4 @@
-import 'package:pocketa/core/data/base_entity.dart';
+import 'package:flow/core/data/base_entity.dart';
 
 enum CategoryKind { income, expense, transfer }
 

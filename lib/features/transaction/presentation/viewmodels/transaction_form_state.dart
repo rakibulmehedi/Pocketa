@@ -1,5 +1,5 @@
 
-import 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
+import 'package:flow/features/transaction/domain/entities/transaction_type.dart';
 
 class TransactionFormState {
   final TransactionType type;

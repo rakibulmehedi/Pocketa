@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pocketa/core/db/hive_helpers.dart';
+import 'package:flow/core/db/hive_helpers.dart';
 
 void main() {
   test('shouldCompact true when length >= threshold', () {

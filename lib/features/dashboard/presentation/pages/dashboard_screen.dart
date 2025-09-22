@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/analytics/analytics_service.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/features/transaction/presentation/pages/pages.dart';
-import 'package:pocketa/l10n/app_localizations.dart';
+import 'package:flow/core/analytics/analytics_service.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/features/transaction/presentation/pages/pages.dart';
+import 'package:flow/l10n/app_localizations.dart';
 
 /// Global nav index state (survives across widgets)
 final navIndexProvider = StateProvider<int>((ref) => 0);
@@ -181,7 +181,7 @@ class _DashboardBody extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Welcome to Pocketa!',
+                      'Welcome to Flow!',
                       style: TextStyle(
                         fontSize: device == DeviceSize.phone 
                           ? 20.sp(context) 

@@ -1,12 +1,12 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/core.dart';
-import 'package:pocketa/core/constants/default_categories.dart';
-import 'package:pocketa/features/categories/domain/entities/category_entity.dart';
-import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
-import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_state.dart';
+import 'package:flow/core/core.dart';
+import 'package:flow/core/constants/default_categories.dart';
+import 'package:flow/features/categories/domain/entities/category_entity.dart';
+import 'package:flow/features/transaction/data/models/transaction_model.dart';
+import 'package:flow/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:flow/features/transaction/domain/entities/transaction_type.dart';
+import 'package:flow/features/transaction/presentation/viewmodels/transaction_form_state.dart';
 
 /// Public provider
 final transactionFormProvider =

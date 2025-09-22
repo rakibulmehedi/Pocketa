@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
+import 'package:flow/core/responsive/responsive.dart';
 
 /// A reusable interactive card widget with micro-interactions
 class InteractiveCard extends StatefulWidget {

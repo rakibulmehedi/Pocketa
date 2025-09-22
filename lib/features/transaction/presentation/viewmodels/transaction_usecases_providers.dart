@@ -1,35 +1,35 @@
 // lib/features/transaction/presentation/viewmodels/transaction_usecases_providers.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_providers.dart';
-import 'package:pocketa/features/transaction/domain/repositories/transaction_repository.dart';
+import 'package:flow/features/transaction/presentation/viewmodels/transaction_providers.dart';
+import 'package:flow/features/transaction/domain/repositories/transaction_repository.dart';
 
 // ---- Usecases (IMPORT ALL) ----
-import 'package:pocketa/features/transaction/domain/usecases/upsert_transaction.dart';
-import 'package:pocketa/features/transaction/domain/usecases/upsert_many_transactions.dart';
-import 'package:pocketa/features/transaction/domain/usecases/delete_transaction_hard.dart';
-import 'package:pocketa/features/transaction/domain/usecases/delete_transaction_soft.dart';
+import 'package:flow/features/transaction/domain/usecases/upsert_transaction.dart';
+import 'package:flow/features/transaction/domain/usecases/upsert_many_transactions.dart';
+import 'package:flow/features/transaction/domain/usecases/delete_transaction_hard.dart';
+import 'package:flow/features/transaction/domain/usecases/delete_transaction_soft.dart';
 
-import 'package:pocketa/features/transaction/domain/usecases/get_transaction_by_id.dart';
-import 'package:pocketa/features/transaction/domain/usecases/get_all_transactions.dart';
-import 'package:pocketa/features/transaction/domain/usecases/get_transactions_between.dart';
-import 'package:pocketa/features/transaction/domain/usecases/get_transactions_by_month.dart';
+import 'package:flow/features/transaction/domain/usecases/get_transaction_by_id.dart';
+import 'package:flow/features/transaction/domain/usecases/get_all_transactions.dart';
+import 'package:flow/features/transaction/domain/usecases/get_transactions_between.dart';
+import 'package:flow/features/transaction/domain/usecases/get_transactions_by_month.dart';
 
-import 'package:pocketa/features/transaction/domain/usecases/get_month_income.dart';
-import 'package:pocketa/features/transaction/domain/usecases/get_month_expense.dart';
-import 'package:pocketa/features/transaction/domain/usecases/get_month_net.dart';
-import 'package:pocketa/features/transaction/domain/usecases/get_net_worth.dart';
-import 'package:pocketa/features/transaction/domain/usecases/get_monthly_net_series.dart';
-import 'package:pocketa/features/transaction/domain/usecases/get_daily_cashflow.dart';
+import 'package:flow/features/transaction/domain/usecases/get_month_income.dart';
+import 'package:flow/features/transaction/domain/usecases/get_month_expense.dart';
+import 'package:flow/features/transaction/domain/usecases/get_month_net.dart';
+import 'package:flow/features/transaction/domain/usecases/get_net_worth.dart';
+import 'package:flow/features/transaction/domain/usecases/get_monthly_net_series.dart';
+import 'package:flow/features/transaction/domain/usecases/get_daily_cashflow.dart';
 
-import 'package:pocketa/features/transaction/domain/usecases/get_category_total_in_month.dart';
-import 'package:pocketa/features/transaction/domain/usecases/get_category_type_total_in_month.dart';
-import 'package:pocketa/features/transaction/domain/usecases/get_amount_by_category.dart';
+import 'package:flow/features/transaction/domain/usecases/get_category_total_in_month.dart';
+import 'package:flow/features/transaction/domain/usecases/get_category_type_total_in_month.dart';
+import 'package:flow/features/transaction/domain/usecases/get_amount_by_category.dart';
 
-import 'package:pocketa/features/transaction/domain/usecases/get_transfer_total_in_month.dart';
-import 'package:pocketa/features/transaction/domain/usecases/get_wallet_transfer_total.dart';
-import 'package:pocketa/features/transaction/domain/usecases/get_transfer_between_wallets.dart';
-import 'package:pocketa/features/transaction/domain/usecases/get_wallet_balance.dart';
+import 'package:flow/features/transaction/domain/usecases/get_transfer_total_in_month.dart';
+import 'package:flow/features/transaction/domain/usecases/get_wallet_transfer_total.dart';
+import 'package:flow/features/transaction/domain/usecases/get_transfer_between_wallets.dart';
+import 'package:flow/features/transaction/domain/usecases/get_wallet_balance.dart';
 
 // Helper: in providers files use `Ref` (NOT WidgetRef)
 TransactionRepository _repo(Ref ref) => ref.watch(txRepositoryProvider);

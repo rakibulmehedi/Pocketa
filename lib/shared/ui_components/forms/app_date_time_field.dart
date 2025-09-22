@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:pocketa/shared/ui_components/forms/app_text_form_field.dart';
+import 'package:flow/shared/ui_components/forms/app_text_form_field.dart';
 
 /// Date and time input field
 class AppDateTimeField extends StatelessWidget {

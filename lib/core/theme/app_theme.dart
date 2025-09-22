@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pocketa/core/theme/app_typography.dart';
+import 'package:flow/core/theme/app_typography.dart';
 
 class AppTheme {
   // Brand seeds

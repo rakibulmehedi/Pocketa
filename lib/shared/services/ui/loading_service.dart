@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pocketa/shared/services/ui/snackbar_service.dart';
-import 'package:pocketa/core/theme/app_colors.dart';
+import 'package:flow/shared/services/ui/snackbar_service.dart';
+import 'package:flow/core/theme/app_colors.dart';
 
 /// Simple loading service for managing loading states with premium UX
 class LoadingService {

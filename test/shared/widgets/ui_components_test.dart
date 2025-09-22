@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/shared/ui_components/ui_components.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/shared/ui_components/ui_components.dart';
 
 void main() {
   group('Premium UI Components Tests', () {

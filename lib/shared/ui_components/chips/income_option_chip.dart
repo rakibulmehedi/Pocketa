@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/theme/app_colors.dart';
-import 'package:pocketa/features/onboarding/domain/entities/onboarding_entity.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/core/theme/app_colors.dart';
+import 'package:flow/features/onboarding/domain/entities/onboarding_entity.dart';
 
 /// A reusable income option chip widget with responsive sizing
 class IncomeOptionChip extends StatelessWidget {

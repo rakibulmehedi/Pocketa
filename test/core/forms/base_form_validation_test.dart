@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pocketa/core/forms/base_form_state.dart';
+import 'package:flow/core/forms/base_form_state.dart';
 
 class TestFormNotifier with BaseFormValidation {
   // This class is just for testing the mixin

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/theme/app_colors.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/core/theme/app_colors.dart';
 
 class SeedMotivationScreen extends ConsumerStatefulWidget {
   const SeedMotivationScreen({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/analytics/analytics_service.dart';
+import 'package:flow/core/analytics/analytics_service.dart';
 
 class _FakeAnalytics implements AnalyticsService {
   final List<Map<String, dynamic>> events = [];

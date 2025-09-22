@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
+import 'package:flow/core/responsive/responsive.dart';
 
 /// A reusable circular icon widget with responsive sizing
 class CircularIcon extends StatelessWidget {

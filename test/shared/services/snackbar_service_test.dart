@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pocketa/shared/services/ui/ui_services.dart';
+import 'package:flow/shared/services/ui/ui_services.dart';
 
 void main() {
   group('SnackbarService Tests', () {

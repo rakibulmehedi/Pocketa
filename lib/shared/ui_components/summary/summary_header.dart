@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/utils/transaction_utils.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/core/utils/transaction_utils.dart';
 
 /// Summary header with gradient background
 class SummaryHeader extends StatelessWidget {

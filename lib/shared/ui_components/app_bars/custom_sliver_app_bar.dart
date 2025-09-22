@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/core/theme/app_colors.dart';
-import 'package:pocketa/shared/widgets.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/l10n/app_localizations.dart';
+import 'package:flow/core/theme/app_colors.dart';
+import 'package:flow/shared/widgets.dart';
 /// Enhanced Custom Sliver App Bar with advanced features
 /// Features:
 /// - Collapsible design with smooth animations

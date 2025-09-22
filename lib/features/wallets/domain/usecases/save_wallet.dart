@@ -1,5 +1,5 @@
-import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
-import 'package:pocketa/features/wallets/domain/repositories/wallet_repository.dart';
+import 'package:flow/features/wallets/domain/entities/wallet_entity.dart';
+import 'package:flow/features/wallets/domain/repositories/wallet_repository.dart';
 
 class SaveWallet {
   final WalletRepository repository;

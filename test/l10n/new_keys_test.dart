@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pocketa/l10n/app_localizations_en.dart';
+import 'package:flow/l10n/app_localizations_en.dart';
 
 void main() {
   test('new i18n keys are accessible', () {

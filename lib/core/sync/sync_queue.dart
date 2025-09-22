@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
-import 'package:pocketa/core/db/hive_box.dart';
-import 'package:pocketa/core/sync/sync_prefs.dart';
-import 'package:pocketa/core/sync/sync_remote.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:flow/core/db/hive_box.dart';
+import 'package:flow/core/sync/sync_prefs.dart';
+import 'package:flow/core/sync/sync_remote.dart';
+import 'package:flow/features/transaction/domain/entities/transaction_entity.dart';
 
 final syncRemoteProvider = Provider<SyncRemote>((ref) {
   // Default wired to a stub; override in prod with real Supabase client

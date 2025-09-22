@@ -1,4 +1,4 @@
-import 'package:pocketa/features/wallets/domain/repositories/wallet_repository.dart';
+import 'package:flow/features/wallets/domain/repositories/wallet_repository.dart';
 
 class DeleteWallet {
   final WalletRepository repository;

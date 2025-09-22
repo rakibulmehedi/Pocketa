@@ -1,7 +1,7 @@
-import 'package:pocketa/core/data/base_repository.dart';
-import 'package:pocketa/features/wallets/data/models/wallet_model.dart';
-import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
-import 'package:pocketa/features/wallets/domain/repositories/wallet_repository.dart';
+import 'package:flow/core/data/base_repository.dart';
+import 'package:flow/features/wallets/data/models/wallet_model.dart';
+import 'package:flow/features/wallets/domain/entities/wallet_entity.dart';
+import 'package:flow/features/wallets/domain/repositories/wallet_repository.dart';
 
 /// Hive-backed implementation for WalletRepository.
 class WalletRepoImpl extends BaseRepositoryImpl<WalletEntity, WalletModel> implements WalletRepository {

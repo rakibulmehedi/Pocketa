@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/shared/ui_components/dialogs/app_dialog.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/l10n/app_localizations.dart';
+import 'package:flow/shared/ui_components/dialogs/app_dialog.dart';
 
 /// Confirmation dialog
 class AppConfirmationDialog extends StatelessWidget {

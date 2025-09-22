@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pocketa/core/forms/base_form_notifier.dart';
-import 'package:pocketa/core/forms/base_form_state.dart';
+import 'package:flow/core/forms/base_form_notifier.dart';
+import 'package:flow/core/forms/base_form_state.dart';
 
 // Test implementation of BaseFormNotifier
 class TestFormNotifier extends BaseFormNotifier<TestFormState> {

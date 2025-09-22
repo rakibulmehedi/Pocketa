@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/theme/app_colors.dart';
-import 'package:pocketa/features/onboarding/presentation/viewmodels/onboarding_providers.dart';
-import 'package:pocketa/l10n/app_localizations.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/core/theme/app_colors.dart';
+import 'package:flow/features/onboarding/presentation/viewmodels/onboarding_providers.dart';
+import 'package:flow/l10n/app_localizations.dart';
 
 class OnboardingTrustScreen extends StatelessWidget {
   final OnboardingFormNotifier notifier;

@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/forms/base_form_notifier.dart';
-import 'package:pocketa/core/forms/base_form_state.dart';
-import 'package:pocketa/features/onboarding/data/onboarding_repo_impl.dart';
-import 'package:pocketa/features/onboarding/domain/entities/onboarding_entity.dart';
-import 'package:pocketa/features/onboarding/domain/repositories/onboarding_repository.dart';
+import 'package:flow/core/forms/base_form_notifier.dart';
+import 'package:flow/core/forms/base_form_state.dart';
+import 'package:flow/features/onboarding/data/onboarding_repo_impl.dart';
+import 'package:flow/features/onboarding/domain/entities/onboarding_entity.dart';
+import 'package:flow/features/onboarding/domain/repositories/onboarding_repository.dart';
 
 final onboardingRepositoryProvider = Provider<OnboardingRepository>((ref) {
   return OnboardingRepositoryImpl();

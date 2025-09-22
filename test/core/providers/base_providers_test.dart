@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/providers/base_providers.dart';
-import 'package:pocketa/core/data/base_entity.dart';
-import 'package:pocketa/core/data/base_repository.dart';
+import 'package:flow/core/providers/base_providers.dart';
+import 'package:flow/core/data/base_entity.dart';
+import 'package:flow/core/data/base_repository.dart';
 
 // Test entity
 class TestEntity extends BaseEntityImpl {

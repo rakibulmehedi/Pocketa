@@ -1,5 +1,5 @@
-import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:flow/features/transaction/data/models/transaction_model.dart';
+import 'package:flow/features/transaction/domain/entities/transaction_entity.dart';
 
 extension TransactionMapper on Transaction {
   TransactionEntity toEntity() {

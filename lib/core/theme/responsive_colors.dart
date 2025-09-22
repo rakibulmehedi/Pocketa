@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
+import 'package:flow/core/responsive/responsive.dart';
 
 /// Responsive color system that adapts to different screen sizes and themes
 class ResponsiveColors {

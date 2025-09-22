@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pocketa/core/ui/base_list_widget.dart';
-import 'package:pocketa/core/data/base_entity.dart';
+import 'package:flow/core/ui/base_list_widget.dart';
+import 'package:flow/core/data/base_entity.dart';
 
 // Test entity for testing
 class TestEntity extends BaseEntityImpl {

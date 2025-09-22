@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/shared/ui_components/performance/interactive_wrapper.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/shared/ui_components/performance/interactive_wrapper.dart';
 
 /// Premium interactive list tile
 class AppListTile extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/ui/base_dialog.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/core/ui/base_dialog.dart';
 
 void main() {
   group('BaseDialog', () {

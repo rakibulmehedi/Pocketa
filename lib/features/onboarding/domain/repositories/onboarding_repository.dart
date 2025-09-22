@@ -1,4 +1,4 @@
-import 'package:pocketa/features/onboarding/domain/entities/onboarding_entity.dart';
+import 'package:flow/features/onboarding/domain/entities/onboarding_entity.dart';
 
 abstract class OnboardingRepository {
   Future<OnboardingData> getOnboardingData();

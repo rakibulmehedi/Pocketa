@@ -1,6 +1,6 @@
-import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
-import 'package:pocketa/features/transaction/domain/repositories/transaction_repository.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
+import 'package:flow/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:flow/features/transaction/domain/repositories/transaction_repository.dart';
+import 'package:flow/features/transaction/domain/entities/transaction_type.dart';
 
 class GetTransactionsBetweenArgs {
   final DateTime from;

@@ -1,9 +1,9 @@
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pocketa/core/db/hive_box.dart';
-import 'package:pocketa/features/dashboard/presentation/pages/dashboard_screen.dart';
-import 'package:pocketa/features/onboarding/presentation/pages/onboarding_screen.dart';
-import 'package:pocketa/features/transaction/presentation/pages/pages.dart';
+import 'package:flow/core/db/hive_box.dart';
+import 'package:flow/features/dashboard/presentation/pages/dashboard_screen.dart';
+import 'package:flow/features/onboarding/presentation/pages/onboarding_screen.dart';
+import 'package:flow/features/transaction/presentation/pages/pages.dart';
 
 GoRouter buildRouter() => GoRouter(
   redirect: (context, state) {

@@ -1,4 +1,4 @@
-import 'package:pocketa/core/sync/sync_remote.dart';
+import 'package:flow/core/sync/sync_remote.dart';
 
 /// Placeholder remote that simply completes. Replace with Supabase client.
 class SupabaseStubRemote implements SyncRemote {

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pocketa/core/analytics/analytics_service.dart';
+import 'package:flow/core/analytics/analytics_service.dart';
 
 class _Sink implements AnalyticsService {
   final events = <Map<String, dynamic>>[];

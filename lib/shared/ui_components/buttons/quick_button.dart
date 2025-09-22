@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/theme/app_colors.dart';
-import 'package:pocketa/shared/ui_components/performance/interactive_wrapper.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/core/theme/app_colors.dart';
+import 'package:flow/shared/ui_components/performance/interactive_wrapper.dart';
 
 /// Quick action buttons for common actions
 class QuickButton extends StatelessWidget {

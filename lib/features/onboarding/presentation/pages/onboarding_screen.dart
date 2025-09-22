@@ -1,16 +1,10 @@
+import 'package:flow/core/core.dart';
+import 'package:flow/features/features.dart';
+import 'package:flow/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/features/onboarding/domain/entities/onboarding_entity.dart';
-import 'package:pocketa/features/onboarding/presentation/viewmodels/onboarding_providers.dart';
-import 'package:pocketa/features/onboarding/presentation/widgets/onboarding_welcome_screen.dart';
-import 'package:pocketa/features/onboarding/presentation/widgets/onboarding_personalization_screen.dart';
-import 'package:pocketa/features/onboarding/presentation/widgets/onboarding_demo_screen.dart';
-import 'package:pocketa/features/onboarding/presentation/widgets/onboarding_trust_screen.dart';
-import 'package:pocketa/features/onboarding/presentation/widgets/onboarding_habit_screen.dart';
-import 'package:pocketa/features/onboarding/presentation/widgets/onboarding_bottom_footer.dart';
-import 'package:pocketa/l10n/app_localizations.dart';
+
 
 class OnboardingScreen extends ConsumerWidget {
   const OnboardingScreen({super.key});

@@ -1,4 +1,4 @@
-import 'package:pocketa/core/errors/failure.dart';
+import 'package:flow/core/errors/failure.dart';
 
 sealed class Result<T> {
   const Result();

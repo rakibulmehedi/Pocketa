@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pocketa/core/sync/sync_prefs.dart';
-import 'package:pocketa/core/sync/sync_queue.dart';
-import 'package:pocketa/core/sync/sync_remote.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
-import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
+import 'package:flow/core/sync/sync_prefs.dart';
+import 'package:flow/core/sync/sync_queue.dart';
+import 'package:flow/core/sync/sync_remote.dart';
+import 'package:flow/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:flow/features/transaction/data/models/transaction_model.dart';
 
 class _MemPrefs implements SyncPrefs {
   final Map<String, dynamic> _m = {};

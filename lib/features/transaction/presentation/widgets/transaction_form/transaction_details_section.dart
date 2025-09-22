@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_notifier.dart';
-import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_state.dart';
-import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/shared/widgets.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/features/transaction/presentation/viewmodels/transaction_form_notifier.dart';
+import 'package:flow/features/transaction/presentation/viewmodels/transaction_form_state.dart';
+import 'package:flow/l10n/app_localizations.dart';
+import 'package:flow/shared/widgets.dart';
 
 class TransactionDetailsSection extends ConsumerWidget {
   final TextEditingController noteController;

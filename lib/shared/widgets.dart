@@ -1,5 +1,5 @@
 // ============================================================================
-// POCKETA UI COMPONENTS - MAIN EXPORT
+// FLOW UI COMPONENTS - MAIN EXPORT
 // ============================================================================
 
 // Core UI Components - Organized Structure

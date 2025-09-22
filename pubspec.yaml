@@ -1,5 +1,5 @@
-name: pocketa
-description: "Clean Architecture-based Expense Management App built with Flutter, Riverpod, and Hive for offline-first personal finance tracking."
+name: flow
+description: "Flow - Personal Finance OS. Culturally intelligent, Bengali-first expense tracking with 9-second entry speed. Built with Flutter, Riverpod, and Hive for offline-first personal finance management."
 version: "0.1.0+1"
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 

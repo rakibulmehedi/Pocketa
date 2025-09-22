@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pocketa/core/theme/app_colors.dart';
+import 'package:flow/core/theme/app_colors.dart';
 
 /// Snackbar types for different message categories
 enum AppSnackbarType { success, error, warning, info }

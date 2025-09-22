@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/utils/currency_utils.dart';
-import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_notifier.dart';
-import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_state.dart';
-import 'package:pocketa/shared/widgets.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/core/utils/currency_utils.dart';
+import 'package:flow/features/transaction/presentation/viewmodels/transaction_form_notifier.dart';
+import 'package:flow/features/transaction/presentation/viewmodels/transaction_form_state.dart';
+import 'package:flow/shared/widgets.dart';
 
 class TransactionAmountSection extends ConsumerWidget {
   final TextEditingController amountController;

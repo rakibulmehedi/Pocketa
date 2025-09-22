@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/data/base_entity.dart';
-import 'package:pocketa/core/data/base_repository.dart';
+import 'package:flow/core/data/base_entity.dart';
+import 'package:flow/core/data/base_repository.dart';
 
 /// Base provider factory for creating common repository providers
 class BaseProviders {

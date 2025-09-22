@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/forms/base_form_state.dart';
+import 'package:flow/core/forms/base_form_state.dart';
 
 /// Base form notifier with common form handling logic
 abstract class BaseFormNotifier<T> extends StateNotifier<T> with BaseFormValidation {

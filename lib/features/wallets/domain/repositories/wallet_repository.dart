@@ -1,5 +1,5 @@
-import 'package:pocketa/core/data/base_repository.dart';
-import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
+import 'package:flow/core/data/base_repository.dart';
+import 'package:flow/features/wallets/domain/entities/wallet_entity.dart';
 
 /// Repository contract for Wallets.
 abstract class WalletRepository extends BaseRepository<WalletEntity> {

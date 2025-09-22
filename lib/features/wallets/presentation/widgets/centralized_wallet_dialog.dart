@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/ui/base_dialog.dart';
-import 'package:pocketa/core/forms/base_form_notifier.dart';
-import 'package:pocketa/core/forms/base_form_state.dart';
-import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
-import 'package:pocketa/features/wallets/presentation/viewmodels/wallet_providers.dart';
+import 'package:flow/core/ui/base_dialog.dart';
+import 'package:flow/core/forms/base_form_notifier.dart';
+import 'package:flow/core/forms/base_form_state.dart';
+import 'package:flow/features/wallets/domain/entities/wallet_entity.dart';
+import 'package:flow/features/wallets/presentation/viewmodels/wallet_providers.dart';
 
 /// Form state for wallet dialog
 class WalletFormState extends BaseFormState {

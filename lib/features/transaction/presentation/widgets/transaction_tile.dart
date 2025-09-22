@@ -3,14 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import 'package:pocketa/core/constants/default_categories.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/utils/transaction_utils.dart';
-import 'package:pocketa/features/categories/presentation/viewmodels/category_providers.dart';
-import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
-import 'package:pocketa/l10n/app_localizations.dart';
+import 'package:flow/core/constants/default_categories.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/core/utils/transaction_utils.dart';
+import 'package:flow/features/categories/presentation/viewmodels/category_providers.dart';
+import 'package:flow/features/transaction/data/models/transaction_model.dart';
+import 'package:flow/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:flow/features/transaction/domain/entities/transaction_type.dart';
+import 'package:flow/l10n/app_localizations.dart';
 
 class TransactionTile extends ConsumerWidget {
   final TransactionEntity? transaction;

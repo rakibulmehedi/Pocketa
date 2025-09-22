@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/features/wallets/presentation/presentation.dart';
-import 'package:pocketa/shared/services/ui/snackbar_service.dart';
+import 'package:flow/features/wallets/presentation/presentation.dart';
+import 'package:flow/shared/services/ui/snackbar_service.dart';
 import 'package:uuid/uuid.dart';
-import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
+import 'package:flow/l10n/app_localizations.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/features/wallets/domain/entities/wallet_entity.dart';
 
 Future<WalletEntity?> showAddWalletSheet(
   BuildContext context,

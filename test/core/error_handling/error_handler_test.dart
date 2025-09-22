@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pocketa/core/error_handling/error_handler.dart';
-import 'package:pocketa/core/errors/failure.dart';
-import 'package:pocketa/core/result/result.dart';
-import 'package:pocketa/l10n/app_localizations.dart';
+import 'package:flow/core/error_handling/error_handler.dart';
+import 'package:flow/core/errors/failure.dart';
+import 'package:flow/core/result/result.dart';
+import 'package:flow/l10n/app_localizations.dart';
 
 void main() {
   group('ErrorHandler', () {

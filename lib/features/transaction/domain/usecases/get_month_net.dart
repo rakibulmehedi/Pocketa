@@ -1,4 +1,4 @@
-import 'package:pocketa/features/transaction/domain/repositories/transaction_repository.dart';
+import 'package:flow/features/transaction/domain/repositories/transaction_repository.dart';
 
 class GetMonthNetArgs {
   final int y, m;

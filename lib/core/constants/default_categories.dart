@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pocketa/features/categories/domain/entities/category_entity.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
+import 'package:flow/features/categories/domain/entities/category_entity.dart';
+import 'package:flow/features/transaction/domain/entities/transaction_type.dart';
 
 CategoryKind kindFromTxType(TransactionType t) {
   switch (t) {

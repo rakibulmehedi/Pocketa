@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/constants/default_categories.dart';
-import 'package:pocketa/features/categories/domain/entities/category_entity.dart';
-import 'package:pocketa/features/categories/presentation/viewmodels/category_providers.dart';
-import 'package:pocketa/features/categories/presentation/widgets/add_category_dialog.dart';
-import 'package:pocketa/l10n/app_localizations.dart';
+import 'package:flow/core/constants/default_categories.dart';
+import 'package:flow/features/categories/domain/entities/category_entity.dart';
+import 'package:flow/features/categories/presentation/viewmodels/category_providers.dart';
+import 'package:flow/features/categories/presentation/widgets/add_category_dialog.dart';
+import 'package:flow/l10n/app_localizations.dart';
 
 class CategoryChipsPicker extends ConsumerWidget {
   final CategoryKind kind;

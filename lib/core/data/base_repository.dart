@@ -1,4 +1,4 @@
-import 'package:pocketa/core/data/base_entity.dart';
+import 'package:flow/core/data/base_entity.dart';
 
 /// Base repository interface with common CRUD operations
 abstract class BaseRepository<T> {

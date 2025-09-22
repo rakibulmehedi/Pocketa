@@ -1,9 +1,9 @@
 import 'package:hive/hive.dart';
-import 'package:pocketa/core/db/hive_type.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
+import 'package:flow/core/db/hive_type.dart';
+import 'package:flow/features/transaction/domain/entities/transaction_type.dart';
 
 // Re-export TransactionType for convenience
-export 'package:pocketa/features/transaction/domain/entities/transaction_type.dart';
+export 'package:flow/features/transaction/domain/entities/transaction_type.dart';
 
 part 'transaction_model.g.dart';
 

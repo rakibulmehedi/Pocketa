@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pocketa/core/db/hive_type.dart';
-import 'package:pocketa/features/categories/domain/entities/category_entity.dart';
+import 'package:flow/core/db/hive_type.dart';
+import 'package:flow/features/categories/domain/entities/category_entity.dart';
 
 part 'category_model.freezed.dart';
 part 'category_model.g.dart';

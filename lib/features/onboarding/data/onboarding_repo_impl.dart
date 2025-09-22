@@ -1,7 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pocketa/core/db/hive_box.dart';
-import 'package:pocketa/features/onboarding/domain/entities/onboarding_entity.dart';
-import 'package:pocketa/features/onboarding/domain/repositories/onboarding_repository.dart';
+import 'package:flow/core/db/hive_box.dart';
+import 'package:flow/features/onboarding/domain/entities/onboarding_entity.dart';
+import 'package:flow/features/onboarding/domain/repositories/onboarding_repository.dart';
 
 class OnboardingRepositoryImpl implements OnboardingRepository {
   @override

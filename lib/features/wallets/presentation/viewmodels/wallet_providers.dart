@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pocketa/core/db/hive_box.dart';
-import 'package:pocketa/core/providers/base_providers.dart';
-import 'package:pocketa/features/wallets/data/models/wallet_model.dart';
-import 'package:pocketa/features/wallets/data/wallet_repo_impl.dart';
-import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
-import 'package:pocketa/features/wallets/domain/repositories/wallet_repository.dart';
+import 'package:flow/core/db/hive_box.dart';
+import 'package:flow/core/providers/base_providers.dart';
+import 'package:flow/features/wallets/data/models/wallet_model.dart';
+import 'package:flow/features/wallets/data/wallet_repo_impl.dart';
+import 'package:flow/features/wallets/domain/entities/wallet_entity.dart';
+import 'package:flow/features/wallets/domain/repositories/wallet_repository.dart';
 
 /// Hive box provider
 final walletBoxProvider = Provider<Box<WalletModel>>(

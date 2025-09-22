@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/shared/ui_components/forms/app_text_form_field.dart';
+import 'package:flow/l10n/app_localizations.dart';
+import 'package:flow/shared/ui_components/forms/app_text_form_field.dart';
 
 /// Note input field for additional text
 class NoteField extends StatelessWidget {

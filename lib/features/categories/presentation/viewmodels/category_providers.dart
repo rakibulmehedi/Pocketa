@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
-import 'package:pocketa/core/core.dart';
-import 'package:pocketa/core/db/hive_box.dart';
-import 'package:pocketa/features/categories/data/category_repo_impl.dart';
-import 'package:pocketa/features/categories/data/models/category_model.dart';
-import 'package:pocketa/features/categories/domain/entities/category_entity.dart';
+import 'package:flow/core/core.dart';
+import 'package:flow/core/db/hive_box.dart';
+import 'package:flow/features/categories/data/category_repo_impl.dart';
+import 'package:flow/features/categories/data/models/category_model.dart';
+import 'package:flow/features/categories/domain/entities/category_entity.dart';
 
 final categoryBoxProvider = Provider<Box<CategoryModel>>(
   (ref) => Hive.box<CategoryModel>(HiveBoxes.categories),

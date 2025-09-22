@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/locale/local_notifier.dart';
-import 'package:pocketa/l10n/app_localizations.dart';
+import 'package:flow/core/locale/local_notifier.dart';
+import 'package:flow/l10n/app_localizations.dart';
 
 /// Language options for the toggle button
 enum AppLanguage { en, bn }

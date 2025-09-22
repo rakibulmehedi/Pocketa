@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pocketa/core/core.dart';
-import 'package:pocketa/core/db/hive_box.dart';
-import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
-import 'package:pocketa/features/transaction/data/transaction_repo_impl.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
-import 'package:pocketa/features/transaction/domain/usecases/get_month_outflow.dart';
+import 'package:flow/core/core.dart';
+import 'package:flow/features/transaction/data/models/transaction_model.dart';
+import 'package:flow/features/transaction/data/transaction_repo_impl.dart';
+import 'package:flow/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:flow/features/transaction/domain/usecases/get_month_outflow.dart';
 
 /// Hive box
 final txBoxProvider = Provider<Box<Transaction>>(

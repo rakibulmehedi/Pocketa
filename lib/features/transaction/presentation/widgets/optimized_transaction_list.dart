@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/performance/performance_providers.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
-import 'package:pocketa/shared/widgets.dart';
+import 'package:flow/core/performance/performance_providers.dart';
+import 'package:flow/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:flow/shared/widgets.dart';
 /// Performance-optimized transaction list with lazy loading and caching
 class OptimizedTransactionList extends ConsumerStatefulWidget {
   final List<TransactionEntity> transactions;

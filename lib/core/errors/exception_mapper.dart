@@ -1,5 +1,5 @@
-import 'package:pocketa/core/errors/exceptions.dart';
-import 'package:pocketa/core/errors/failure.dart';
+import 'package:flow/core/errors/exceptions.dart';
+import 'package:flow/core/errors/failure.dart';
 
 Failure mapExceptionToFailure(Object error) {
   if (error is CacheException) {

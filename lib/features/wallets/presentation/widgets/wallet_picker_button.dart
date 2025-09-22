@@ -1,11 +1,11 @@
 // lib/features/wallets/presentation/widgets/wallet_picker_button.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/l10n/app_localizations.dart';
-import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
-import 'package:pocketa/features/wallets/presentation/viewmodels/wallet_providers.dart';
-import 'package:pocketa/features/wallets/presentation/widgets/add_wallet_sheet.dart';
-import 'package:pocketa/shared/widgets.dart';
+import 'package:flow/l10n/app_localizations.dart';
+import 'package:flow/features/wallets/domain/entities/wallet_entity.dart';
+import 'package:flow/features/wallets/presentation/viewmodels/wallet_providers.dart';
+import 'package:flow/features/wallets/presentation/widgets/add_wallet_sheet.dart';
+import 'package:flow/shared/widgets.dart';
 class WalletPickerButton extends ConsumerWidget {
   final String? walletId;
   final ValueChanged<WalletEntity> onSelected;

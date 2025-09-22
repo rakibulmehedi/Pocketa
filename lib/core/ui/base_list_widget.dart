@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pocketa/core/data/base_entity.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
+import 'package:flow/core/data/base_entity.dart';
+import 'package:flow/core/responsive/responsive.dart';
 
 /// Base list widget with common functionality
 abstract class BaseListWidget<T extends BaseEntity> extends StatelessWidget {

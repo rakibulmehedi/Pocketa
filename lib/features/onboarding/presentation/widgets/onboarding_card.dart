@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/theme/app_colors.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/core/theme/app_colors.dart';
 
 class OnboardingCard extends StatefulWidget {
   final String title;

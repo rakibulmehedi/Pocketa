@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pocketa/core/db/hive_type.dart';
-import 'package:pocketa/features/wallets/domain/entities/wallet_entity.dart';
+import 'package:flow/core/db/hive_type.dart';
+import 'package:flow/features/wallets/domain/entities/wallet_entity.dart';
 
 part 'wallet_model.freezed.dart';
 part 'wallet_model.g.dart';

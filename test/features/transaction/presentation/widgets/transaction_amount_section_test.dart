@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
-import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_state.dart';
-import 'package:pocketa/features/transaction/presentation/widgets/transaction_form/transaction_amount_section.dart';
-import 'package:pocketa/l10n/app_localizations.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/features/transaction/data/models/transaction_model.dart';
+import 'package:flow/features/transaction/presentation/viewmodels/transaction_form_state.dart';
+import 'package:flow/features/transaction/presentation/widgets/transaction_form/transaction_amount_section.dart';
+import 'package:flow/l10n/app_localizations.dart';
 
 void main() {
   group('TransactionAmountSection', () {

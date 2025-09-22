@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/theme/text_styles.dart';
-import 'package:pocketa/l10n/app_localizations.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/core/theme/text_styles.dart';
+import 'package:flow/l10n/app_localizations.dart';
 
 class FeatureAwarenessSlides extends ConsumerStatefulWidget {
   const FeatureAwarenessSlides({super.key});

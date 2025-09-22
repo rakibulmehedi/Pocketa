@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pocketa/core/responsive/responsive.dart';
-import 'package:pocketa/core/theme/app_colors.dart';
+import 'package:flow/core/responsive/responsive.dart';
+import 'package:flow/core/theme/app_colors.dart';
 
 /// A reusable option chip widget with responsive sizing
 class OptionChip extends StatelessWidget {

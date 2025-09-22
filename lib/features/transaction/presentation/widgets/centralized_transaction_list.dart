@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:pocketa/core/core.dart';
-import 'package:pocketa/features/transaction/domain/entities/transaction_entity.dart';
-import 'package:pocketa/features/transaction/presentation/widgets/transaction_tile.dart';
+import 'package:flow/core/core.dart';
+import 'package:flow/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:flow/features/transaction/presentation/widgets/transaction_tile.dart';
 
 /// Centralized transaction list widget using BaseListWidget
 class CentralizedTransactionListView extends BaseListWidget<TransactionEntity> {

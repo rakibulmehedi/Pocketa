@@ -1,8 +1,8 @@
 
-import 'package:pocketa/core/data/base_repository.dart';
-import 'package:pocketa/features/categories/data/models/category_model.dart';
-import 'package:pocketa/features/categories/domain/entities/category_entity.dart';
-import 'package:pocketa/features/categories/domain/repositories/category_repository.dart';
+import 'package:flow/core/data/base_repository.dart';
+import 'package:flow/features/categories/data/models/category_model.dart';
+import 'package:flow/features/categories/domain/entities/category_entity.dart';
+import 'package:flow/features/categories/domain/repositories/category_repository.dart';
 
 class CategoryRepoImpl extends BaseRepositoryImpl<CategoryEntity, CategoryModel> implements CategoryRepository {
   const CategoryRepoImpl(super.box);
