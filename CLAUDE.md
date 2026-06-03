@@ -126,6 +126,35 @@ After modifying any annotated model, re-run build_runner.
 
 Beyond `flutter_lints`: `prefer_final_locals`, `always_use_package_imports`, `avoid_print`.
 
+## Agent loop system
+
+Mandatory for all autonomous AI agent sessions. Full spec: [`docs/planning/AGENT_LOOP_SYSTEM.md`](docs/planning/AGENT_LOOP_SYSTEM.md).
+
+**Core loop:** `OBSERVE → ORIENT → PLAN → EXECUTE → VERIFY → DOCUMENT → COMMIT → REFLECT`
+
+**Session startup (every new session):**
+1. Read this file (CLAUDE.md)
+2. Read `docs/tracking/CURRENT_SPRINT.md`
+3. Read `docs/tracking/TASKS.md`
+4. `git status && git log --oneline -5`
+5. Understand request in context of current sprint
+
+**Key rules:**
+- Verify repo state before trusting plans or memory
+- Define blast radius before starting (list files you'll touch)
+- Verify after each step, not just at the end
+- One commit per logical change
+- Fail loudly — never silently work around unexpected state
+- Update tracking docs after every task
+- Ask when confidence < 80% on irreversible decisions
+
+**Invariants (never violate):**
+- Never change Hive type IDs
+- Never skip `build_runner` after modifying annotated models
+- Never commit generated files (*.g.dart, *.freezed.dart)
+- Never remove existing test coverage
+- Always match existing code style
+
 ## Coding methodology (Karpathy rules)
 
 These are mandatory, not optional. Every task must follow all four.
