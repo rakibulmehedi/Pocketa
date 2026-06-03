@@ -116,7 +116,7 @@ jobs:
     
     strategy:
       matrix:
-        test-type: [unit, widget, integration]
+        test-type: [unit, widget]
     
     steps:
       - name: Checkout code
@@ -143,12 +143,6 @@ jobs:
         if: matrix.test-type == 'widget'
         run: flutter test test/widget_test.dart --coverage
 
-      - name: Run integration tests
-        if: matrix.test-type == 'integration'
-        run: |
-          # Start emulator for integration tests
-          flutter emulators --launch android_emulator || true
-          flutter test integration_test/ --coverage
 
       - name: Upload coverage to Codecov
         if: matrix.test-type == 'unit'

@@ -181,7 +181,7 @@ sequenceDiagram
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/pocketa.git
+   git clone https://github.com/rakibulmehedi/Pocketa-V2.git
    cd pocketa
    ```
 
@@ -512,8 +512,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/your-username/pocketa/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-username/pocketa/discussions)
+- **Issues**: [GitHub Issues](https://github.com/rakibulmehedi/Pocketa-V2/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/rakibulmehedi/Pocketa-V2/discussions)
 - **Email**: support@pocketa.app
 
 ---
@@ -522,6 +522,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ by the Pocketa Team**
 
-[⭐ Star this repo](https://github.com/your-username/pocketa) • [🐛 Report Bug](https://github.com/your-username/pocketa/issues) • [💡 Request Feature](https://github.com/your-username/pocketa/issues)
+[⭐ Star this repo](https://github.com/rakibulmehedi/Pocketa-V2) • [🐛 Report Bug](https://github.com/rakibulmehedi/Pocketa-V2/issues) • [💡 Request Feature](https://github.com/rakibulmehedi/Pocketa-V2/issues)
 
 </div>

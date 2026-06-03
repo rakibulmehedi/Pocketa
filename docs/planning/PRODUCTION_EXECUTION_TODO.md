@@ -12,15 +12,15 @@
 
 | ID | Task | Owner | Status | Acceptance Criteria | Verification | Expected Commit |
 |----|------|-------|--------|---------------------|--------------|-----------------|
-| P0-01 | Add MIT LICENSE file | Agent | TODO | LICENSE file exists at repo root, matches MIT template | `test -f LICENSE && head -1 LICENSE` | `docs: add MIT LICENSE file` |
-| P0-02 | Add CONTRIBUTING.md | Agent | TODO | File exists, references CI, PR process, code style | `test -f CONTRIBUTING.md` | `docs: add CONTRIBUTING.md` |
-| P0-03 | Add SECURITY.md | Agent | TODO | File exists, has vulnerability disclosure process | `test -f SECURITY.md` | `docs: add SECURITY.md` |
-| P0-04 | Fix README placeholder URLs | Agent | TODO | Zero occurrences of `your-username` in README.md | `grep -c "your-username" README.md` returns 0 | `docs: fix README URLs to point to rakibulmehedi/Pocketa-V2` |
-| P0-05 | Update CI Flutter version | Agent | TODO | All workflow FLUTTER_VERSION values match project SDK constraint | `grep "FLUTTER_VERSION" .github/workflows/*.yml` shows consistent version | `ci: update Flutter version to match project SDK` |
-| P0-06 | Fix or remove broken integration_test CI job | Agent | TODO | CI test matrix doesn't reference non-existent integration_test/ | `grep "integration_test" .github/workflows/ci.yml` returns empty | `ci: remove integration test job (no integration tests yet)` |
+| P0-01 | Add MIT LICENSE file | Agent | DONE | LICENSE file exists at repo root, matches MIT template | `test -f LICENSE && head -1 LICENSE` | `docs: add MIT LICENSE file` |
+| P0-02 | Add CONTRIBUTING.md | Agent | DONE | File exists, references CI, PR process, code style | `test -f CONTRIBUTING.md` | `docs: add CONTRIBUTING.md` |
+| P0-03 | Add SECURITY.md | Agent | DONE | File exists, has vulnerability disclosure process | `test -f SECURITY.md` | `docs: add SECURITY.md` |
+| P0-04 | Fix README placeholder URLs | Agent | DONE | Zero occurrences of `your-username` in README.md | `grep -c "your-username" README.md` returns 0 | `docs: fix README URLs to point to rakibulmehedi/Pocketa-V2` |
+| P0-05 | Update CI Flutter version | Agent | DONE | All workflow FLUTTER_VERSION values match project SDK constraint | `grep "FLUTTER_VERSION" .github/workflows/*.yml` shows consistent version | `ci: update Flutter version to match project SDK` |
+| P0-06 | Fix or remove broken integration_test CI job | Agent | DONE | CI test matrix doesn't reference non-existent integration_test/ | `grep "integration_test" .github/workflows/ci.yml` returns empty | `ci: remove integration test job (no integration tests yet)` |
 | P0-07 | Activate dormant GitHub workflows | Agent | TODO | ci_guard, deploy, performance, release-please, security appear in `gh api` workflow list | `gh api repos/rakibulmehedi/Pocketa-V2/actions/workflows` shows all | `ci: trigger workflow registration for dormant pipelines` |
 | P0-08 | Fix Release workflow permissions | Founder | TODO | Release workflow has `contents: write` permission and runs clean | `gh run list --workflow=release-please.yml` shows success | `ci: fix release workflow permissions` |
-| P0-09 | Pin Flutter version with FVM | Agent | TODO | `.fvmrc` exists, CI uses same version | `test -f .fvmrc && cat .fvmrc` | `chore: pin Flutter version with FVM` |
+| P0-09 | Pin Flutter version with FVM | Agent | DONE | `.fvmrc` exists, CI uses same version | `test -f .fvmrc && cat .fvmrc` | `chore: pin Flutter version with FVM` |
 | P0-10 | Transaction repository unit tests | Agent | TODO | Tests exist for all CRUD operations in transaction repo | `flutter test test/features/transaction/data/` passes | `test: add transaction repository unit tests` |
 | P0-11 | Wallet repository unit tests | Agent | TODO | Tests exist for wallet CRUD | `flutter test test/features/wallets/` passes | `test: add wallet repository unit tests` |
 | P0-12 | Transaction use case unit tests | Agent | TODO | Tests for add, delete, get_summary use cases | `flutter test test/features/transaction/domain/` passes | `test: add transaction use case tests` |
