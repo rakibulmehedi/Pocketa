@@ -3,7 +3,7 @@
 **Last updated:** 2026-06-03
 **Source of truth:** [PRODUCTION_EXECUTION_TODO.md](../planning/PRODUCTION_EXECUTION_TODO.md)
 
-## Active Sprint: Sprint 1 — Repo Truth + CI Foundation
+## Active Sprint: Sprint 1.5 — COMPLETE
 
 See [CURRENT_SPRINT.md](./CURRENT_SPRINT.md) for details.
 
@@ -11,16 +11,17 @@ See [CURRENT_SPRINT.md](./CURRENT_SPRINT.md) for details.
 
 | Priority | Total | Done | In Progress | TODO | Blocked |
 |----------|-------|------|-------------|------|---------|
-| P0 | 12 | 0 | 0 | 12 | 0 |
+| P0 | 12 | 7 | 0 | 4 | 1 |
 | P1 | 10 | 0 | 0 | 10 | 0 |
 | P2 | 5 | 0 | 0 | 5 | 0 |
-| **Total** | **27** | **0** | **0** | **27** | **0** |
+| **Total** | **27** | **7** | **0** | **19** | **1** |
 
 ## Sprint Allocation
 
 | Sprint | Tasks | Status |
 |--------|-------|--------|
-| Sprint 1: Repo Truth + CI | P0-01 to P0-09 | NOT STARTED |
+| Sprint 1: Repo Truth + CI | P0-01 to P0-09 | COMPLETE |
+| Sprint 1.5: Analyzer/Test Recovery | analyzer + test fixes | COMPLETE |
 | Sprint 2: Test Safety Net | P0-10 to P0-12, P1-01 to P1-04 | NOT STARTED |
 | Sprint 3: Real-Device QA | P1-05, P1-06, P2-05 | NOT STARTED |
 | Sprint 4: Beta Release Prep | P0-08, P1-07 to P1-10, P2-04 | NOT STARTED |

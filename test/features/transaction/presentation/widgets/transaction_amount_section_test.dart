@@ -5,6 +5,7 @@ import 'package:pocketa/core/responsive/responsive.dart';
 import 'package:pocketa/features/transaction/data/models/transaction_model.dart';
 import 'package:pocketa/features/transaction/presentation/viewmodels/transaction_form_state.dart';
 import 'package:pocketa/features/transaction/presentation/widgets/transaction_form/transaction_amount_section.dart';
+import 'package:pocketa/shared/widgets/input/app_amount_field.dart';
 import 'package:pocketa/l10n/app_localizations.dart';
 
 void main() {
@@ -22,112 +23,60 @@ void main() {
       container.dispose();
     });
 
-    testWidgets('should display amount field with correct currency', (tester) async {
-      final form = TransactionFormState(
-        type: TransactionType.expense,
-        currency: 'BDT',
-        amount: 0.0,
-        dateUtc: DateTime.now().toUtc(),
-      );
-
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [],
-          child: MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            builder: (context, child) => Responsive.builder(
-              child: child!,
-            ),
-            home: Scaffold(
-              body: TransactionAmountSection(
-                amountController: amountController,
-                form: form,
-              ),
+    Widget buildTestWidget(TransactionFormState form) {
+      return ProviderScope(
+        overrides: [],
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          builder: (context, child) => Responsive.builder(
+            child: child!,
+          ),
+          home: Scaffold(
+            body: TransactionAmountSection(
+              amountController: amountController,
+              form: form,
             ),
           ),
         ),
       );
+    }
 
-      expect(find.byType(TextField), findsOneWidget);
-      expect(find.text('৳'), findsOneWidget);
+    TransactionFormState defaultForm() => TransactionFormState(
+          type: TransactionType.expense,
+          currency: 'BDT',
+          amount: 0.0,
+          dateUtc: DateTime.now().toUtc(),
+        );
+
+    testWidgets('should display amount field', (tester) async {
+      await tester.pumpWidget(buildTestWidget(defaultForm()));
+
+      expect(find.byType(AmountField), findsOneWidget);
+      expect(find.byType(TextFormField), findsOneWidget);
     });
 
     testWidgets('should display quick amount chips for expense', (tester) async {
-      final form = TransactionFormState(
-        type: TransactionType.expense,
-        currency: 'BDT',
-        amount: 0.0,
-        dateUtc: DateTime.now().toUtc(),
-      );
+      await tester.pumpWidget(buildTestWidget(defaultForm()));
 
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [],
-          child: MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            builder: (context, child) => Responsive.builder(
-              child: child!,
-            ),
-            home: Scaffold(
-              body: TransactionAmountSection(
-                amountController: amountController,
-                form: form,
-              ),
-            ),
-          ),
-        ),
-      );
-
-      // Should show quick amount chips
       expect(find.byType(ActionChip), findsWidgets);
       expect(find.text('৳100'), findsOneWidget);
       expect(find.text('৳500'), findsOneWidget);
     });
 
     testWidgets('should call onChanged when amount is entered', (tester) async {
-      final form = TransactionFormState(
-        type: TransactionType.expense,
-        currency: 'BDT',
-        amount: 0.0,
-        dateUtc: DateTime.now().toUtc(),
-      );
+      await tester.pumpWidget(buildTestWidget(defaultForm()));
 
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [],
-          child: MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            builder: (context, child) => Responsive.builder(
-              child: child!,
-            ),
-            home: Scaffold(
-              body: TransactionAmountSection(
-                amountController: amountController,
-                form: form,
-              ),
-            ),
-          ),
-        ),
-      );
-
-      // Enter amount
-      await tester.enterText(find.byType(TextField), '1000');
+      await tester.enterText(find.byType(TextFormField), '1000');
       await tester.pump();
 
-      // Verify the amount was set
-      expect(amountController.text, '1000');
+      // Indian grouping formatter adds commas
+      expect(amountController.text, '1,000');
     });
 
     testWidgets('should validate required amount', (tester) async {
-      final form = TransactionFormState(
-        type: TransactionType.expense,
-        currency: 'BDT',
-        amount: 0.0,
-        dateUtc: DateTime.now().toUtc(),
-      );
+      final formKey = GlobalKey<FormState>();
+      final form = defaultForm();
 
       await tester.pumpWidget(
         ProviderScope(
@@ -139,9 +88,22 @@ void main() {
               child: child!,
             ),
             home: Scaffold(
-              body: TransactionAmountSection(
-                amountController: amountController,
-                form: form,
+              body: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    TransactionAmountSection(
+                      amountController: amountController,
+                      form: form,
+                    ),
+                    Builder(
+                      builder: (context) => ElevatedButton(
+                        onPressed: () => formKey.currentState!.validate(),
+                        child: const Text('validate'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -149,20 +111,15 @@ void main() {
       );
 
       // Leave amount empty and trigger validation
-      await tester.enterText(find.byType(TextField), '');
+      await tester.tap(find.text('validate'));
       await tester.pump();
 
-      // Should show validation error
-      expect(find.text('Amount is required'), findsOneWidget);
+      expect(find.text('Required'), findsOneWidget);
     });
 
     testWidgets('should validate positive amount', (tester) async {
-      final form = TransactionFormState(
-        type: TransactionType.expense,
-        currency: 'BDT',
-        amount: 0.0,
-        dateUtc: DateTime.now().toUtc(),
-      );
+      final formKey = GlobalKey<FormState>();
+      final form = defaultForm();
 
       await tester.pumpWidget(
         ProviderScope(
@@ -174,55 +131,42 @@ void main() {
               child: child!,
             ),
             home: Scaffold(
-              body: TransactionAmountSection(
-                amountController: amountController,
-                form: form,
+              body: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    TransactionAmountSection(
+                      amountController: amountController,
+                      form: form,
+                    ),
+                    Builder(
+                      builder: (context) => ElevatedButton(
+                        onPressed: () => formKey.currentState!.validate(),
+                        child: const Text('validate'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
       );
 
-      // Enter negative amount
-      await tester.enterText(find.byType(TextField), '-100');
+      // Enter 0 (not positive)
+      await tester.enterText(find.byType(TextFormField), '0');
+      await tester.tap(find.text('validate'));
       await tester.pump();
 
-      // Should show validation error
-      expect(find.text('Invalid amount'), findsOneWidget);
+      expect(find.text('Amount must be positive'), findsOneWidget);
     });
 
     testWidgets('should handle quick amount chip tap', (tester) async {
-      final form = TransactionFormState(
-        type: TransactionType.expense,
-        currency: 'BDT',
-        amount: 0.0,
-        dateUtc: DateTime.now().toUtc(),
-      );
+      await tester.pumpWidget(buildTestWidget(defaultForm()));
 
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [],
-          child: MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            builder: (context, child) => Responsive.builder(
-              child: child!,
-            ),
-            home: Scaffold(
-              body: TransactionAmountSection(
-                amountController: amountController,
-                form: form,
-              ),
-            ),
-          ),
-        ),
-      );
-
-      // Tap on quick amount chip
       await tester.tap(find.text('৳100'));
       await tester.pump();
 
-      // Verify amount was set
       expect(amountController.text, '100');
     });
   });

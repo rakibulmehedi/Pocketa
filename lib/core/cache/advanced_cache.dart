@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
-import 'package:pocketa/core/performance/performance_metrics.dart';
+
 
 /// Advanced caching system with TTL, LRU eviction, and performance monitoring
 class AdvancedCache {
@@ -28,7 +28,6 @@ class AdvancedCache {
       final memoryEntry = _memoryCache[key];
       if (memoryEntry != null && !memoryEntry.isExpired) {
         _logger.d('Cache hit (memory): $key');
-        PerformanceMetrics.recordMetric('cache_get_memory', stopwatch.elapsed);
         return memoryEntry.value as T?;
       }
 
@@ -40,7 +39,6 @@ class AdvancedCache {
           // Move to memory cache for faster access
           _addToMemoryCache(key, entry);
           _logger.d('Cache hit (persistent): $key');
-          PerformanceMetrics.recordMetric('cache_get_persistent', stopwatch.elapsed);
           return entry.value as T?;
         } else {
           // Remove expired entry
@@ -49,7 +47,6 @@ class AdvancedCache {
       }
 
       _logger.d('Cache miss: $key');
-      PerformanceMetrics.recordMetric('cache_get_miss', stopwatch.elapsed);
       return null;
     } finally {
       stopwatch.stop();
@@ -83,7 +80,6 @@ class AdvancedCache {
       }
 
       _logger.d('Cache set: $key (TTL: ${entry.ttl.inMinutes}min, Priority: ${priority.name})');
-      PerformanceMetrics.recordMetric('cache_set', stopwatch.elapsed);
     } finally {
       stopwatch.stop();
     }

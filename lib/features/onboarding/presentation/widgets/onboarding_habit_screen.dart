@@ -345,7 +345,7 @@ class _OnboardingHabitScreenState extends ConsumerState<OnboardingHabitScreen>
                         onChanged: (value) {
                           widget.notifier.updateDailyReminder(value);
                         },
-                        activeColor: Theme.of(context).primaryColor,
+                        activeTrackColor: Theme.of(context).primaryColor,
                       ),
                     ],
                   ),

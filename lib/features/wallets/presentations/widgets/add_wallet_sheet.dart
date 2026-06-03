@@ -205,7 +205,7 @@ class _AddWalletSheetState extends ConsumerState<_AddWalletSheet> {
 
             SizedBox(height: L.spaceM),
             DropdownButtonFormField<WalletType>(
-              value: _type,
+              initialValue: _type,
               isExpanded: true,
               decoration: InputDecoration(
                 labelText: l10n.walletType,

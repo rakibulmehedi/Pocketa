@@ -240,7 +240,7 @@ class OnboardingScreen extends ConsumerWidget {
     VoidCallback? onPrimaryPressed;
     String? secondaryButtonText;
     VoidCallback? onSecondaryPressed;
-    bool showBackButton = currentStep != OnboardingStep.welcome;
+    final bool showBackButton = currentStep != OnboardingStep.welcome;
     
     switch (currentStep) {
       case OnboardingStep.welcome:

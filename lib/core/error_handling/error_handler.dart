@@ -41,6 +41,7 @@ class ErrorHandler {
     Result<T> result, {
     String? message,
     VoidCallback? onRetry,
+    bool showSnackbar = true,
   }) {
     result.when(
       ok: (data) {}, // Do nothing on success
@@ -49,6 +50,7 @@ class ErrorHandler {
         failure,
         message: message,
         onRetry: onRetry,
+        showSnackbar: showSnackbar,
       ),
     );
   }
