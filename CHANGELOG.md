@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0](https://github.com/rakibulmehedi/Pocketa/compare/v0.1.0...v1.0.0) (2026-06-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* **ui:** none
+* **ui,perf,i18n:** centralize responsive usage, optimize lists, and tighten theming/error handling
+* **responsive:** legacy responsive utilities removed; use `Responsive.builder` + `context.layout`.
+
+### Features
+
+* add user-defined categories and refactor transaction form UX ([cdfb11f](https://github.com/rakibulmehedi/Pocketa/commit/cdfb11fd476663f24631c6f2fde1a5412ad6ca28))
+* Enhance theming, localization, and add onboarding flow ([6a02f0e](https://github.com/rakibulmehedi/Pocketa/commit/6a02f0ebc72d14417a2d0b18932e225fa83f7160))
+* **transaction:** add form state, notifier, and providers ([682cfa3](https://github.com/rakibulmehedi/Pocketa/commit/682cfa3b3a6c491ab35c9252a9f1a6936eee38a6))
+* **wallets,categories,tx:** add wallet & category modules + integrate pickers ([eae0981](https://github.com/rakibulmehedi/Pocketa/commit/eae098137f2bb33e4719b9817157bc949bf03856))
+
+
+### Bug Fixes
+
+* clean analyzer baseline and fix all failing tests ([c821b20](https://github.com/rakibulmehedi/Pocketa/commit/c821b20bf7b43775388a832eead8fe2c4cf5fb07))
+
+
+### Code Refactoring
+
+* **responsive:** unify responsive system and migrate UI components ([a029528](https://github.com/rakibulmehedi/Pocketa/commit/a029528058a47c124e73fce22325663e1af6296f))
+* **ui,perf,i18n:** centralize responsive usage, optimize lists, and tighten theming/error handling ([acd34cf](https://github.com/rakibulmehedi/Pocketa/commit/acd34cf145cc01238e01d323d8a38c8684d1aebe))
+* **ui:** responsive masonry/list perf, safer errors, i18n presets, iOS 13 ([d1d9c39](https://github.com/rakibulmehedi/Pocketa/commit/d1d9c39b2fdaf059fe1d23bb1d0522e30cd44781))
+
 ## [Unreleased]
 
 ### Added
